@@ -1,0 +1,36 @@
+Note
+~~~~
+
+This spanish style for babel provides the functionality intented
+for the Spanish language when babel 3.7 comes to light. Very
+likely, its implementation will change in babel 3.7 because there
+are part of code for it to work with 3.6; thus, it's should be
+considered neither part of babel 3.7 nor babel 3.6.
+
+To repeat: These files are not part of the babel package but extend
+its functionality.  When you find a problem with them, please contact
+Javier Bezos <jbezos@wanadoo.es>, not Johannes Braams.
+
+Installation procedure
+~~~~~~~~~~~~~~~~~~~~~~
+
+To use spanish typeset spanish.ins. The files
+spanish.ldf and esbst.sty are generated, which you should
+move to the babel directory. romanidx.tex is also generated,
+which may be placed anywhere you like. Note: the old spanish
+must be moved to a place where latex cannot find it.
+
+For further details typeset spanish.dtx, which regrettably
+is in Spanish only.
+
+Instalacion
+~~~~~~~~~~~
+
+Para usar spanish hay que componer spanish.ins. Se generaran
+los archivos spanish.ldf and esbst.sty, que se han de mover
+al directorio de babel. Tambien se genera romanidx.tex, que
+se puede poner donde se crea conveniente. Nota: el antiguo
+spanish se debe mover a un sitio donde babel no pueda
+encontrarlo.
+
+Para mas detalles, componer spanish.dtx.
