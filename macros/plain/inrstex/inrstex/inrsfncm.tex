@@ -1,0 +1,350 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+% This file now uses cm fonts where available. 
+
+
+% ======= INRS Fonts ========
+% This file adds the fonts used in INRSTeX. It also adds the spacing 
+% related to these fonts. The important section is the definitions of
+% the font families. The intent is to produce a font family with all
+% related fonts. In the same manner as the TeXbook, \tenpoint indicates
+% the 10pt family and \rm would be a Roman font in that family. The
+% additions here are the special fonts for section heads, footnotes, ...
+% The section head fonts, for example \sheadfont is changed only if 
+% the font family is called within the command \documentstyle. This 
+% means that it is possible to change the font internal to a 
+% document without disturbing the appearance of the section heads or
+% page numbering. 
+
+% In addition to this file, there is an spfont.tex. This file allows for 
+% the scaling of a font family. The basic family is \tenpoint. It can be 
+% scaled to the extent that there exist scaled printable forms of the font.
+
+% ======= ADDITIONAL FONTS IN INRSTEX ==========
+
+% =====special fonts ========
+\font\tendu = cmdunh10 
+%\font\inchhigh=cminch
+%\font\fortysc=cmsc40
+%\font\fortypen=pen40
+%\font\fortypeni=peni40
+%\font\thirtysc=cmsc30
+%\font\twentysc=cmsc20
+%\font\twentyfourozub=ozub24 %OCR types 
+%\font\twentyfourozuh=ozuh24  % ocr hollow
+%\font\twentynaro = cmnaro
+
+% ===== twenty one point  =======
+\font\twentyonermsca = cmr10 scaled 2074
+
+
+
+% ===== eighteen point =======
+\font\eighteenrm= cmr17 % no eighteen point font in cm  
+\font\eighteenrmsca = cmr10 scaled 1728
+%\font\eighteenark = ark18 % hands and pencils
+%\font\eighteenbbb = bbb18 % ??????
+%\font\eighteenpen = pen18 % pen script like font 
+%\font\eighteenpeni = peni18 % pen script like font 
+
+% ===== fourteenpoint fonts =====
+\font\fourteenrmsca = cmr10 scaled 1440
+\font\fourteenbfxsca = cmbx10 scaled 1440
+
+
+% ===== twelvepoint fonts 
+\font\twelverm= cmr12
+\font\twelvermsca = cmr10 scaled 1200
+\font\twelvebfxsca = cmbx10 scaled 1200
+\let\twelvebf=\twelvebfxsca
+\font\twelvess  = cmss12
+\font\twelvessb= cmssbx10 scaled 1200
+\font\twelveit = cmti12
+\font\twelvei = cmmi12
+\font\twelvesl = cmsl12
+\font\twelvesy = cmsy10 scaled 1200 % no 12point symbol
+\font\twelvett = cmtt12
+\font\twelvesc = cmcsc10 scaled 1200 % no 12point form 
+\let\sanss = \twelvess
+\let\sanssb= \tenss
+\let\twelveex=\tenex
+
+% ======= tenpoint fonts not in plain.tex ======= 
+\font\tenss = cmss10 
+\font\tenssb = cmssbx10  % 
+\font\tencsc = cmcsc10 % caps and small caps
+\font\tenu=cmu10 % unslanted text italic
+\font\tenbfx = cmbx10
+\font\tenbfy = cmbsy10 %bold math symbols?
+
+
+% ======== smaller fonts not in plain.tex ========
+\font\ninerm=cmr9
+\font\eightrm=cmr8
+\font\sixrm=cmr6
+
+\font\ninei=cmmi9
+\font\eighti=cmmi8
+\font\sixi=cmmi6
+\skewchar\ninei='177 \skewchar\eighti='177 \skewchar\sixi='177
+
+\font\ninesy=cmsy9
+\font\eightsy=cmsy8
+\font\sixsy=cmsy6
+\skewchar\ninesy='60 \skewchar\eightsy='60 \skewchar\sixsy='60
+
+\font\eightss=cmssq8
+
+\font\eightssi=cmssqi8
+
+\font\ninebfx=cmbx9
+\font\eightbfx=cmbx8
+\let\sevenbfx = \sevenbf % defined in plain as cmbx7
+\font\sixbfx=cmbx6
+\let\fivebfx = \fivebf % defined in plain as cmbx5
+
+\font\ninett=cmtt9
+\font\eighttt=cmtt8
+
+\hyphenchar\tentt=-1 % inhibit hyphenation in typewriter type
+\hyphenchar\twelvett=-1 
+\hyphenchar\ninett=-1
+\hyphenchar\eighttt=-1
+
+\font\ninesl=cmsl9
+\font\eightsl=cmsl8
+
+\font\nineit=cmti9
+\font\eightit=cmti8
+\font\sevenit= cmti7
+
+% =========== margin note/version  font ===========
+\let\notefont = \eighttt
+
+% ============ THE FONT FAMILIES =========== 
+
+% =============  <....>point families =============
+% \pointsize and \documentpointsize are the point sizes of the 
+% present and document point sizes.
+% resets the default spacing 
+
+\newskip\ttglue
+\def\twelvepoint{\def\pointsize{twelve}%
+  \def\rm{\fam0\twelverm}%
+  \textfont0=\twelverm \scriptfont0=\tenrm \scriptscriptfont0=\sevenrm
+  \textfont1=\twelvei \scriptfont1=\teni \scriptscriptfont1=\seveni
+  \textfont2=\twelvesy \scriptfont2=\tensy \scriptscriptfont2=\sevensy
+  \textfont3=\twelveex \scriptfont3=\twelveex \scriptscriptfont3=\twelveex
+  \def\it{\fam\itfam\twelveit}%
+  \textfont\itfam=\twelveit
+  \def\sl{\fam\slfam\twelvesl}%
+  \textfont\slfam=\twelvesl
+  \def\bf{\fam\bffam\twelvebfxsca}%
+  \textfont\bffam=\twelvebfxsca \scriptfont\bffam=\tenbf
+   \scriptscriptfont\bffam=\sevenbfx
+  \def\tt{\fam\ttfam\twelvett}%
+  \textfont\ttfam=\twelvett \scriptfont\ttfam=\tentt
+  \tt \ttglue=.5em plus .25em minus .15em
+  \normalbaselines\rm % now so resets are ok. 
+  \setstrut
+  \ifd@ocsty \def\documentpointsize{twelve}%
+              \let\footerfont =\twelveit
+              \let\headerfont=\twelveit 
+              \let\footnotefont = \tenpoint
+              \let\smallerfont = \tenpoint
+              \let\cheadfont = \twentyonermsca
+              \let\sheadfont=\fourteenbfxsca
+              \let\ssheadfont=\twelvebfxsca
+              \let\sssheadfont=\twelvebfxsca
+              \let\dsssheadfont=\twelvebfxsca
+              \let\captionnumfont=\twelvebfxsca
+              \let\captiontitlefont=\relax
+              \let\captionbodyfont=\relax
+              \let\eqnumfont=\rm
+              \setspacings\fi
+  \let\bigfont = \fourteenrmsca
+  \let\biggfont = \eighteenrmsca
+  \let\bigggfont = \twentyonermsca 
+  \let\titlefont = \bigggfont
+  \let\sc=\tenrm
+  }
+
+
+% ======= elevenpoint fonts not in plain.tex ======= 
+
+\font\elevenssb = cmssbx10 scaled 1095  % no ss bold
+\font\elevencsc = cmcsc10 scaled 1095 % caps and small caps
+\font\elevenbfx = cmbx10 scaled 1095 % bold wide
+\font\elevenbfy = cmbsy10 scaled 1095 %bold math symbols?
+
+% ===== elevenpoint fonts 
+\font\elevenrm= cmr10 scaled 1095
+\font\elevenrmsca = cmr10 scaled 1095
+\font\elevenbf = cmb10 scaled 1095
+\font\elevenbfxsca = cmbx10 scaled 1095
+\font\elevenss = cmss10 scaled 1095 
+\font\elevenit = cmti10 scaled 1095
+\font\eleveni = cmmi10 scaled 1095
+\font\elevensl = cmsl10 scaled 1095
+\font\elevensy = cmsy10 scaled 1095
+\font\eleventt = cmtt10 scaled 1095
+\font\elevensc = cmcsc10 scaled 1095
+\let\sanss = \elevenss
+
+\let\elevenex=\tenex
+
+
+\def\elevenpoint{\def\pointsize{eleven}%
+  \def\rm{\fam0\elevenrm}%
+  \textfont0=\elevenrm \scriptfont0=\eightrm \scriptscriptfont0=\sixrm
+  \textfont1=\eleveni \scriptfont1=\eighti \scriptscriptfont1=\sixi
+  \textfont2=\elevensy \scriptfont2=\eightsy \scriptscriptfont2=\sixsy
+  \textfont3=\elevenex \scriptfont3=\elevenex \scriptscriptfont3=\elevenex
+  \def\it{\fam\itfam\elevenit}%
+  \textfont\itfam=\elevenit
+  \def\sl{\fam\slfam\elevensl}%
+  \textfont\slfam=\elevensl
+  \def\bf{\fam\bffam\elevenbf}%
+  \textfont\bffam=\elevenbf \scriptfont\bffam=\eightbfx
+   \scriptscriptfont\bffam=\sixbfx
+  \def\tt{\fam\ttfam\eleventt}%
+  \textfont\ttfam=\eleventt \scriptfont\ttfam=\tentt
+  \tt \ttglue=.5em plus .25em minus .15em
+  \normalbaselines\rm % now so resets are ok. 
+  \setstrut
+  \ifd@ocsty \def\documentpointsize{eleven}%
+              \let\footerfont=\elevenit
+              \let\headerfont=\elevenit 
+              \let\footnotefont = \ninepoint
+              \let\smallerfont = \ninepoint
+              \let\cheadfont = \eighteenrmsca
+              \let\sheadfont=\fourteenbfxsca
+              \let\ssheadfont=\elevenbfxsca
+              \let\sssheadfont=\elevenbfxsca
+              \let\dsssheadfont=\elevenbfxsca
+              \let\captionnumfont=\elevenbfxsca
+              \let\captiontitlefont=\relax
+              \let\captionbodyfont=\relax
+              \let\eqnumfont=\rm
+              \setspacings\fi
+  \let\bigfont = \twelvermsca
+  \let\biggfont = \fourteenrmsca
+  \let\bigggfont = \eighteenrmsca
+  \let\titlefont = \bigggfont
+  \let\sc=\ninerm
+  }
+
+
+\def\tenpoint{\def\pointsize{ten}\def\rm{\fam0\tenrm}%
+  \textfont0=\tenrm \scriptfont0=\sevenrm \scriptscriptfont0=\fiverm
+  \textfont1=\teni \scriptfont1=\seveni \scriptscriptfont1=\fivei
+  \textfont2=\tensy \scriptfont2=\sevensy \scriptscriptfont2=\fivesy
+  \textfont3=\tenex \scriptfont3=\tenex \scriptscriptfont3=\tenex
+  \def\it{\fam\itfam\tenit}%
+  \textfont\itfam=\tenit
+  \def\sl{\fam\slfam\tensl}%
+  \textfont\slfam=\tensl
+  \def\bf{\fam\bffam\tenbfx}%
+  \textfont\bffam=\tenbfx \scriptfont\bffam=\sevenbfx
+   \scriptscriptfont\bffam=\fivebfx
+  \def\tt{\fam\ttfam\tentt}%
+  \textfont\ttfam=\tentt
+  \tt \ttglue=.5em plus .25em minus .15em
+  \normalbaselines\rm
+  \setstrut
+  \ifd@ocsty \def\documentpointsize{ten}\let\footerfont =\tenit 
+              \let\headerfont=\tenit 
+              \let\footnotefont = \eightpoint 
+              \let\smallerfont = \eightpoint
+              \let\cheadfont = \eighteenrm 
+              \let\sheadfont=\twelvebfxsca
+              \let\ssheadfont=\tenbfx
+              \let\sssheadfont=\tenbfx
+              \let\dsssheadfont=\tenbfx 
+              \let\captionnumfont=\tenbfx
+              \let\captiontitlefont=\relax
+              \let\captionbodyfont=\relax
+              \let\eqnumfont=\rm
+              \setspacings\fi
+  \let\bigfont = \twelvermsca
+  \let\biggfont = \fourteenrmsca
+  \let\bigggfont = \eighteenrmsca
+  \let\titlefont = \bigggfont
+  \let\sc=\eightrm }
+
+\def\ninepoint{\def\pointsize{nine}\def\rm{\fam0\ninerm}%
+  \textfont0=\ninerm \scriptfont0=\sixrm \scriptscriptfont0=\fiverm
+  \textfont1=\ninei \scriptfont1=\sixi \scriptscriptfont1=\fivei
+  \textfont2=\ninesy \scriptfont2=\sixsy \scriptscriptfont2=\fivesy
+  \textfont3=\tenex \scriptfont3=\tenex \scriptscriptfont3=\tenex
+  \def\it{\fam\itfam\nineit}%
+  \textfont\itfam=\nineit
+  \def\sl{\fam\slfam\ninesl}%
+  \textfont\slfam=\ninesl
+  \def\bf{\fam\bffam\ninebfx}%
+  \textfont\bffam=\ninebfx \scriptfont\bffam=\sixbfx
+   \scriptscriptfont\bffam=\fivebfx
+  \def\tt{\fam\ttfam\ninett}%
+  \textfont\ttfam=\ninett
+  \tt \ttglue=.5em plus .25em minus .15em
+  \normalbaselines\rm
+  \setstrut
+  \ifd@ocsty \def\documentpointsize{nine}\let\footerfont =\nineit 
+              \let\headerfont=\nineit 
+              \let\footnotefont = \eightpoint
+              \let\smallerfont = \eightpoint
+              \let\cheadfont = \eighteenrm 
+              \let\sheadfont=\tenbfx
+              \let\ssheadfont=\tenbfx
+              \let\sssheadfont=\tenbfx
+              \let\dsssheadfont=\tenbfx 
+              \let\captionnumfont=\tenbfx
+              \let\captiontitlefont=\relax
+              \let\captionbodyfont=\relax
+              \let\eqnumfont=\rm
+              \setspacings\fi
+  \let\bigfont = \twelvermsca
+  \let\biggfont = \fourteenrmsca
+  \let\bigggfont = \eighteenrm 
+  \let\titlefont = \bigggfont
+  \let\sc=\sevenrm }
+
+
+\def\eightpoint{\def\pointsize{eight}\def\rm{\fam0\eightrm}%
+  \textfont0=\eightrm \scriptfont0=\fiverm \scriptscriptfont0=\fiverm
+  \textfont1=\eighti \scriptfont1=\fivei \scriptscriptfont1=\fivei
+  \textfont2=\eightsy \scriptfont2=\fivesy \scriptscriptfont2=\fivesy
+  \textfont3=\tenex \scriptfont3=\tenex \scriptscriptfont3=\tenex
+  \def\it{\fam\itfam\eightit}%
+  \textfont\itfam=\eightit
+  \def\sl{\fam\slfam\eightsl}%
+  \textfont\slfam=\eightsl
+  \def\bf{\fam\bffam\eightbfx}%
+  \textfont\bffam=\eightbfx \scriptfont\bffam=\fivebfx
+   \scriptscriptfont\bffam=\fivebfx
+  \def\tt{\fam\ttfam\eighttt}%
+  \textfont\ttfam=\eighttt
+  \tt \ttglue=.5em plus .25em minus .15em
+  \normalbaselines\rm
+  \setstrut
+  \ifd@ocsty \def\documentpointsize{eight}\let\footerfont =\eightit
+                  \let\headerfont=\eightit 
+                  \let\footnotefont = \eightpoint 
+                  \let\smallerfont = \eightpoint
+                  \let\cheadfont = \fourteenrmsca
+                  \let\sheadfont=\eightbfx
+                  \let\ssheadfont=\eightbfx
+                  \let\sssheadfont=\eightbfx
+                  \let\dsssheadfont=\eightbfx
+                  \let\captionnumfont=\eightbfx
+                  \let\captiontitlefont=\relax
+                  \let\captionbodyfont=\relax
+                  \let\eqnumfont=\rm
+                  \setspacings\fi
+  \let\bigfont = \tenrm
+  \let\biggfont = \twelverm
+  \let\bigggfont = \fourteenrmsca
+  \let\titlefont = \bigggfont
+  \let\sc=\sevenrm }
+

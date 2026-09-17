@@ -1,0 +1,397 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\marginnotestrue
+\chcode{start}
+\def\cqu{}
+
+
+\draftversion
+\chapterhead{start}{STARTING\cr STOPPING\cr and FINISHING}
+This chapter discusses the commands that are required to actually process
+a \tex\ or \intex\ document, and to answer the ``|?|'' when \tex\ runs into an
+error. 
+Section~{\ref{printing}} gives the most important options available in \tex print,
+the program that actually prints the \intex\ file.
+
+Since the initial production of a document is almost always in the ``draft''
+mode, the 
+ \intex\ default is |\draftversion|. This mode includes the ``{\eightrm Draft
+Version :} {\eightit Date}'' at the bottom of the page and margin notes that
+include  {\it tags} and their values. This version of the book was a produced
+with |\draftversion| but with |\marginnotesfalse| for all but this chapter
+and the one on auto numbering and tagging (\ref{auto}). The really {\bf final} version of
+this book will probably be produced with 
+|\finalversion|. 
+Section~\ref{finalversion} discusses the changes to make when
+processing the ``final'' version of a document. 
+
+\intex, especially in conjunction with Multilingual \mtex, supports both
+English and French \dots\ in the same document on a  paragraph by
+paragraph basis. English,
+both for \intex\ messages and hyphenation is the default and is called by
+|\englishversion|. |\versionfrancaise| invokes 
+French messages, hyphenation, and spacing. 
+To change only the hyphenation and spacing, |\ehyph| is used for
+English and |\fhyph| is used for French. 
+
+
+\shead{startcom}{Command List}
+The commands in this list are organized in three sections,
+Creation, Termination and Language, 
+\tex print, and ``?'' answer and interrupt.
+The Language commands  include those related to choosing the
+particular language (French or English) and efficient commands for just changing
+spacing and hyphenation rules and not the messages. 
+\comhead{Creation, Termination  and Language Commands}
+\begintwocolumn
+\pla|\bye|
+\ext|\done|
+\ext|\draftversion|
+\ext|\ehyph|
+\pri|\end|
+\ext|\englishversion|
+\ext|\fhyph|
+\ext|\finalversion|
+\pri|\hyphenation|
+\ext|\language| 
+\ext|\marginnotestrue|
+\ext|\marginnotesfalse|
+\ext|\versionfrancaise|
+\endtwocolumn
+
+\shead{Doc}{Document Creation}
+To create a document, you first need something to write. Enter
+the text into a file on whatever system you are using. In this book it is
+assumed that the system you are using is a VAX11/780 running the VMS operating system with
+the appropriate file names or system conventions. 
+
+There are basically three steps to producing a document. The first is to enter
+the information, with all of the appropriate \tex\ conventions into a file.
+The second is for \tex\ to process it, and the third is for \tex print,
+\tex's printing system to print it out.  Any output device that supports
+typesetting can be used if it has been properly configured for \tex. 
+This could be a dot matrix printer (heaven forbid), a phototypesetter
+such as the Alphatype, or PostScript laser printer.
+
+\shead{docprep}{Preparing the File}
+All that is required to prepare the file is to create the file using your
+favourite editor. You might try the example given in Chapter \ref{descom}.
+A file of \tex\ commands is normally given the name |<your file name>.tex|
+and it can be referred to by only |<your file name>| with \tex\ automatically
+extending it. To tell \intex\ that the your file has is completed, the
+command |\done| should be the last command in the file. \tex\ will ignore
+everything after a |\done|. |\done| not only terminates the file, it also
+{\it fills} the last page so that the spacing is correct. The primitive
+command for \tex\ to terminate processing is |\end|. This is {\bf not}
+recommended while using \intex\ because the last page is not reasonably
+processed and it will terminate processing while inside a subdocument,
+something not ordinarily desired (see Chapter~\ref{subdoc} for discussion on
+the details of subdocuments). 
+
+{\it Plain} \tex\ supplies the command |\bye| which has an
+|\end| imbedded in it and also cleans up the last page. |\done| is 
+similar but has a few additional features including a compatibility
+with the |\subdocumentmacros| commands. |\done| is recommended 
+for use in \intex.
+
+
+\shead{subfile}{\tex ing a File}
+After the file has been completed, you leave the editor and return to the
+operating system where you will be greeted by the prompt of a \$\ sign. 
+For example if the 23$^{rd}$ psalm file is called |psalm23.tex| then
+\begintt
+$inrstex psalm23
+\endtt
+This will submit the job. 
+If you forget to put in your file name, \tex\ will return with its
+interactive prompt, the |*|, and ask you for a file name. 
+At this point you will see the following on your 
+screen.
+
+\begingroup \eightpoint
+\begintt
+This is MLTeX, Version 3.1+ 
+(psalm23.tex [1] )
+Output written on psalm23.dvi (1 page, 540 bytes).
+\endtt
+\endgroup
+Do not be deceived. \intex\ was indeed loaded \dots\ the evidence will be in
+the |psalm23.lis| file. The directories containing the files are completely
+given, and will be yours instead of that shown. The |psalm23.log| shows that
+\intex\ was indeed preloaded. This file contains
+
+\begingroup\eightpoint
+\begintt
+This is MLTeX, Version 3.1+ (format=inrs3_mlb 91.8.22)  2 SEP 1991 02:59
+**&/usr/users/u1/mike/inrstex/inrs3_mlb psalm23
+(psalm23.tex [1] )
+Output written on psalm23.dvi (1 page, 540 bytes).
+\endtt
+\endgroup
+The version numbers, for both \tex\ and \intex\ will vary with time and
+installation. 
+If you are not using ML\TeX\ the two ``version'' lines will be more
+like 
+\begingroup\eightpoint
+\begintt
+This is TeX, Version 3.14 
+
+or
+
+This is TeX, Version 3.14 (format=inrs3_mlb 91.8.22)  2 SEP 1991 02:59
+
+\endtt 
+\endgroup
+for the terminal and list file respectively. 
+
+The default form of the interaction of \tex\ with you is to stop on an error.
+At an error, the display will halt and \tex\ gives you a ``~{\tt ?}~'' as a prompt. At
+this point if you reply with an |x| or an |e|, the job will terminate cleanly
+and you can print what you have to that point. An |s| will cause \tex\ to
+continue, but not to pause for further errors; a |<cr>| will continue to the
+next error; an |r| is like |s| but will not stop even if it cannot find a
+file; a |q| is a nonstop mode that also suppresses all output to your
+terminal. 
+
+
+Sometimes \tex\ seems to be in deep trouble and cannot extricate itself. At
+this point  |^C| or |<control> C| will send \tex\ a message that it should
+stop. It will after the end of its present command, and return to you the
+``~{\tt ?}~''. At that point an |x| will terminate the job, {\bf and} give you output
+that you can print. If all else fails, a |^Y| will terminate the job,
+uncleanly, and there will be no help to fix it.
+
+Sometimes \tex\ stops with an |*|. When this happens \tex\ is looking for a
+command. Usually an |\end| or |\done| will satisfy it and terminate cleanly.
+
+Finally, \tex\ sometimes has trouble reading a file and asks for another name.
+The only way out of this, cleanly, is to give it a file name. You should have
+an empty or |null.tex| in your directory for such eventualities. This will
+allow \tex\ to continue whereupon a |^C| will interrupt. 
+
+
+\shead{additionalfiles}{Additional Files}
+Whenever \tex\ processes a job (your file), it creates an internal name that
+is referred to in a \tex\ file as \@|\jobname|. This is the same as the file
+name submitted to \tex\ or \intex\ {\bf without} the |.tex| extension.
+
+Both \tex\ and \intex\ use this |\jobname| to create other files with
+different extensions. All \tex\ and \intex\ jobs create
+create a second file 
+called |\jobname.lis|. In this file is a complete listing of the
+messages and prompts sent to your terminal along with information about
+problems that may have existed. It is useful for correcting errors.
+If there is any output that can be printed, this is placed in a file with the
+name |\jobname.dvi|. This is the file used by \tex print.
+
+In addition to these two files, \intex\ creates and uses files for special
+purposes such as building table of contents, lists of figures, or 
+citation lists. These are only produced when some automatic feature of
+\intex\ is active. The complete list of these files is
+\bshortcomlist
+|\jobname.ctg|&created by the first |\cite| command used to accumulate the
+citation tags for a list of citations or references.\cr
+|\jobname.cfm|&{\bf NOT} created by \intex\ but by the user. This file holds
+the citation forms to be used when actually printing the citation in the list
+of citations. \cr
+|\jobname.dvi|&created by \tex\ for any (partly) successful \tex\ or \intex\
+job. This is used by \tex print.\cr
+|\jobname.fig|&created with a |\openlistfile{fig}| and used to accumulate
+the figure list.\cr
+|\jobname.lis|&created by \tex\ for all jobs. This contains the terminal
+messages and errors  along with more detail on overfull boxes.\cr
+|\jobname.tag|&created by |\autonumberingon| and used to accumulate the tags
+and other special information necessary for symbolic references to sections,
+equations, etc in the text.\cr
+|\jobname.tbl|&created with a |\openlistfile{tbl}| and used to accumulate
+the table list.\cr
+|\jobname.toc|&created with a |\openlistfile{toc}| and used to accumulate
+the table of contents.\cr
+\eshortcomlist
+
+\shead{printing}{\tex print --- Printing your Document}
+After \tex\ has successfully produced your |.dvi| file it is submitted for
+printing, using the same example,  by 
+\begintt
+$dvialw psalm23 -b 
+\endtt
+\intex\ makes the same irrational assumptions of drivers as other macro
+packages such as {\tt plain}, namely that the initial position
+on the page is at (1in, 1in). However these assumptions are not hard wired.
+\intex\ has two commands |\hprintoffset| and |\vprintoffset| which are
+given default values of 1in respectively. These may be changed at will. 
+
+\beginblockmode
+\ext\@|\hprintoffset = <dimen>|
+\nbr
+This offsets, horizontally,
+\intex's natural margins, which would be flush with the top of
+the page by {\tt <dimen>}. The default is |\hprintoffset = 1in|
+
+\mbr\ext\@|\vprintoffset = <dimen>|
+\nbr
+This offsets, vertically, 
+\intex's natural margins, which would be flush with the top of
+the page by {\tt <dimen>}. The default is |\vprintoffset = 1in|
+\endblockmode
+
+
+The {\tt -b} option prints the pages {\tt backwards}, really normal,
+order from the lowest number to the highest. A simple batch file can hide
+this messiness\footnote{\dagger}{For the INRS/BNR VAX }
+use {\tt HELP DVIALW to find a list of all the command line options.}.
+The most important command line option that you can use gives
+the ability to print only
+a few pages of the file. {\tt DVIALW} reports output pages as $[p\{l\}]$
+where $p$ is the {\it physical} page number and $l$ is the {\it logical}
+page number.
+The first example will print from {\it physical} page 6 to the end of the
+document. The second example from page 6 to page 12, and the third example
+from page 6 to page 12 in steps of 2, {\it ie} pages 6, 8, 10, and 12.
+
+
+\beginttverbatim
+$dvialw psalm23 -b -o6
+$dvialw psalm23 -b -o6:12
+$dvialw psalm23 -b -o6:12:2
+\endttverbatim
+
+
+\shead{finalversion}{The ``Final'' Version}
+\intex\ has number of features that are quite useful while putting together a
+document but which appear in the ``draft'' version but not in the ``final''
+version. 
+The default for \intex\ is |\draftversion|. This puts all the tags in
+the margin and puts ``Draft Version: 
+{\it date}''\footnote{\dagger}{version pr\'eliminaire: {\it date} en 
+fran\c cais} at the bottom of the page. To create the final version the
+command |\finalversion| should be put at the very beginning of your document.
+
+
+\shead{stcomforms}{Command Forms}
+\nosheadbreak
+\dssshead{Creation and Termination Commands}
+\beginblockmode
+\pla\@|\bye|
+\nbr
+Cleanly terminates a file. Actual meaning is 
+``|\par \vfill \supereject \end|''. However, it will also {\bf terminate}
+\tex\ processing if found in a {\it subdocument.} See Chapter~\ref{subdoc}
+for details.
+
+\mbr
+\ext\@|\done|
+\nbr
+This is the only way to terminate a document or subdocument in 
+\intex\ without creating problems.
+Does everything |\bye| does along with checking  whether certain groups are
+properly ended. 
+
+\mbr
+\ext\@|\draftversion|
+\nbr
+This is the \intex\ default form. It prints margin notes when tags and
+autonumbering are used and puts a draft version note in the bottom margin. It
+is turned off using |\finalversion|.
+
+\mbr
+\pri\@|\end|
+\nbr
+Terminates a \tex\ job, even if it is in a subdocument. See
+Chapter~\ref{subdoc}. 
+
+\mbr
+\ext\@|\englishversion  \ehyph|
+\nbr
+This is the default for \intex. All the messages are in English, along with
+the various headings such as Chapter, and Appendix. Hyphenation is done by
+English rules, as is sentence and word spacing. 
+\@|\ehyph| just invokes English hyphenation rules and does not affect messages.
+The other version that exists
+is |\versionfrancaise|
+
+\mbr
+\ext\@|\finalversion|
+\nbr
+This removes the marginal notes and the ``Draft Version'' note in the bottom
+margin. It should be used for the ``final'' copy.
+
+\mbr
+\ext\@|\hyphenation{<exceptions>}|
+\nbr
+This command is used to correct hyphenation of a specific word when \tex\
+does it incorrectly. It is generally needed only for English. Without \mtex,
+the word is entered into the hyphenation exception table. With \mtex, it is
+entered into the hyphenation table corresponding to the language that is
+active at the time the command is executed. For example, if English
+(|\language=0|) is active, then |\hyphenation{man-u-script}| will enter the
+word ``manuscript'' into the hyphenation exception table with possible
+hyphens at those places where there is a ``~-~''. 
+
+\mbr 
+\ext\@|\language [=] <integer>|
+\nbr
+Normally this command will not need to be used. \intex\ has |\language=0| for
+English and |\language=1| for French. Additional languages may be added. If
+\intex\ is used in conjunction \mtex, then |\language| is an integer
+parameter; otherwise, it is a |\count|. For details on \mtex, see ``A
+Multilingual \mtex''. 
+
+
+\mbr
+\ext|\marginnotestrue  \marginnotesfalse|
+\nbr
+If \@|\marginnotestrue|, then the margin notes will be produced. They will
+not be produced when \@|\marginnotesfalse|. These can be used to override the
+defaults in |\draftversion| and |\finalversion|.
+
+\mbr
+\ext\@|\versionfrancaise  \fhyph|
+\nbr
+This will produce French titles, messages, and spacing. When used with
+Multi-lingual \mtex,  it also produces French hyphenation.
+\@|\fhyph| just invokes French hyphenation rules and does not affect messages.
+It should be placed at the beginning of the
+file.
+\endblockmode
+\dssshead{\tex print Commands}
+These commands are dependent upon the actual print driver that is being
+used. For DVIALW the following command line switches are used:
+
+\beginblockmode
+\@|DVIALW Command line options|
+\nbr
+\endblockmode
+\bl 
+\li -b  : Print the file in normal order. The default is to print the file
+      beginning with the last page.
+
+\li -c\# : Select the number of copies to print ... each page is printed
+      \# times. eg -c42 will print 42 copies of each page.
+
+\li -h  : Select landscape printing.
+
+\li -i  : Select Legal printing.
+
+\li -o  : Select output page range ... all numbers are the "physical" page
+      numbers, not the logical pages. DVIALW reports page output in the
+      format of [p{l}] where where p is the "physical' page number and 
+      l is the "logical' page number. 
+
+        -o\#      specifies start page
+
+        -o\#:\#    specifies start page and end page
+
+        -o\#:\#:\#  specifies start page, end page and step
+
+\li -r  : Select manual feed. The laserwriter will wait for the insertion of
+      manual pages.
+
+\li -x\#{\tt <}dim{\tt >} : Set left margin. -x0in sets the left margin to 0in.
+
+\li -y\#{\tt <}dim{\tt >} : Set top margin. -y0in sets the top margin to 0in.
+\el
+\ejectpage
+\marginnotesfalse
+\done 
+

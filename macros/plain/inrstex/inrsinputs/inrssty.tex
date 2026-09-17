@@ -1,0 +1,30 @@
+
+% this assumes the basic paperstyle of INRSTeX and only defines  macros for 
+% covers
+% INRS Report cover Macros
+\newtoks\titrederapport  \titrederapport = {Titre de Rapport}
+\newtoks\numeroderapport \numeroderapport = {Numero de Rapport}
+\newtoks\datederapport  \datederapport = {Date de Rapport}
+\newtoks\auteursderapport  \auteursderapport = {Auteurs de Rapport}
+\newtoks\titrespecial \titrespecial = {}
+\def\faitepagetitre{\begingroup \leftmargin=1.75in
+                    \fullpagestyle
+                    \vglue 3.8cm
+                    \line{\hss\vbox{\hsize=8cm\twelvebfxsca\lineskip=2pt
+                            \paragraphcenterline \the\titrederapport
+                            \medskip \it
+                            \the\auteursderapport}\hskip 3.4cm}
+                    \vfill
+                    \centerline{\vbox{\hsize=10cm \it\paragraphcenterline
+                              INRS-T\'el\'ecommunications \cr
+                              3 Place du Commerce \cr
+                              Ile des Soeurs, Qu\'e. \cr
+                              CANADA   H3E 1H6 }}
+                    \vskip 2.5cm
+                    \centerline{\the\datederapport}
+                    \vfill
+                    \centerline{Rapport technique de 
+                    l'INRS-T\'el\'ecommunications no. \the\numeroderapport}
+                    \medskip   
+                    \the\titrespecial
+                    \ejectpage\endgroup}

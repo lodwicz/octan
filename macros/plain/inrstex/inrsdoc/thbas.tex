@@ -1,0 +1,220 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{bas}
+\def\testhrule{\hrule}
+\def\testvrule{\vrule}
+\def\cqu{\cquote{Once a ``question'' is perfectly understood, we
+must free it of every conception superfluous to its meaning \dots}{
+ Rules for the Direction of the Mind, Rule XIII, 
+Ren\'e~Descartes (1596-1650)}}
+
+\chapterhead{bas}{BASIC IDEAS\cr and\cr TERMINOLOGY}
+This chapter introduces some more terminology used in \tex\ and \intex. These
+are {\it boxes, glue, dimensions,  modes, penalties, groups, tokens, token lists,
+definitions, macros, assignments} and {\it parameters}. 
+
+\shead{boxes}{Boxes}
+
+\vbox{\hrule\hbox{\vrule\vbox{\hsize=\hcolumnsize
+\tex\ can be imagined as assembling boxes, in various {\it modes}, 
+much in the same way that a child
+builds a castle. 
+Pages are formatted by glueing together such boxes. This page has some of the
+component boxes outlined so you can see them. In fact this paragraph 
+is surrounded by a box that is made up by \tex's page paragraph builder,
+when it pastes together a page. However this process starts from the bottom
+up. First \hh{l}\hh{e}\hh{t}\hh{t}\hh{e}\hh{r}\hh{s} are glued together
+horizontally to make the word \hh{letters}. Then all the words in a paragraph
+are glued together, with appropriate 
+interword spacing, in a single long line. Finally this long line is broken
+into page-width lines in the nicest way.
+}\vrule}\hrule}
+
+A {\it horizontal} box, one with a {\it horizontal list} such as the 
+words in a paragraph, is an |\hbox|. A
+{\it vertical} box, for example the one that contains the 
+vertical list of |\hbox|es for the lines, 
+is called a |\vbox|.
+The most important |\vbox| for \tex\ is the one that is used to collect the
+lines that make up the page. This is box 255, and it is on this box that the
+page builder works. There are, in fact, 256 boxes available to use. Some of
+these have been already used by |plain| or an extension package. 
+
+
+\shead{glue}{Glue}
+Boxes are not the whole story. Between boxes there is {\it glue}. This glue
+can stretch or shrink and is stretched or shrunk in order to make a list of
+boxes inside another, such as words on a line, evenly fill out the line. This
+is how words are right justified on a line. When there is not enough stretch
+or shrink available, \tex\ complains about an {\it underfull} or {\it
+overfull} box. Overfull boxes are indicated on the document with an ugly
+black vertical line at the end of the offending box. Underfull boxes cause
+error messages and the glue is stretched beyond its limits. 
+When glue is inserted, it shows up as blanks or white space.
+More detail on glue will be found in Chapter~\ref{dimnum}.
+
+\let\testhrule=\relax
+\let\testvrule=\relax
+
+\shead{dimensions}{Dimensions}
+Boxes have dimensions that consist of a |<decimal number>| and a two letter
+unit of measurement such as |in| for inches or |cm| for cm. Thus ``2.54cm''
+is another way of saying ``1in''. When \tex\ is processing some text looking
+for a dimension, it reads the next two letters after a number and attempts to
+interpret this as a unit of measure, whether or not there is a space or non
+letter following. More details on dimensions will be found in
+Chapter~\ref{dimnum}. 
+
+\shead{modes}{Modes}
+When \TeX\  is
+putting together a horizontal list of boxes, such as characters in a line,
+it is said to be in the {\it horizontal}  mode. The result of working on a 
+{\it horizontal} list of boxes is a {\it horizontal} box. 
+
+If \TeX\  is putting together
+boxes {\bf inside} another {\it horizontal} box, it is in the {\it internal}  {\it horizontal} mode.
+Lines are assembled as a {\it vertical} list  to create {\it vertical} boxes. When 
+assembling {\it vertical} list of boxes to makeup a page, \TeX\  is said to be in
+{\it vertical} mode. When processing a {\it vertical} list of boxes to make up a
+{\it vertical} box it is in the {\it internal vertical} mode. \tex's page builder is in
+action when \tex\ is in {\it vertical} mode. When in {\it internal \it vertical} mode it is
+not. In fact this is about the {\bf only} difference between the two 
+modes.\footnote{\ddagger}{This was not the case in \tex78.} 
+
+\TeX\ has two other modes, {\it mathematics} mode, and {\it display mathematics}
+mode. It is in these modes that mathematical equations, subscripts, and 
+superscripts are produced. You {\bf cannot} create subscripts and superscripts
+in non {\it mathematics} mode. {\it Mathematics} mode is used to imbed {\it mathematics} 
+or mathematical symbols amongst normal text. {\it Display mathematics} will 
+create a displayed equation.
+
+For the most part \tex\ will flip from one mode to another automatically when
+it meets a command that should occur in one of the specific 
+modes.
+
+\shead{penalties}{Penalties}
+\tex\ does its work by assigning {\it penalties} to various visually
+disturbing aspects of the page. It then tries to make the total of these
+penalties as low as possible, and when it happens, confidently declares that
+the best possible job has been done. Sometimes the results are not as nice as
+either you or \tex\ would like. \tex\ not liking it means that there was no
+feasible way to do things, such as build a paragraph, or break a page without
+violating the norms of good taste as embodied in such things as glue
+stretching badness on a line. The result is {\it underfull} or {\it overfull}
+boxes. In some cases, the result is just plain awful. \tex\ has about 40
+parameters, and the various extensions many more. Any of these may be changed
+to improve a given situation. In fact, since \tex\ actually assigns penalties
+based on the context or state of a page, the penalty approach will
+theoretically satisfy any objective. Difficulties arise in choosing the
+penalties to match your objectives and upon obtaining a consensus on
+objectives. The playing with penalties is an advanced occupation.
+
+\shead{grouping}{Grouping}
+One of the most important ideas in \tex, is that of a {\it group}. 
+Commands in \intex\ of the form |\begin... \end...|, 
+the inside of boxes and  fields in an |\halign| always 
+form a  {\it group}. The |{...}| also form a group {\bf unless they are
+being used to determine the parameters for a definition}.
+
+A {\it group} allows for an action to be restricted to a small locality,
+and to easily revert to the previous form when going outside the group. For
+instance, this paragraph is set in roman type. The command |\bf| \bf causes
+everything after it to appear in bold face type until there is something like
+a |\rm| \rm to return it back to normal. However if the |\bf| were placed
+inside a group, the effect of the command will be undone when leaving the
+group {\bf without} you having to remember what to undo. To insert some
+{\bf bold face type} in the midst of roman type just enclose it in a group
+like |{\bf bold face type}| and the roman will magically reappear after the
+group. 
+
+Both |{...}| and the |\begingroup...\endgroup| pairs define groups. The
+major difference is that the text inside |{...}| is absorbed by \tex\
+immediately as a single entity while the passing through a |\begingroup| just
+causes \tex\ to note that it has gone into another level of grouping.
+
+Braces |{...}| are most useful to define parameter groups for definitions
+For instance the command |\sqrt{<math expression>}| uses the |{...}| to
+determine exactly what should be under the square root sign.  They are also
+useful for short groups within the body of the text.
+
+However, for major, long groups the |\begingroup...\endgroup| pair should 
+be used.
+For instance, in \intex, |\beginappendices| begins a group which is
+ended when you say |\endappendices|. While inside that group special
+changes to the format of equation numbers and section references are
+occurring. When the group is left, these are undone. In fact, in \intex, any
+command that has the form |\begin...| will enter a group and have a
+corresponding |\end...| associated with it that must be used to properly
+leave the group. 
+
+While \tex\ is still reading commands, before it has settled down to actually
+doing its work, braces and |\begingroup...\endgroup| pairs do not need to
+match. This is a perfectly valid grouping 
+|{...\begingroup...}...\endgroup|. 
+In fact |{ ...\endgroup| is not a valid grouping. 
+When the information in the \tex\ commands get finally
+deep down inside \tex, all groups are the same and if a group is opened it
+must eventually be closed. This is possible because of the special way that
+\tex\ destroys braces while it is digesting commands. \tex\ never destroys
+|\begingroup...\endgroup| pairs.
+
+\shead{tokenlists}{Tokens and Token Lists}
+When \tex\ reads your file, it {\bf immediately} changes the input characters
+{\it tokens}. In this sense a command like |\begingroup| is a {\bf single}
+token. A {\it token list} is simply a list of tokens. One of the features of
+\tex\ that is used in \intex\ is the named {\it token list}. For instance,
+\intex\ defines the token list |\chaptername| to be the chapter name. This
+chapter has a name
+\begintt
+\chaptername = {Basic Ideas\cr and\cr Terminology}
+\endtt
+Note that there are |\cr| in this list that do not give any trouble. To
+insert the contents of a {\it token list} into the text, the command
+|\the\chaptername| is used.  The following
+\begingroup
+\chaptername = {Basic Ideas\cr and\cr Terminology}
+$$
+\centerline{\vbox{\halign{\strut\hss #\cr 
+                 \the\chaptername \cr}}}
+$$
+\endgroup
+is obtained by
+\begintt
+\centerline{\vbox{\halign{\strut\hss #\cr 
+                 \the\chaptername \cr}}}
+\endtt
+\def\mjf{Michael J. Ferguson}
+
+\shead{defsintro}{Definitions or Macros}
+Both \tex\ and \intex\ let the user define their own commands. These are of
+the form |\<name>| and are single tokens. The terms {\it definitions} and
+{\it macros} are to be considered identical. If for some reason your name
+occurs frequently in your text, the following would make typing easier:
+\begintt
+\def\mjf{Michael J. Ferguson}
+\endtt
+would allow for ``\mjf, \mjf, \mjf'' to be inserted in the text by merely typing
+``|\mjf, \mjf, \mjf|''. More details on definitions will be found in
+Chapter~\ref{defs} and in the \texbook.
+
+All the internal \intex\ macro definitions have an {\tt @} as the second
+letter. Since an {\tt @} is not normally allowed in definition names there is
+no danger that you will inadvertently redefine a command that is used by
+\intex\ but is not found in the command index (following page \pref{index}).
+
+
+\shead{assignments}{Assignments and Parameters}
+{\it Parameters} in \tex\ and \intex\ are used to keep and allow modification
+of such things as page sizes,  list spacing, or page margins. They are all
+modified by 
+\begintt
+\<parameter name> [=] <new value>
+\endtt
+where the ``|=|'' is optional. For example 
+\begintt
+\houterpagesize = 8in
+\endtt
+will change the width of the page to eight inches. 
+
+\ejectpage
+\done 

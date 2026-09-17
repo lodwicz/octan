@@ -1,0 +1,480 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{mateq}
+
+\def\cqu{\cquote{Having got our equations, we must proceed to
+carry out such operatins as we have neglected, taking care never to multiply
+when we can divide}{Rules for the Direction of the Mind, Rule XX, 
+Ren\'e~Descartes (1596-1650)}}
+
+\chapterhead{mateq}{MATHEMATICS:\cr EQUATION\cr SETUP}
+\tex\ makes the typesetting of the most difficult expressions relatively
+easy. This chapter lists and shows examples of the special forms supplied by
+{\it plain}. For the finer points of mathematic equation setup, the reader is
+referred to the \texbook~[\cite{[Knut84]}]. For more advanced mathematics macro
+and accenting capabilities, the AMS\tex~[\cite{[Amst84]}] package is
+recommended. 
+
+\intex\ supplies all that is in {\it plain} plus
+\beginlist
+\li $\bullet$ an  autonumbering feature, using |\aneq|, |\aneqtag|, or |\autoeqnum|
+for equations, 
+\li $\bullet$ a |\math| and |\displaymath| 
+for those who don't like |$|, 
+\li $\bullet$ a
+|\leftequationnumbering| and |\rightequationnumbering| that will magically
+shift all the equation numbers from the side specified by the form,
+\li $\bullet$ and a  |\mathopen| command that will cause aligned equations to increase
+their spacing. 
+\endlist
+
+
+The two basic commands |\math| and |\displaymath| can be used to invoke either
+scriptstyle or displaystyle mathematics in running text. For instance
+|\math{\sum_0^n}| gives \math{\sum_0^n} while |\displaymath{\sum_0^n}| gives 
+\displaymath{\sum_0^n}. 
+
+In addition there is a tagging mechanism that enables the
+symbolic referencing of equations, both forward and backward. 
+
+
+
+\shead{eqcoms}{Command List}
+\begintwocolumn
+\hfuzz = 20pt %temporary
+\pla|\abovewithdelims|
+\pla|\atop|
+\pla|\atopwithdelims|
+\ext|\aneq   \aneqtag|  
+\ext|\autoeqnum|
+\pla|\bordermatrix|
+\pla|\cases|
+\pla|\cdot|
+\pla|\cdots|
+\pla|\choose|
+\pla|\ddots|
+\ext|\displaymath|
+\pla|\eqalign|
+\pla|\eqalignno|
+\pla|\eqno|
+\pla|\ldots|
+\ext|\leftequationnumbering|
+\pla|\leqno|
+\pla|\leqalignno|
+\ext|\math|
+\ext|\mathopen|
+\pla|\matrix|
+\pri|\noalign|
+\pla|\openup|
+\pla|\over|
+\pla|\overbrace|
+\pla|\overline|
+\pla|\overwithdelims|
+\pla|\phantom|
+\pla|\pmatrix|
+\ext|\rightequationnumbering|
+\pla|\smash|
+\ext|\sphantom|
+\pla|\sqrt|
+\pla|\underbrace|
+\pla|\underline|
+\pla|\vphantom|
+\endthreecolumn
+
+\shead{eqbasics}{Mathematic Equation Basics}
+To put some mathematics, either symbols or expressions, in running text you
+must surround them by a pair of single |$| like |$<expression>$|. An example
+is |$x^y$| gives $x^y$. Mathematics in running text will be broken at the end
+of line at spaces in the expression. To prevent a break but preserve a space
+insert the tie |~| into the expression. Thus |$x~=~y+1$|, giving  $x~=~y+1$
+will prevent a break around the $=$ sign. To obtain display equations use
+form
+\begintt
+$$
+<display mathematics forms>
+$$
+\endtt
+There should be {\bf no} blank lines or |\par| within 
+|<display mathematics>|. Mysterious errors will result. To have a
+display expression end a sentence, the last character before the equation
+number should be a period. 
+
+Superscripting and subscripting can occur only in mathematics mode. The |\@|
+is the superscript character and |_| is the subscript character. The braces
+|{<super,subscript characters>}| are necessary to tell \tex\ what material
+goes where. The example below shows the result of different use of braces.
+
+$$
+2^xyz_uvw : 2^{xyz}_{uvw} : 2^{xyz_uvw} : 2^{xyz_{uvw}}.
+$$
+is given by
+\begintt
+$$
+2^xyz_uvw : 2^{xyz}_{uvw} : 2^{xyz_uvw} : 2^{xyz_{uvw}}.
+$$
+\endtt
+
+Finally, in commands that produce alignments, the |&| is used to separate
+items and the |\cr| to end a line. Examples of their use will be found in
+such commands as |\matrix| and |\eqalign|. Equation numbers are put in using
+either the automatic numbering commands |\aneq|, |\aneqtag|, |\autoeqnum|, or
+the normal manual numbering forms |\eqno| for right hand numbers or |\leqno|
+for lefthand numbers. 
+
+
+
+
+\shead{mateqcomforms}{Command Forms}
+This is a list of commands that are given in {\it plain}, along with some
+examples and the form of the parameters for their use. 
+\beginblockmode
+
+\mbr
+\pla\@|\above..  \atop..  \over..  functions
+     {<parm1> \atop <parm2>}
+     {<parm1> \choose <parm2>}
+     {<parm1> \over <parm2>}
+     {<parm1> \atopwithdelims<left delim><right delim>  <parm2>}
+     {<parm1> \overwithdelims<left delim><right delim> <parm2>}
+     {<parm1> \abovewithdelims<left delim><right delim>
+            <bar thickness>  <parm2>}|
+\nbr
+These forms are all used for putting |<parm1>| on top of |<parm2>| as might
+happen in a fraction. The difference between them is that |\atop| puts no
+line or bar between the |<parms>| while |\over| does, and |\choose| puts in
+no bar but does enclose the |<parms>| in large parens as is normally done in
+a binomial coefficient. The forms |\...delims| allow for the specifcation of
+delimiters around the |<parms>| that may be different than parens. Finally
+the |<bar thickness>| in the |\abovewithdelims| allows for the thickness of
+the line or bar between the |<parms>| to be a specified |<dimen>|. As an
+example
+$$
+{37 \over 45} : {n \atop \alpha} : {10 \choose r} 
+: {f(x) \overwithdelims\{\} g(y)} 
+: {\alpha \atopwithdelims][ \beta}
+: {209 \abovewithdelims\langle\rangle 2pt h(y)}
+$$
+is given by
+\begintt
+$$
+{37 \over 45} : {n \atop \alpha} : {10 \choose r} 
+: {f(x) \overwithdelims\{\} g(y)} 
+: {\alpha \atopwithdelims][ \beta}
+: {209 \abovewithdelims\langle\rangle 2pt h(y)}
+$$
+\endtt
+\mbr
+\ext|\aneq   \aneqtag{<tag>}|  
+\nbr
+\ext|\autoeqnum{<tag>}|
+\nbr
+When |autonumbering| is on these commands will automatically number
+equations. |\aneq| and |\aneqtag{<tag>}| inserts a bracketed equation number
+in the correct place in the equation depending on whether it is an
+|\eqalign|, |\eqalignno|, or |\leqalignno|. The |\autonumeq{<tag>}| inserts a
+number without brackets. The |<tag>| allows for references to the equation.
+
+If |autonumbering| is off, the |\aneq| results in nothing and the two forms
+with |<tag>| insert the |<tag>| --- without the |< >| of course.
+
+For example, |autonumbering| is on,
+$$
+x \equiv y      \aneq
+$$
+is given by
+\begintt
+$$
+x \equiv y      \aneq
+$$
+\endtt
+and 
+$$
+\eqalignno{ f(x)&\approx K x^{-3/2}   & (\autoeqnum{eqfx}.a) \cr
+                &\approx 0 \qquad x \gg 0   & (\ref{eqfx}.b) \cr}
+$$
+is given by
+\begintt
+$$
+\eqalignno{ f(x)&\approx K x^{-3/2}   & (\autoeqnum{eqfx}.a) \cr
+                &\approx 0 \qquad x \gg 0   & (\ref{eqfx}.b) \cr}
+$$
+\endtt
+The |eqfx| is the equation tag. However,  the
+tag for |eqfx| does not make it to the margin! A better way to do this, and
+one that guarantees that the tag for |eqfx| makes it to the margin is as
+follows:
+\begintt
+{\silenttrue \autoeqnum{eqfx}}
+$$
+\eqalignno{ f(x)&\approx K x^{-3/2}   & (\ref{eqfx}.a) \cr
+                &\approx 0 \qquad x \gg 0   & (\ref{eqfx}.b) \cr}
+$$
+\endtt
+The \@|\silenttrue| turns on a switch in |\autoeqnum{<...>}| that prevents it
+from writing out its value. 
+In this case, the |\autoeqnum{<...>}| is in vertical mode
+so that the tag for |eqfx| will now make it to the margin. 
+The command |\ref{eqfx}| will produce the
+(equation) number corresponding to |eqfx|. This construction allows 
+both lines of the equation to have the same main equation number.
+
+\mbr
+\pla\@|\bordermatrix{<top 0>&<top 1>&<top 2>&...&<top n>\cr
+              <side 1>&<first row>\cr
+                  ...
+              <side m>&<last row>\cr}|
+\nbr
+The |\bordermatrix| places parens around the |<rows>| in the same way as
+|\pmatrix| and then places the |<top i>| items above and the |<side i>| items
+to the left hand side outside the parens. Thus
+$$
+\bordermatrix{ R\backslash C&  Col 1 & Col 2 & Col 3 \cr
+                 Row 1      &   a    &   b   &   c   \cr
+                 Row 2 &\sum_{\ell=1}^n &    & \alpha \cr
+                 Row 3 & v=0         &\gamma & 1000.0\cr}
+$$
+is given by
+\begintt
+$$
+\bordermatrix{ R\backslash C&  Col 1 & Col 2 & Col 3 \cr
+                 Row 1      &   a    &   b   &   c   \cr
+                 Row 2 &\sum_{\ell=1}^n &    & \alpha \cr
+                 Row 3 & v=0         &\gamma & 1000.0\cr}
+$$
+\endtt
+
+\mbr
+\pla\@|\cases{<first math>&<first condition>\cr
+         ...
+        <last math>&<last condition>\cr}|
+\nbr
+This allows for a very simple way of stacking a set of possibilities in an
+equation and putting a large brace on the left hand side. The |<...math>| is
+the mathematics, and is in display math mode, and the |<...condition>| 
+is the condition and  is in internal horizontal mode \dots\ not
+math mode. Thus 
+$$
+G(x) = \cases{\vert x\vert & for $x<0$ \cr
+                    x^2    & for $x\ge 0$ \cr}
+$$
+is given by
+\begintt
+$$
+G(x) = \cases{\vert x\vert & for $x<0$ \cr
+                    x^2    & for $x\ge 0$ \cr}
+$$
+\endtt
+\mbr
+\pla\@|\eqalign ...
+  \eqalign{ <left first row> &<right first row>\cr
+                      ...
+            <left last row>  &<right last row>\cr}
+  \eqalignno{<left first row> &<right first row>&<first eq.no>\cr
+                      ...
+             <left last row>  &<right last row>&<last eq.no>\cr}
+  \leqalignno{<left first row>&<right first row>&<first eq.no>\cr
+                      ...
+              <left last row> &<right last row>&<last eq.no>\cr}|
+\nbr
+All three of these commands allow for a list of equations, or expressions to
+be aligned on a {\bf single} point within the expression. This is usually a
+relation such as $=$ or $\gg$ although any point is possible. The
+|\eqalignno| and |\leqalignno| have an extra field at the end of each row for
+an equation number, which will be printed on the right for the former and on
+the left for the latter. Note that in both cases the actual  |<eq.no>| field
+appears on the right. Any of the |<left ...>| or |<right ...>| or 
+|<... eq.no.>| may be omitted.  
+A major difference between |\eqalign| and |\eqalignno| is that the latter
+always is as wide as the page while the former is its natural width. 
+|\openup<dimen>|, immediately after the opening |$$|,  
+is used to increase the spacing between the lines of an 
+|\eqalign| or its relatives by |<dimen>|. A font relative 
+|<unit of measure>| such as |ex| is recommended with |1ex| to start.
+To obtain a lefthand equation number with
+|\eqalign|, or ordinary display mathematics, use |\leqno|. 
+
+\intex\ supplies automatic equation numbering and ways of having a document
+change from left to right hand equation numbering or vice versa. See
+|\lefhandequationnumbering| and |\righthandequationnumbering|.
+For automatic equation numbering use |\autoeqnum{tag}|, |\aneq| and 
+|\aneqtag|. 
+
+An example of an |\eqalign| is 
+$$
+\eqalign{F(x)  &=\int_{-\infty}^x H(y)dy \cr
+               &=x^{3/2} \cr
+         G(z)  &\ll 1 \cr}
+    \eqno (12)
+$$
+which is given by 
+\begintt
+$$
+\eqalign{F(x)  &=\int_{-\infty}^x H(y)dy \cr
+               &=x^{3/2} \cr
+         G(z)  &\ll 1 \cr}
+    \eqno (12)
+$$
+\endtt
+Notice the equation number is centered on the right hand side. An example
+for |\eqalignno|  is
+$$
+\openup 1ex
+\eqalignno{F(x)  &=\int_{-\infty}^x H(y)dy \cr
+                 &=x^{3/2} &(2.i)\cr
+\noalign{and}
+           G(z)  &\ll 1 &(2.ii)\cr}
+$$
+is given by
+\begintt
+$$
+\openup 1ex
+\eqalignno{F(x)  &=\int_{-\infty}^x H(y)dy \cr
+               &=x^{3/2} &(2.i)\cr
+\noalign{and}
+         G(z)  &\ll 1 &(2.ii)\cr}
+$$
+\endtt
+The use of |\noalign {<text>}| places the |and| at the margin and maintains
+the  alignment of the $=$ and $\ll$. This technique will not work with
+|\eqalign| because it does not necessarily take up the full width of the page.
+Note again the placement of the equation numbers.
+
+\mbr
+\pri\@|\eqno <reference>   \leqno <reference>|
+\nbr
+|\eqno| and |\leqno| are used to put an equation |<reference>|, usually a
+number, at the right or left hand side, respectively, of an equation. It can
+be used with any display mathematics except |\[l]eqalignno|.
+
+\mbr
+\ext\@|\leftequationnumbering   \rightequationnumbering|
+\nbr
+These commands when used with the auto equation numbering commands |\aneq|,
+|\aneqtag{<tag>}| or |\autoeqnum{<tag>}| will result in completely left or
+right hand equation numbers whether |\eqalignno| or
+|\leqalignno| is used. However |\eqno| and |\leqno| still result in right and
+left hand equation numbers respectively.\footnote{\dagger}{These defaults are
+subject to negotiation and change. It is quite easy to make the equation
+sides independent of |\eqno| and |\leqno|.}
+
+
+
+\mbr
+\pri\@|\noalign {<text>}|
+\nbr
+This is used in mathematics to insert text that you want at the left hand
+margin between lines in an |\eqalignno| or |\leqalignno|. See the
+|\eqalignno| example.
+
+\mbr
+\pla\@|\openup <dimen>|
+\nbr
+This is used in  display mathematics |$$\openup  ... $$| to increase spacing
+between lines in an |\eqalign|, |\eqalignno|, or |\leqalignno|. The dimension
+should be |<decimal number>ex| for font size independence. It does not work
+with |\cases| or |\matrix|.
+
+\mbr
+\pri\@|\over ... \under ...
+     \overline{<math>}    \underline{<math>}
+     \overbrace{<math>}   \underbrace{<math>}|
+\nbr
+These commands put lines and braces on top or under the |<math>| expressions.
+Thus
+$$
+\overline{\alpha\beta\gamma} : \underline{2^x_y} :
+\underbrace{\overbrace{H(x)=u+g(x,y)}}
+$$
+is given by
+\begintt
+$$
+\overline{\alpha\beta\gamma} : \underline{2^x_y} :
+\underbrace{\overbrace{H(x)=u+g(x,y)}}
+$$
+\endtt
+
+
+\mbr
+\pla\@|\dots ... \cdot \cdots \ldots \ddots|
+\nbr
+These produce dots of various flavours. Thus
+$$
+[\cdot] : [\cdots] : [\ldots] : [\ddots] 
+$$
+are given by
+\begintt
+$$
+[\cdot] : [\cdots] : [\ldots] : [\ddots] 
+$$
+\endtt
+\mbr
+\ext\@|\mathopen{<dimen or glue>}|
+\nbr
+This will cause all of the horizontal alignments, such as |\eqalign|,
+|\eqalignno|, |\halign|, |\cases|, |\matrix|, |\bordermatrix|, |\pmatrix|,
+and the table macros within the {\bf group} to be spread apart by 
+|<dimen or glue>|. Its effect on tables with rules or lines is probably
+undesirable. {\bf It should be used only within a group such as that implied
+by |$$ ... $$|.}
+
+\mbr
+
+
+\mbr
+\pla\@|\matrix{<entry 11>&<entry 12>&...&<entry 1n>\cr
+         <second row>\cr
+            ...
+         <last row> \cr}
+  \pmatrix{<several rows>\cr}|
+\nbr
+The |\matrix| entry allows for the production of matrices or arrays with an
+arbitrary number of rows and columns. Thus
+$$
+\left\{
+   \matrix{       a        &   b   &  c \cr
+           \sum_{\ell=1}^n &       & \alpha \cr
+               v=0         &\gamma & 1000.0\cr}
+\right\} 
+$$
+is given by
+\begintt
+$$
+\left\{
+   \matrix{       a        &   b   &  c \cr
+           \sum_{\ell=1}^n &       & \alpha \cr
+               v=0         &\gamma & 1000.0\cr}
+\right\} 
+$$
+\endtt
+Note that the braces |{..}| were in addition to the rows generated by
+|\matrix|. |\pmatrix| is identical to |\left( \matrix{<rows>\cr} \right)|.
+This just saves the placement of the braces.
+
+
+\mbr
+\pla\@|\phantom{<math>}    \vphantom{<math>}    \sphantom{<hlist>}|
+\nbr
+|\phantom| builds a box the same size as |<math>| but prints a blank.
+|\vphantom| is a box of the same height and depth as |<math>| but of zero
+width \dots\ a custom made strut. |\sphantom| is used when 
+strange expansions such as messages create errors using a |\vphantom|.
+All three  are used for controlling spacing.
+
+\mbr
+\pla\@|\sqrt{<math>}|
+\nbr
+This puts a square root sign around a |<math>| expression. Thus |$\sqrt{2}$|
+gives $\sqrt{2}$.
+
+\mbr
+\pla\@|\smash{<math>}|
+\nbr
+This leaves the |<math>| expression in a box of height and depth zero. It is
+useful for certain kinds of superposition.
+
+\endblockmode
+\ejectpage
+
+
+
+\done

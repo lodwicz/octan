@@ -1,0 +1,156 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{pagsiz}
+
+\def\cqu{\cquote{It is when I am struggling to be brief that
+I become unintelligible.}{Ars Poetica, Horace (65-8~BC)}
+}
+
+\chapterhead{pagsiz}{PAGES:\cr SIZES\cr MAGNIFICATION}
+\intex\ has a number of page size parameters that are set to make the output
+possible on different devices, and to facilitate special formats. 
+All page size
+parameter changes are made in assignment fashion with an optional |[=]| sign.
+All page size changes must be made inside a 
+\@|\documentstyle| list in order to insure that they take effect.
+Figure~\ref{pagdiag} diagrams the various dimensions.
+
+\input pagdiag 
+\beginpageinsert
+\figureform{pagdiag}{Diagram of the various page dimensions.\captionbody{
+     The actual printing area is determined by the computed dimensions
+{\tt \1hinnerpagesize} and {\tt \1vinnerpagesize}. The {\tt outer} dimensions
+are normally specified. The {\tt \1firstcolumnoffset} is normally
+0pt.}}{\centergraph{ \pagdiag sc:.8 }}
+\endpageinsert
+
+\shead{pagecomlist}{Command List}
+\beginthreecolumn
+\hfuzz=20pt
+\ext\@|\documentstyle|
+\ext\@|\houterpagesize|
+\ext\@|\hpapersize|
+\ext\@|\leftmarginsize|
+\ext\@|\leftmarginskip|
+\pri|\mag|
+\pla|\magstep|
+\ext\@|\topmarginsize|
+\ext\@|\topmarginskip|
+\ext\@|\vouterpagesize|
+\ext\@|\vpapersize|
+\endthreecolumn
+
+\shead{pagesandmargins}{Page Size Setting and Margins}
+These commands define and set the various page sizes. Only the |outer| and
+|header|, and |paper| commands should be changed. 
+\intex\ also has some |inner| and |column| sizes. These are computed and
+should not be modified -- although they are accessible. See
+Section~{\ref{inner}}, page \pref{inner} for details. 
+{\bf All dimension changes must be made inside a |\documentstyle| command or
+they  will not necessarily take effect.}
+
+This  section details the various parameters used to
+name and describe the parts of the printed page that can be varied.
+The general convention is that |\h<name>| names a horizontal dimension
+and |\v<name>| names the corresponding vertical dimension. The various 
+|<name>|s are
+\bshortcomlist
+|outerpagesize|&{this is the extent of the area allowed
+                                    for printing. It includes all headers,
+                                    footers, footnotes \dots\
+                                    \@|\vouterpagesize| and \@|\houterpagesize|
+                                    are the vertical and horizontal 
+                                    forms}\cr
+|papersize|&{this is the ``physical'' size of the paper and includes all 
+                                   the |outerpagesizes| plus 
+                                   margins. The actual 
+                                   vertical extent of the paper 
+                                   is  \@|\vpapersize| and
+                                   the actual width of the 
+                                    paper is is the size of \@|\hpapersize|.
+The default values are correct for 
+11in by 8.5in paper but must be increased for 
+14in by 8.5in (Legal size) paper.}\cr
+\@|\vsize|&the actual verticalsize of the present page. This is set at the time when the
+first material is submitted for putting on the page. In \intex\ it is usually
+the |\vcolumnsize|. It should be changed only with knowledge.\cr
+\@|\hsize|&the actual horizontal size of the present {\bf box} in which \tex\ is
+working. This may be a page or some box that is to be eventually placed on
+the page. 
+This is set at the time when 
+first material is submitted for putting on the page. In \intex\ |\hsize|  is
+usually 
+the |\hcolumnsize|. \cr
+
+\eshortcomlist
+
+Assignments are made in the normal way. The general form is
+
+\@|\<dimen name> [=] <dimen>|
+\noindent
+where |<dimen>| is a dimension. Thus the papersize, margins, 
+and outer page sizes are set in \intex\ by 
+\begintt
+\documentstyle{\vpapersize = 11in
+               \hpapersize = 8.5in
+               \vouterpagesize=9in 
+               \houterpagesize=6.5in
+               \leftmarginsize=1.25in
+               \topmarginsize=1in}
+\endtt
+These values are actually set for the paper style in {\tt papersty.tex}. 
+
+\shead{magnification}{Magnification}
+\tex\ is able to magnify an entire document through its
+|\magnification| parameter. The form is
+\beginblockmode
+\mbr
+\pri\@|\mag [=] <1000 times scale factor>|
+\nbr
+The document is magnified by the |<scale factor>|, times any  |texprint|
+magnification. It can appear only once and should appear at the beginning of
+the document. {\bf It should be used with extreme caution. The results may 
+be too big for the output device.} The {\it plain} form |\magnification| has
+been defined to be the same as |\mag|. The reason is that |\magnification| in
+{\it plain} also sets page sizes which is inappropriate here. \TeX Graph will
+scale correctly when using |\mag|. 
+
+\mbr
+\pri\@|\magstep<integer>|
+\nbr
+This is a valid magnification scaling for the |\magnification| command. The
+actual magnification is $1.2^{\langle{\rm integer}\rangle}$. 
+Thus |<integer>=3| implies a
+magnification of 1.728.
+\endblockmode
+
+In fact there are two points at which
+magnification can occur. The first is in the \tex\ document and the second is
+when it is printed. All that is important is the final magnification. A
+magnified document may be printed only if all the fonts are available at the
+magnifications requested. In general, magnification should be controlled by 
+\intex\ so that \TeX Graph will operate correctly. 
+
+\shead{inner}{Internal and Computed Sizes}
+\intex\ is actually in multicolumn mode at all times. The default though is
+just one column. In order to live in this world \intex\ understands |inner|
+and |column| sizes. The |column| sizes are the actual sizes that are used to
+for the text. The |inner| horizontal size is the sum of the column widths and
+the intercolumn spacing. To this is added a \@|\leftcolumnoffset| (twice) to
+obtain the |\houterpagesize|. Normally the |\leftcolumnoffset| is zero. The
+effect of a left column offset is to inset the pages with respect to the
+header/footer boxes whose width is the |\houterpagesize|. Thus 
+
+\bshortcomlist
+|columnsize|&this is the actual size of the column
+                                    where the text is printed. Footnotes 
+                                    are inside the column. In single 
+                                    column format columnsize and innerpagesize
+                                    are the same 
+                                    (\@|\vcolumnsize|, \@|\hcolumnsize|) \cr
+|innerpagesize|&this is the size of the page left after
+                 the headers and footers have been removed 
+                 (\@|\vinnerpagesize|, \@|\hinnerpagesize|) \cr
+\eshortcomlist
+\ejectpage
+\done

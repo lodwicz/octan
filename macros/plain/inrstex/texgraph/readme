@@ -1,0 +1,25 @@
+Michael J. Ferguson
+(514) 765-7834
+mike@inrs-telecom.uquebec.ca
+
+Montreal, July 30, 1991
+
+This directory contains
+
+The files are 
+
+1. texgraph.sty --- a texgraph style file for LaTeX
+2. test_lat.tex --- This is a latex file that performs some simple graphics,
+                    includes an EPS, encapsulated postscript file and plays 
+                    some scaling and rotating games, and also the code for 
+                    INRS letterhead. 
+3. ieeelogo.ps  --- Scanned PostScript logo
+4. inrslogo.tex --- TeXgraph commands for the INRS letterhead.
+5. testinrs.tex --- A test file for INRSTeX but augmented by the slide macros.
+6. inrssl.tex   --- The slide macros package ... for INRSTeX
+7. texgraph.tex --- the TeXGraph macros in a form compatible with INRSTeX and
+                --- the master format file inrs3_pc.tex
+8. texgraph.ps  --- A PostScript version of the TeXGraph Chapter in the 
+                    INRSTeX Reference Manual. 
+9.  spfont.tex  --- A scaled font family used in the inrssl.tex
+10. readme      --- This file.

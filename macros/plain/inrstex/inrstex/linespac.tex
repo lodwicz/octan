@@ -1,0 +1,33 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+% ======  Basic Line Spacing =========
+% The basic line spacing in a font is assumed to be scaled according to the 
+% ex height of the font. This is perhaps not the aesthetically best but
+% does allow consistent line spacing commands. The four basic commands are
+% \normalbaselines, \normalbaselineskipsize, \spacing,  and \setstrut.
+
+
+\def\normalbaselines{\baselineskip \normalbaselineskipsize 
+                        \normallineskipform}
+
+% ----- sets interline spacing in terms of normalbaselines ------
+%           does not change baseline glue. 
+\def\spacing#1{\setbox0=\vbox{\vskip \normalbaselineskipsize}\baselineskip 
+                                      #1\ht0 \normalbaselineskipglue
+                               \normallineskipform}
+
+
+% ----- a single line spacing strut -------
+% Set at current baselineskip size
+\def\setstrut{\setbox0=\vbox{\vskip\normalbaselineskipsize}\setbox\strutbox=
+                       \hbox{\vrule height .72\ht0 depth .28\ht0 width\z@}}
+
+% --- The default forms must also be set -- They are shown below but 
+%     are actually set in inrsdef.tex 
+
+% \def\normalbaselineskipsize{2.8ex \normalbaselineskipglue}
+% \def\normalbaselineskipglue{plus .07ex minus .07ex}
+% \def\normallineskipform{\lineskip 1pt \lineskiplimit 0pt}
+

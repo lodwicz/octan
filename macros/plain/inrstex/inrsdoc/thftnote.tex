@@ -1,0 +1,104 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{footnot}
+\def\cqu{}
+
+{\catcode`\?=7
+\global\def\ftn{$\sphantom{\cheadfont S}?\ddagger$} 
+}
+\autonumberingon
+
+\chapterhead{footnot}{FOOTNOTES\ftn}
+\sfootnote{\ddagger}{This really should not have been footnoted. However to
+ obtain the correct placement of the $\ddagger$, 
+ |$\sphantom{\cheadfont S}^\ddagger$| was actually used. This footnote leads 
+to a large number of problems. It will show up in the automatic listing of
+the table of contents and the header text. To prevent this, the 
+|\let\ftn=\relax| is placed immediately after the |\chapterhead| and 
+just before |\maketoclist| produces the table of contents.
+}
+\let\ftn=\relax
+\intex\ supplies a simple but powerful 
+footnote\footnote{\dagger}{For making footnotes like this, even with
+imbedded mathematics, {\it ie} $\int_0^{\infty} g(x)dx$, or {\bf font}
+changes.}
+capability. This replaces the |\footnote| command in {\it plain}. {\bf Do not
+use |\footnote| in  |\title| or any of the section head commands.} 
+The footnote will  get lost. If you must footnote a title or section
+head, then use |\up{<mark>}| where you call out the footnote and |\sfootnote|
+with the same |<mark>| in the vertical list of the surrounding {\bf page}.
+For those of you who wish to change the default formats there is an 
+|\everyfootnote={<token list>}| that will be inserted at the beginning of
+every footnote list. 
+\shead{footnotcomlist}{Command List}
+\begintwocolumn
+\pla|\dimen\footins|
+\ext|\everyfootnote|
+\ext|\footnote|
+\ext|\footnotefont|
+\pla|\footnoterule|
+\pla|\skip\footins|
+\ext|\sfootnote|
+\ext|\up|
+\endthreecolumn
+
+\shead{footnotcomforms}{Command Forms}
+\beginblockmode
+\ext\@|\everyfootnote = {<token list>}|
+\nbr
+The |<token list>| is inserted before every footnote list. It could be used,
+for instance, to change the spacing between lines or any other default
+feature that is found undesirable. 
+
+\mbr
+\ext\@|\footnote{<math mode mark>}{<text>}|
+\nbr
+The |<math mode mark>| is the marker  that is placed
+on the word that is being footnoted. Note that it is in {\bf math mode}. This 
+command should be used only in (internal) horizontal mode. 
+If the footnote gets lost for some reason, use the |\up{<math mode mark>}| at
+the appropriate place in the text and |\sfootnote| with the same 
+|<math mode mark>|. The |\sfootnote| should be in the vertical list of the
+main page.
+\mbr
+\ext\@|\footnotefont|
+\nbr
+The footnote font (really an entire family) 
+\dots it is set when the document font
+is set or specifically. 
+\mbr
+\pla\@|\footnoterule|
+\nbr
+The footnote line at the bottom of a page. This is modified by redefining it
+through a |\def\footnoterule{<new definition>}|.
+\mbr
+\ext\@|\up{<math mode mark>}|
+This command  superscripts the |<math mode mark>| to the preceding character.
+It assumes that the current font family is active. Since the
+|\cheadfont| in the title is much bigger than the default |\tenpoint| of this
+book, |{\cheadfont FOOTNOTES\up{\ddagger}}| would look like this
+{\cheadfont FOOTNOTES\up{\ddagger}}.
+
+\mbr
+\pla\@|\skip\footins [=] <dimen>|
+\nbr
+This sets the initial skip before the first
+footnote to |<dimen>|.
+\mbr
+\pla\@|\dimen\footins [=] <dimen>|
+\nbr
+This sets the maximum height allowed for
+footnotes to |<dimen>|. If this maximum height is exceeded, the footnotes spill over to the
+next page. It is set in \intex\  at 10in. 
+
+\mbr
+\ext\@|\sfootnote{<math mode mark>}{<text>}|
+\nbr
+This should be used for footnotes that appear in the vertical mode. It is
+necessary if the original footnote to be called out is too deep inside
+vertical boxes. An example of this is the |\title|, the various section and
+chapter heads, and the |\captionbox| in a |\figureinsert| or |\tableinsert|.
+It should not be used in either horizontal or internal vertical mode.
+\endblockmode
+\ejectpage
+\done

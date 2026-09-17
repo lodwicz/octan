@@ -1,0 +1,762 @@
+!\aa, \AA! \indpg 14.
+!\ae, \AE! \indpg 14.
+!\copyright! \indpg 14.
+!\dag! \indpg 14.
+!\ddag! \indpg 14.
+!{\it\$}! \indpg 14.
+!{\it\&}! \indpg 14.
+!\i! \indpg 14.
+!\j! \indpg 14.
+!\l, \L! \indpg 14.
+!\o, \O! \indpg 14.
+!\oe, \OE! \indpg 14.
+!\P! \indpg 14.
+!\S! \indpg 14.
+!\ss! \indpg 14.
+!\jobname! \indpg 20.
+!\hprintoffset = <dimen>! \indpg 21.
+!\vprintoffset = <dimen>! \indpg 22.
+!\bye! \indpg 22.
+!\done! \indpg 23.
+!\draftversion! \indpg 23.
+!\end! \indpg 23.
+!\englishversion  \ehyph! \indpg 23.
+!\ehyph! \indpg 23.
+!\finalversion! \indpg 23.
+!\hyphenation{<exceptions>}! \indpg 23.
+!\language [=] <integer>! \indpg 23.
+!\marginnotestrue! \indpg 24.
+!\marginnotesfalse! \indpg 24.
+!\versionfrancaise  \fhyph! \indpg 24.
+!\fhyph! \indpg 24.
+!DVIALW Command line options! \indpg 24.
+!\hfuzz [=] <dimen>! \indpg 31.
+!\overfullrule [=] <dimen>! \indpg 31.
+!\vfuzz [=] <dimen>! \indpg 32.
+!\raggedbottom! \indpg 32.
+!\font\<fontname> [scaled <number>]! \indpg 34.
+!\fivei! \indpg 34.
+!\fiverm! \indpg 34.
+!\fivebf! \indpg 34.
+!\twelvepoint! \indpg 35.
+!\tenpoint! \indpg 35.
+!\ninepoint! \indpg 35.
+!\eightpoint! \indpg 35.
+!\bf! \indpg 35.
+!\it! \indpg 35.
+!\rm! \indpg 35.
+!\tt! \indpg 35.
+!\bigggfont! \indpg 35.
+!\biggfont! \indpg 35.
+!\bigfont! \indpg 35.
+!\cheadfont! \indpg 35.
+!\documentstyle{<font family>}! \indpg 36.
+!\footerfont! \indpg 36.
+!\footnotefont! \indpg 36.
+!\headerfont! \indpg 36.
+!\smallerfont! \indpg 36.
+!\sheadfont! \indpg 36.
+!\ssheadfont! \indpg 36.
+!\sssheadfont! \indpg 36.
+!\dsssheadfont! \indpg 36.
+!\captionnumfont! \indpg 36.
+!\captiontitlefont! \indpg 36.
+!\captionbodyfont! \indpg 36.
+!<units of measure>*/*   cm em ex in*/*   mu pt sp! \indpg 37.
+!\newdimen\<dimen name>! \indpg 38.
+!\newcount\<count name>! \indpg 38.
+!\newskip\<skip or glue name>! \indpg 39.
+!\<count name> [=] <integer, dimen, glue>! \indpg 39.
+!\<dimen name> [=] < dimen, glue>! \indpg 39.
+!\<skip or glue name> [=]  <dimen>*/*      [plus <dimen>] [minus<dimen>]! \indpg 39.
+!\advance \<count, dimen, glue name> by [+ -]<count, dimen, glue>! \indpg 40.
+!\multiply \<count, dimen, glue name> by [+ -]<integer>! \indpg 40.
+!\divide \<count, dimen, glue name> by [+ -]<integer>! \indpg 40.
+!\hfil \hfill! \indpg 42.
+!\hfilneg! \indpg 42.
+!\hss! \indpg 42.
+!\medmuskip! \indpg 42.
+!\newskip\<skip name>! \indpg 42.
+!\newmuskip\<muskip name>! \indpg 42.
+!\thickmuskip! \indpg 43.
+!\thinmuskip! \indpg 43.
+!\vfil \vfill! \indpg 43.
+!\vfilneg! \indpg 43.
+!\vss! \indpg 43.
+!\discretionary{<prebreak text>}{<postbreak text>}{<nobreak text>}! \indpg 47.
+!\endnarrowtext! \indpg 47.
+!\everyparagraph [=] {<token string>}! \indpg 47.
+!\hangafter [+ -] <integer>! \indpg 48.
+!\hangindent [=] [+ -] <dimen>! \indpg 48.
+!\hyphenatecapitals [=] <integer>! \indpg 48.
+!\indent! \indpg 48.
+!\leftskip [=] <dimen> [plus <dimen>] [minus <dimen>]! \indpg 48.
+!\rightskip [=] <dimen> [plus <dimen>] [minus <dimen>]! \indpg 48.
+!\looseness [=] [+ -] <integer>! \indpg 49.
+!\noindent! \indpg 49.
+!\obeylines! \indpg 49.
+!\obeyspaces! \indpg 49.
+!\par! \indpg 50.
+!\paragraphcenterline! \indpg 50.
+!\parindent [=] <dimen>! \indpg 50.
+!\parshape <number of lines> <indent 1> <line length 1>*/*       ... <indent n> <line length n>! \indpg 50.
+!\parskip [=] <dimen>! \indpg 51.
+!\pretolerance [=] <integer>! \indpg 51.
+!\tolerance [=] <integer>! \indpg 51.
+!\raggedright! \indpg 51.
+!\ttraggedright! \indpg 51.
+!\veryraggedright! \indpg 51.
+!\beginttverbatim! \indpg 55.
+!\bigskip! \indpg 55.
+!\endttverbatim! \indpg 55.
+!\enskip! \indpg 55.
+!\hskip [+ -] <dimen> [plus <dimen>] [minus <dimen>]! \indpg 56.
+!\kern [+ -] <dimen>! \indpg 56.
+!\mkern [+ -] <decimal number>mu! \indpg 56.
+!\mskip [+ -] <mudimen> [plus <mudimen>] [minus <mudimen>]! \indpg 56.
+!\medskip! \indpg 56.
+!\quad \qquad! \indpg 56.
+!\smallskip! \indpg 56.
+!\spacing {<decimal number>}! \indpg 56.
+!\vglue [=] [+ -] <dimen> [plus <dimen>] [minus <dimen>]! \indpg 56.
+!\vskip [=] [+ -] <dimen> [plus <dimen>] [minus <dimen>]! \indpg 56.
+!\allowbreak! \indpg 57.
+!\break! \indpg 57.
+!\bigbreak! \indpg 57.
+!\bye! \indpg 58.
+!\discretionary{<pre  break  text>}{<post  break  text>}{<text>}! \indpg 58.
+!\done! \indpg 58.
+!\end! \indpg 58.
+!\filbreak! \indpg 58.
+!\eject! \indpg 58.
+!\ejectcolumn! \indpg 58.
+!\ejectpage! \indpg 58.
+!\goodbreak! \indpg 58.
+!\linebreak! \indpg 58.
+!\medbreak! \indpg 58.
+!\nobreak! \indpg 58.
+!\penaltybreak{<penalty>}{<skip size>}! \indpg 59.
+!\smallbreak! \indpg 59.
+!\alpha {\rm A} A! \indpg 62.
+!\beta {\rm B} B! \indpg 62.
+!\gamma \Gamma {\mit\Gamma}! \indpg 62.
+!\delta \Delta {\mit\Delta} ! \indpg 62.
+!\epsilon {\rm E} E! \indpg 62.
+!\varepsilon! \indpg 62.
+!\zeta {\rm Z} Z! \indpg 62.
+!\eta {\rm H} H! \indpg 62.
+!\theta \Theta {\mit\Theta} ! \indpg 62.
+!\vartheta! \indpg 63.
+!\iota {\rm I} I! \indpg 63.
+!\kappa {\rm K} K ! \indpg 63.
+!\lambda \Lambda {\mit\Lambda}  ! \indpg 63.
+!\mu {\rm M} M ! \indpg 63.
+!\nu {\rm N} N! \indpg 63.
+!\xi \Xi {\mit\Xi} ! \indpg 63.
+!\pi \Pi {\mit\Pi}! \indpg 63.
+!\varpi! \indpg 63.
+!\rho {\rm R} R! \indpg 63.
+!\sigma \Sigma {\mit\Sigma}! \indpg 63.
+!\tau {\rm T} T! \indpg 63.
+!\upsilon \Upsilon {\mit\Upsilon}! \indpg 63.
+!\phi \Phi {\mit\Phi}! \indpg 63.
+!\varphi! \indpg 63.
+!\chi {\rm X} X! \indpg 63.
+!\psi \Psi {\mit\Psi}! \indpg 63.
+!\omega \Omega {\mit\Omega}! \indpg 63.
+!+! \indpg 63.
+!-! \indpg 63.
+!=! \indpg 63.
+!\not=! \indpg 63.
+!<! \indpg 63.
+!\not<! \indpg 63.
+!>! \indpg 63.
+!\not>! \indpg 63.
+!\aleph! \indpg 63.
+!\amalg! \indpg 63.
+!\angle! \indpg 63.
+!\approx! \indpg 63.
+!\not\approx! \indpg 63.
+!\ast! \indpg 63.
+!\asymp! \indpg 64.
+!\backslash! \indpg 64.
+!\bigcap! \indpg 64.
+!\bigcirc! \indpg 64.
+!\bigcup! \indpg 64.
+!\bigodot! \indpg 64.
+!\bigoplus! \indpg 64.
+!\bigotimes! \indpg 64.
+!\bigsqcup! \indpg 64.
+!\bigtriangledown! \indpg 64.
+!\bigtriangleup! \indpg 64.
+!\biguplus! \indpg 64.
+!\bigvee! \indpg 64.
+!\bigwedge! \indpg 64.
+!\bot! \indpg 64.
+!\bowtie! \indpg 64.
+!\bullet! \indpg 64.
+!\cap! \indpg 64.
+!\cdot! \indpg 64.
+!\circ! \indpg 64.
+!\clubsuit! \indpg 64.
+!\cong! \indpg 64.
+!\not\cong! \indpg 64.
+!\coprod! \indpg 64.
+!\cup! \indpg 64.
+!\dagger! \indpg 64.
+!\dashv! \indpg 64.
+!\ddagger! \indpg 64.
+!\diamondsuit! \indpg 64.
+!\diamond! \indpg 64.
+!\div! \indpg 64.
+!\doteq! \indpg 64.
+!\Downarrow! \indpg 64.
+!\downarrow! \indpg 64.
+!\ell! \indpg 64.
+!\emptyset! \indpg 64.
+!\equiv! \indpg 64.
+!\not\equiv! \indpg 64.
+!\exists! \indpg 64.
+!\flat! \indpg 64.
+!\forall! \indpg 64.
+!\frown! \indpg 64.
+!\ge! \indpg 64.
+!\geq! \indpg 64.
+!\not\geq! \indpg 64.
+!\gg! \indpg 64.
+!\not\gg! \indpg 64.
+!\hbar! \indpg 64.
+!\heartsuit! \indpg 64.
+!\hookleftarrow! \indpg 64.
+!\hookrightarrow! \indpg 64.
+!\Im! \indpg 64.
+!\imath! \indpg 64.
+!\infty! \indpg 64.
+!\int! \indpg 64.
+!\in! \indpg 64.
+!\not\in! \indpg 64.
+!\jmath! \indpg 64.
+!\Leftarrow! \indpg 64.
+!\leftarrow! \indpg 64.
+!\leftharpoondown! \indpg 64.
+!\leftharpoonup! \indpg 64.
+!\Leftrightarrow! \indpg 64.
+!\leftrightarrow! \indpg 64.
+!\le! \indpg 64.
+!\leq! \indpg 64.
+!\not\leq! \indpg 64.
+!\ll! \indpg 64.
+!\not\ll! \indpg 64.
+!\Longleftarrow! \indpg 64.
+!\longleftarrow! \indpg 64.
+!\Longleftrightarrow! \indpg 64.
+!\longleftrightarrow! \indpg 64.
+!\longmapsto! \indpg 64.
+!\Longrightarrow! \indpg 64.
+!\longrightarrow! \indpg 64.
+!\mapsto! \indpg 64.
+!\mid! \indpg 64.
+!\models! \indpg 64.
+!\mp! \indpg 64.
+!\nabla! \indpg 64.
+!\natural! \indpg 64.
+!\nearrow! \indpg 65.
+!\nwarrow! \indpg 65.
+!\neg! \indpg 65.
+!\lnot! \indpg 65.
+!\ni! \indpg 65.
+!\owns! \indpg 65.
+!\odot! \indpg 65.
+!\oint! \indpg 65.
+!\ominus! \indpg 65.
+!\oplus! \indpg 65.
+!\oslash! \indpg 65.
+!\otimes! \indpg 65.
+!\parallel! \indpg 65.
+!\partial! \indpg 65.
+!\perp! \indpg 65.
+!\pm! \indpg 65.
+!\preceq! \indpg 65.
+!\not\preceq! \indpg 65.
+!\prec! \indpg 65.
+!\not\prec! \indpg 65.
+!\prime! \indpg 65.
+!\prod! \indpg 65.
+!\propto! \indpg 65.
+!\Re! \indpg 65.
+!\Rightarrow! \indpg 65.
+!\rightarrow! \indpg 65.
+!\rightharpoondown! \indpg 65.
+!\rightharpoonup! \indpg 65.
+!\rightleftharpoons! \indpg 65.
+!\setminus! \indpg 65.
+!\sharp! \indpg 65.
+!\simeq! \indpg 65.
+!\not\simeq! \indpg 65.
+!\sim! \indpg 65.
+!\not\sim! \indpg 65.
+!\smile! \indpg 65.
+!\spadesuit! \indpg 65.
+!\sqcap! \indpg 65.
+!\sqcup! \indpg 65.
+!\sqsubseteq! \indpg 65.
+!\not\sqsubseteq! \indpg 65.
+!\sqsupseteq! \indpg 65.
+!\not\sqsupseteq! \indpg 65.
+!\star! \indpg 65.
+!\subseteq! \indpg 65.
+!\not\subseteq! \indpg 65.
+!\subset! \indpg 65.
+!\not\subset! \indpg 65.
+!\succeq! \indpg 65.
+!\not\succeq! \indpg 65.
+!\succ! \indpg 65.
+!\not\succ! \indpg 65.
+!\sum! \indpg 65.
+!\supseteq! \indpg 65.
+!\not\supseteq! \indpg 65.
+!\supset! \indpg 65.
+!\not\supset! \indpg 65.
+!\surd! \indpg 65.
+!\searrow! \indpg 65.
+!\swarrow! \indpg 65.
+!\times! \indpg 65.
+!\top! \indpg 65.
+!\triangleleft! \indpg 65.
+!\triangleright! \indpg 65.
+!\triangle! \indpg 65.
+!\uplus! \indpg 65.
+!\Uparrow! \indpg 65.
+!\uparrow! \indpg 65.
+!\Updownarrow! \indpg 65.
+!\updownarrow! \indpg 65.
+!\Vert! \indpg 65.
+!\vert! \indpg 65.
+!\vdash! \indpg 65.
+!\lor! \indpg 65.
+!\vee! \indpg 65.
+!\land! \indpg 65.
+!\wedge! \indpg 65.
+!\wp! \indpg 65.
+!\wr! \indpg 65.
+!\big\Arrowvert! \indpg 66.
+!\big\arrowvert! \indpg 66.
+!\langle! \indpg 66.
+!\rangle! \indpg 66.
+!\big\bracevert! \indpg 66.
+!\lbrace! \indpg 66.
+!\rbrace! \indpg 66.
+!\lbrack! \indpg 66.
+!\rbrack! \indpg 66.
+!\lceil! \indpg 66.
+!\rceil! \indpg 66.
+!\lfloor! \indpg 66.
+!\rfloor! \indpg 66.
+!\big\lgroup! \indpg 66.
+!\big\rgroup! \indpg 66.
+!\big\lmoustache! \indpg 66.
+!\big\rmoustache! \indpg 66.
+!\backslash! \indpg 66.
+!$\left<delimiter> ...\right<delimiter>$! \indpg 67.
+!\bigl! \indpg 67.
+!\biggl! \indpg 67.
+!\Biggl! \indpg 67.
+!\bigr! \indpg 67.
+!\Bigr! \indpg 67.
+!\biggr! \indpg 67.
+!\Biggr! \indpg 67.
+!\arg! \indpg 68.
+!\arccos! \indpg 68.
+!\arcsin! \indpg 68.
+!\arctan! \indpg 68.
+!\cot! \indpg 68.
+!\coth! \indpg 68.
+!\cosh! \indpg 68.
+!\cos! \indpg 68.
+!\csc! \indpg 68.
+!\det! \indpg 68.
+!\deg! \indpg 68.
+!\dim! \indpg 68.
+!\exp! \indpg 68.
+!\gcd! \indpg 68.
+!\hom! \indpg 68.
+!\inf! \indpg 68.
+!\ker! \indpg 68.
+!\lg! \indpg 68.
+!\liminf! \indpg 68.
+!\limsup! \indpg 68.
+!\lim! \indpg 68.
+!\ln! \indpg 68.
+!\log! \indpg 68.
+!\max! \indpg 68.
+!\min! \indpg 68.
+!\Pr! \indpg 68.
+!\sec! \indpg 68.
+!\sin! \indpg 68.
+!\sinh! \indpg 68.
+!\sup! \indpg 68.
+!\tanh! \indpg 68.
+!\tan! \indpg 68.
+!\buildrel <superscript> \over <relation>! \indpg 68.
+!\above..  \atop..  \over..  functions*/*     {<parm1> \atop <parm2>}*/*     {<parm1> \choose <parm2>}*/*     {<parm1> \over <parm2>}*/*     {<parm1> \atopwithdelims<left delim><right delim>  <parm2>}*/*     {<parm1> \overwithdelims<left delim><right delim> <parm2>}*/*     {<parm1> \abovewithdelims<left delim><right delim>*/*            <bar thickness>  <parm2>}! \indpg 71.
+!\silenttrue! \indpg 73.
+!\bordermatrix{<top 0>&<top 1>&<top 2>&...&<top n>\cr*/*              <side 1>&<first row>\cr*/*                  ...*/*              <side m>&<last row>\cr}! \indpg 73.
+!\cases{<first math>&<first condition>\cr*/*         ...*/*        <last math>&<last condition>\cr}! \indpg 74.
+!\eqalign ...*/*  \eqalign{ <left first row> &<right first row>\cr*/*                      ...*/*            <left last row>  &<right last row>\cr}*/*  \eqalignno{<left first row> &<right first row>&<first eq.no>\cr*/*                      ...*/*             <left last row>  &<right last row>&<last eq.no>\cr}*/*  \leqalignno{<left first row>&<right first row>&<first eq.no>\cr*/*                      ...*/*              <left last row> &<right last row>&<last eq.no>\cr}! \indpg 74.
+!\eqno <reference>   \leqno <reference>! \indpg 76.
+!\leftequationnumbering   \rightequationnumbering! \indpg 76.
+!\noalign {<text>}! \indpg 76.
+!\openup <dimen>! \indpg 77.
+!\over ... \under ...*/*     \overline{<math>}    \underline{<math>}*/*     \overbrace{<math>}   \underbrace{<math>}! \indpg 77.
+!\dots ... \cdot \cdots \ldots \ddots! \indpg 77.
+!\mathopen{<dimen or glue>}! \indpg 77.
+!\matrix{<entry 11>&<entry 12>&...&<entry 1n>\cr*/*         <second row>\cr*/*            ...*/*         <last row> \cr}*/*  \pmatrix{<several rows>\cr}! \indpg 78.
+!\phantom{<math>}    \vphantom{<math>}    \sphantom{<hlist>}! \indpg 78.
+!\sqrt{<math>}! \indpg 78.
+!\smash{<math>}! \indpg 78.
+!\box{<named box>}! \indpg 82.
+!\boxit{<line thickness>}{<border separation>}{<box, vlist>}! \indpg 82.
+!\boxmaxdepth [=] <dimen>! \indpg 82.
+!\copy{<named box>}! \indpg 82.
+!\line{<horizontal list>}! \indpg 82.
+!\centerline{<horizontal list>}! \indpg 82.
+!\leftline{<horizontal list>}! \indpg 82.
+!\rightline{<horizontal list>}! \indpg 82.
+!\box dimensions ... \dp \ht \wd! \indpg 83.
+!\dp<named box> [=] <dimen>*/*     \ht<named box> [=] <dimen>*/*     \wd<named box> [=] <dimen>! \indpg 83.
+!<scale factor>\dp<named box>*/*     <scale factor>\ht<named box>*/*     <scale factor>\wd<named box>! \indpg 83.
+!\everyhbox = {<token list>}! \indpg 83.
+!\everyvbox = {<token list>}! \indpg 83.
+!\hbox <box spec>{<horizontal list>}! \indpg 83.
+!\vbox <box spec>{<vertical list>}! \indpg 83.
+!<box spec>! \indpg 83.
+!\vbox{\hsize [=] <dimen> <text>}! \indpg 84.
+!\hrule [height <dimen>] [width <dimen>] [depth <dimen>]! \indpg 84.
+!\vrule [height <dimen>] [width <dimen>] [depth <dimen>]! \indpg 84.
+!\llap{<text>}! \indpg 84.
+!\rlap{<text>}! \indpg 84.
+!\lower<dimen><box>! \indpg 84.
+!\raise<dimen><box>! \indpg 84.
+!\setbox<named box> [=] <box>{<list>}! \indpg 85.
+!\strut! \indpg 85.
+!\unhbox{<named hbox>}! \indpg 85.
+!\unhcopy{<named hbox>}! \indpg 85.
+!\unvbox{<named vbox>}! \indpg 85.
+!\unvcopy{<named vbox>}! \indpg 85.
+!\vcenter{<vertical list>}! \indpg 85.
+!\vsplit<named box> to <dimen>! \indpg 85.
+!\splitmaxdepth! \indpg 85.
+!\+<text>&<text> ... &<text>\cr! \indpg 96.
+!\cleartabs! \indpg 96.
+!\tabalign ... \cr! \indpg 96.
+!\halign{<preamble>\cr <first row>\cr ... <last row>\cr}! \indpg 96.
+!\hidewidth! \indpg 97.
+!\ialign{<preamble>\cr <first row>\cr ... <last row>\cr}! \indpg 97.
+!\multispan {<integer>}! \indpg 97.
+!\noalign {<text>}! \indpg 98.
+!\oalign{<first row>\cr ... &<last row>\cr}! \indpg 98.
+!\omit! \indpg 98.
+!\span! \indpg 98.
+!\valign{<preamble>\cr <first column>\cr ... <last column>\cr}! \indpg 98.
+!~! \indpg 99.
+!\:! \indpg 99.
+!\-! \indpg 99.
+!\br{<rules..>}   \er{<rules..>}! \indpg 100.
+!\begintable ... \endtable! \indpg 100.
+!\begintableformat ... \endtableformat! \indpg 100.
+!\center  \center{<argument>}! \indpg 101.
+!\displaymath{<argument>}! \indpg 101.
+!\everytable! \indpg 101.
+!\fulltablerule{<dimen>}! \indpg 101.
+!\left! \indpg 101.
+!\math{<argument>}! \indpg 102.
+!\midtabglue [=] <glue>! \indpg 102.
+!\modifystrut{<original>}{<add to height>}{<add to depth>}*/*\mst = \modifystrut! \indpg 102.
+!\right! \indpg 102.
+!\sa{<text>}! \indpg 102.
+!\sprule! \indpg 102.
+!\tablespread = {<halign specification>}! \indpg 103.
+!\tcs! \indpg 103.
+!\thrule{<height>}! \indpg 103.
+!\tr! \indpg 103.
+!\tvrule{<width>}! \indpg 104.
+!\use{<number of data columns>}! \indpg 104.
+!\zerocenteredbox{<text>}*/* \zb = \zerocenteredbox! \indpg 104.
+!\def\<def name> <parameter form>{<replacement text>}! \indpg 108.
+!\gdef\<def name> <parameter form>{<replacement text>}! \indpg 109.
+!\global! \indpg 109.
+!\let\<def a> [=] \<def b>! \indpg 109.
+!\long! \indpg 109.
+!\outer! \indpg 109.
+!\beginlist \bl! \indpg 114.
+!\beginsublist \bsl! \indpg 114.
+!\beginsubsublist \bssl! \indpg 114.
+!\endlist \el! \indpg 114.
+!\endsublist \esl! \indpg 114.
+!\endsubsublist \essl! \indpg 114.
+!\everylist [=] {<token list>}! \indpg 114.
+!\everysublist [=] {<token list>}! \indpg 114.
+!\everysubsublist [=] {<token list>}! \indpg 115.
+!\item! \indpg 115.
+!\itemitem! \indpg 115.
+!\listitem <listitem mark>! \indpg 115.
+!\loosenlist! \indpg 115.
+!\samplemark{<listitem mark>}! \indpg 115.
+!\tightenlist! \indpg 116.
+!\listindent [=] <dimen>! \indpg 116.
+!\listitemmarksize [=] <dimen>! \indpg 116.
+!\listitemskip [=] <glue>! \indpg 116.
+!\polistskip [=] <glue>! \indpg 116.
+!\posublistskip [=] <glue>! \indpg 116.
+!\posubsublistskip [=] <glue>! \indpg 116.
+!\prlistskip [=] <glue>! \indpg 116.
+!\prsublistskip [=] <glue>! \indpg 116.
+!\prsubsublistskip [=] <glue>! \indpg 116.
+!\sublistindent [=] <dimen>! \indpg 116.
+!\subsublistindent [=] <dimen>! \indpg 116.
+!\sublistitemskip [=] <glue>! \indpg 116.
+!\subsublistitemskip [=] <glue>! \indpg 116.
+!\everyfootnote = {<token list>}! \indpg 118.
+!\footnote{<math mode mark>}{<text>}! \indpg 118.
+!\footnotefont! \indpg 118.
+!\footnoterule! \indpg 118.
+!\up{<math mode mark>}! \indpg 118.
+!\skip\footins [=] <dimen>! \indpg 118.
+!\dimen\footins [=] <dimen>! \indpg 118.
+!\sfootnote{<math mode mark>}{<text>}! \indpg 119.
+!\beginmidinsert! \indpg 127.
+!\beginpageinsert! \indpg 127.
+!\begintopinsert! \indpg 127.
+!\captionbox{<number text>}{<title>}! \indpg 127.
+!\captionbody{<text>}! \indpg 127.
+!\captionbodyon \captionbodyoff! \indpg 127.
+!\captionbodyfont! \indpg 127.
+!\captionnumfont! \indpg 128.
+!\captiontitlefont! \indpg 128.
+!\captionskip [=] <dimen>! \indpg 128.
+!\captiontextfraction! \indpg 128.
+!\ejectinserts! \indpg 128.
+!\endmidinsert! \indpg 128.
+!\endpageinsert! \indpg 128.
+!\endtopinsert! \indpg 128.
+!\figureform{<tag or number>}{<title>}{<figure box>}! \indpg 128.
+!\figureinsert{<tag or number>}{<title>}{<figure box>}! \indpg 129.
+!\figurelabel! \indpg 129.
+!\rect <horizontal dimen> by <vertical dimen>! \indpg 129.
+!\tableform{<tag or number>}{<title>}{<table>}! \indpg 129.
+!\tableinsert{<tag or number>}{<title>}{<figure box>}! \indpg 129.
+!\tablelabel! \indpg 130.
+!\balancecolumnsize*/*        [=] <column length> ! \indpg 132.
+!\beginmulticolumnformat! \indpg 132.
+!\endmulticolumnformat! \indpg 132.
+!\ejectcolumn! \indpg 132.
+!\ejectpage! \indpg 132.
+!\firstcolumnoffset*/*      [=] <dimen>! \indpg 133.
+!\intercolumnsep*/*      [=] {<token list>}! \indpg 133.
+!\numberofcolumns*/*      [=] <integer>! \indpg 133.
+!\chead{<number or tag>}{<title>}! \indpg 137.
+!\preludehead{<title>}! \indpg 137.
+!\shead{<number or tag>}{<title>}! \indpg 137.
+!\sshead{<number or tag>}{<title>}! \indpg 137.
+!\ssshead{<number or tag>}{<title>}! \indpg 137.
+!\dssshead{<title>}! \indpg 137.
+!\Appendix! \indpg 137.
+!\beginappendices  \endappendices! \indpg 137.
+!\beginprelude  \endprelude! \indpg 138.
+!\Chapter! \indpg 138.
+!\chapterstartform = {<special pre chapter tests>}! \indpg 138.
+!\<head type>headfont! \indpg 138.
+!\Alphabetic{<integer>}! \indpg 138.
+!\alphabetic{<integer>}! \indpg 138.
+!\UpperRoman{<integer>}! \indpg 138.
+!\chtagreplaceformat! \indpg 139.
+!\shtagreplaceformat! \indpg 139.
+!\prsheadskip [=] <glue>! \indpg 139.
+!\posheadskip [=] <glue>! \indpg 139.
+!\prssheadskip [=] <glue>! \indpg 139.
+!\possheadskip [=] <glue>! \indpg 139.
+!\prsssheadskip [=] <glue>! \indpg 139.
+!\posssheadskip [=] <glue>! \indpg 139.
+!\prdsssheadskip [=] <glue>! \indpg 139.
+!\podsssheadskip [=] <glue>! \indpg 139.
+!\preludeheadformat! \indpg 139.
+!\cheadformat{<chapter>}{<text>}! \indpg 140.
+!\gensheadformat{<font>}{<number>}{<text>}{<separator>}! \indpg 140.
+!\preludheadformat{<title>}! \indpg 140.
+!\autoeqnum! \indpg 142.
+!\autotblnum! \indpg 142.
+!\autofignum! \indpg 142.
+!\<type>tagrefformat! \indpg 142.
+!\<type>num! \indpg 142.
+!\<type>tagreplaceformat! \indpg 142.
+!\<type>numform! \indpg 142.
+!\pagetagson! \indpg 142.
+!\pagetagsoff! \indpg 142.
+!{\silenttrue \auto...num{<tag>}}! \indpg 143.
+!\aneq  \aneqtag{<tag>}! \indpg 144.
+!\autonumberingon! \indpg 145.
+!\autonumberingoff! \indpg 145.
+!\autoreferencingon! \indpg 145.
+!\autoreferencingingoff! \indpg 145.
+!\auto<type>num{<tag>}! \indpg 145.
+!\inputtagfiles [=] {<input command><file name> ...}! \indpg 145.
+!\newautonum{<type>}! \indpg 146.
+!\newtag{<tag>}{<tag value>}! \indpg 146.
+!\newttag{<tag>}{<tag value>}! \indpg 146.
+!\newptag{<tag>}! \indpg 146.
+!\numberbychapter! \indpg 146.
+!\numberbysection! \indpg 146.
+!\pagequietref{<tag>} \pqref{<tag>}! \indpg 146.
+!\pageref{<tag>}  \pref{<tag>}! \indpg 147.
+!\pagetagson \pagetagsoff! \indpg 147.
+!\quietref{<tag>} \qref{<tag>}! \indpg 147.
+!\ref{<tag>}! \indpg 147.
+!\silent{<text>}! \indpg 147.
+!\specialnumberscontinuous! \indpg 147.
+!\citenum! \indpg 151.
+!\cite{<citation tag>}! \indpg 151.
+!\citeform{<citation tag>}{<TeX macro form>}! \indpg 152.
+!\citetagvalue! \indpg 152.
+!\closecitationtagfile! \indpg 152.
+!\initcitetag{<integer>}! \indpg 152.
+!\inputciteformfiles*/*          [=] { \inputwithcheck{<first form file>}*/*                  ...*/*                \inputwithcheck{<last form  file>} }! \indpg 152.
+!\inputcitetagfiles*/*          [=] { \inputwithcheck{<first tag file>}*/*                  ...*/*                \inputwithcheck{<last tag file>} }! \indpg 153.
+!\lastcitetag{<integer>}! \indpg 153.
+!\makecitationlist! \indpg 153.
+!\makelongcitationlist! \indpg 153.
+!\openlistfile{<file extension>}! \indpg 156.
+!\chtoc{<number>}{<title>}{<page number>}! \indpg 156.
+!\chtocout! \indpg 157.
+!\dssshtoc{<number>}{<title>}{<page number>}! \indpg 157.
+!\intdssshtoc! \indpg 157.
+!\dssshtocout! \indpg 157.
+!\figtoc{<number>}{<title>}{<page number>}! \indpg 157.
+!\figtocout! \indpg 157.
+!\inputfigfiles! \indpg 157.
+!\inputtblfiles! \indpg 157.
+!\inputtocfiles! \indpg 158.
+!\makefiglist! \indpg 158.
+!\maketbllist! \indpg 158.
+!\maketoclist! \indpg 158.
+!\newtocfile! \indpg 158.
+!\prtoc{<title>}{<page number>}! \indpg 158.
+!\prtocout! \indpg 158.
+!\shtoc{<number>}{<title>}{<page number>}! \indpg 159.
+!\sshtoc{<number>}{<title>}{<page number>}! \indpg 159.
+!\ssshtoc{<number>}{<title>}{<page number>}! \indpg 159.
+!\intssshtoc! \indpg 159.
+!\shtocout! \indpg 159.
+!\sshtocout! \indpg 159.
+!\ssshtocout! \indpg 159.
+!\tbltoc<number>}{<title>}{<page number>}! \indpg 159.
+!\tbltocout! \indpg 159.
+!\tocbox{<indent>}{<number>}{<title>}{<pagenumber>}! \indpg 159.
+!\tocfill! \indpg 160.
+!\writelistfile{<file extension}{\string\..toc}{<number>}{<arg>}! \indpg 160.
+!\folio! \indpg 162.
+!\uppercase\folio! \indpg 162.
+!\nopagenumberadvance! \indpg 162.
+!\pagenumber [=] <new page number>! \indpg 162.
+!\romanpagenumber [=] <new page number>! \indpg 163.
+!\vheadersize = <dimen>! \indpg 163.
+!\vfootersize = <dimen>! \indpg 163.
+!\documentstyle! \indpg 163.
+!\blankheaderstyle  \blankfooterstyle! \indpg 163.
+!\documentstyle{<list of style types>}! \indpg 163.
+!\fullpagestyle! \indpg 163.
+!\noheaderstyle  \nofooterstyle! \indpg 164.
+!\normalheaderstyle \normalfooterstyle! \indpg 164.
+!\normalpagestyle! \indpg 164.
+!\specialheaderstyle \specialfooterstyle! \indpg 164.
+!\specialpagestyle! \indpg 164.
+!\titlepagestyle! \indpg 164.
+!\headertext [=] {<token list>}! \indpg 164.
+!\footertext [=] {<token list>}! \indpg 164.
+!\specialheadertext [=] {<token list>}! \indpg 164.
+!\specialfootertext [=] {<token list>}! \indpg 164.
+!\vheadersize [=] <dimen>! \indpg 165.
+!\vfooterersize [=] <dimen>! \indpg 165.
+!\documentstyle! \indpg 167.
+!\documentstyle! \indpg 167.
+!\houterpagesize! \indpg 167.
+!\hpapersize! \indpg 167.
+!\leftmarginsize! \indpg 167.
+!\leftmarginskip! \indpg 167.
+!\topmarginsize! \indpg 167.
+!\topmarginskip! \indpg 167.
+!\vouterpagesize! \indpg 167.
+!\vpapersize! \indpg 167.
+!\vouterpagesize! \indpg 169.
+!\houterpagesize! \indpg 169.
+!\vpapersize! \indpg 169.
+!\hpapersize! \indpg 169.
+!\vsize! \indpg 169.
+!\hsize! \indpg 169.
+!\<dimen name> [=] <dimen>! \indpg 169.
+!\mag [=] <1000 times scale factor>! \indpg 170.
+!\magstep<integer>! \indpg 170.
+!\leftcolumnoffset! \indpg 171.
+!\vcolumnsize! \indpg 171.
+!\hcolumnsize! \indpg 171.
+!\vinnerpagesize! \indpg 171.
+!\hinnerpagesize! \indpg 171.
+!\inputsubdocument{<file name>}! \indpg 175.
+!\following\...hnum! \indpg 176.
+!\subdocumentmacros{<macros for subdocument>}! \indpg 176.
+!\beginabstract...\endabstract! \indpg 178.
+!\title{<first row>\cr ... <last row>}! \indpg 178.
+!\formatinrs! \indpg 178.
+!\inrsreportstyle! \indpg 178.
+!\move h:<..> v:<..>! \indpg 184.
+!\lvec h:<..> v:<..>! \indpg 184.
+!\clvec h1:<..> v1:<..> h2:<..> v2:<..> h3:<..> v3:<..>! \indpg 185.
+!\clv  (<h1> <v1>)  (<h2> <v2>)  (<h3> <v3>)! \indpg 185.
+!\penwidth <size>! \indpg 185.
+!\linecap <integer>! \indpg 185.
+!\linejoin <integer>! \indpg 185.
+!\lpatt p:<pattern>! \indpg 185.
+!\avec h:<..> v:<..>! \indpg 186.
+!\cavec h1:<..> v1:<..> h2:<..> v2:<..> h3:<..> v3:<..>! \indpg 186.
+!\cav (<h1> <v1>) (<h2> <v2>) (<h3> <v3>) ! \indpg 186.
+!\arrowheadtype t:<type>! \indpg 186.
+!\arrowheadsize l:<length> w:<width>! \indpg 186.
+!\arrowheadscale! \indpg 186.
+!\unitscale <scale>! \indpg 187.
+!\htext {<text>}! \indpg 189.
+!\vtext {<text>}! \indpg 189.
+!\rtext d:<degrees> t:{<text>}! \indpg 189.
+!\rstext d:<degrees> sc:<scale> t:{<text>}! \indpg 189.
+!\textref h:<L C R> v:<T C B>! \indpg 190.
+!\lcir r:<radius>! \indpg 193.
+!\arcc r:<radius> sd:<degrees> ed:<degrees>! \indpg 193.
+!\arcn r:<radius> sd:<degrees> ed:<degrees>! \indpg 193.
+!\pfill p:<fraction>! \indpg 193.
+!\beginsegment! \indpg 197.
+!\endsegment! \indpg 197.
+!\unitscale <scale>! \indpg 197.
+!\segmentscale <scale>! \indpg 197.
+!\absoluteposition! \indpg 197.
+!\relativeposition! \indpg 197.
+!\input inrssl! \indpg 200.
+!\fullform! \indpg 200.
+!\textform! \indpg 200.
+!\formscale <scale>! \indpg 200.
+!\hslide <title> // <text> //! \indpg 201.
+!\comment <text> //! \indpg 201.
+!\inrsform! \indpg 201.
+!\genform! \indpg 201.
+!\topdata ={<text>}! \indpg 201.
+!\botdata = {<b-text>}! \indpg 201.
+!\slidedate = {<s-date>}! \indpg 201.
+!\iftextform <...> \else <...> \fi! \indpg 201.
+!\lb \lc \last! \indpg 201.
+!\hd{<text>}! \indpg 201.
+!\begintexgraph \btg! \indpg 202.
+!\endtexgraph \etg! \indpg 202.
+!\graphdim <units>! \indpg 202.
+!\hgraphsize! \indpg 202.
+!\hgraphskip! \indpg 202.
+!\hpix <number>/<unit>! \indpg 202.
+!\vgraphsize! \indpg 202.
+!\vgraphskip! \indpg 202.
+!\vpix <number>/<unit>! \indpg 202.

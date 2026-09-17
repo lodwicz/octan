@@ -1,0 +1,224 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{cont}
+
+\def\cqu{\cquote{The life is so short, the craft so long to learn.}{Aphorisms,
+Hippocrates (460-400~BC)}
+}
+
+
+\chapterhead{cont}{SPECIAL CHARACTERS\cr and\cr ACCENTS}
+This chapter discusses {\it special characters}, both those that are single
+keys (usually) on the terminal but are used for special purposes
+and those, non mathematics,  that end up in the final text as
+single characters. An example of the first is the |{| used for grouping (see
+Chapter~\ref{bas} information on {\it grouping}) and an example of the latter is the copyright sign
+\copyright\ that is obtained by typing |\copyright|. For special mathematics
+symbols see Chapter~\ref{matsym}. 
+
+Section~\ref{controluse} discusses the special characters that do not
+normally print and are used by \tex\ and \intex\ for control purposes.
+Section~\ref{controlprint} tells how to print them in the text.
+
+A second set of special use characters, usually single keys, 
+are really single character commands to \tex\
+and \intex. Their behaviour varies depending on the circumstances. In most
+cases, they can be used with little or no thought. Occasionally errors in use
+might cause some confusion. For instance, in \intex\ the ``\vrt'' is
+interpreted as a vertical bar or rule in normal text and mathematics, but as a
+column separator with a vertical rule while building tables using \intex's
+|\begintable...\endtable| commands. The complete set of these commands for
+\intex\ is given in Section~\ref{activechar}.
+
+
+The rest of this chapter discusses the second class of special {\it text}
+characters, and the means of inserting them in the text.
+Section~\ref{specialtextsymbols} shows how to obtain such interesting
+characters as the British Pound ``{\it\$}'' paragraph symbol ``\P''. 
+Quotes, both English ``\dots'' and French  
+{\language = 1 \ldq\dots\rdq}  are discussed in
+Section~\ref{quotes}.
+Accents
+on ordinary text letters are in Section~\ref{ordaccent} and on mathematics in
+Section~\ref{mathaccent}. 
+
+
+
+\shead{controluse}{Control Characters - Meaning}
+\tex\ and \intex\ have reserved the following control characters for the uses
+indicated. None of these characters will be actually printed in the text.
+\bshortcomlist
+|\|&escape character \dots starts 
+                    all control and command sequences  \cr
+|{}|&grouping brackets \cr
+\% &indicates the end of a line in a \TeX\  file. Anything after the 
+          \%\ will be ignored by \TeX\  while processing the file. This is used
+       for comments. \cr
+|\@|&superscript sign\cr
+|_|&subscript sign\cr
+|&|&alignment character used to align characters from line to line\cr
+|$|&\it mathematics mode indicator\cr
+|$<expression>$|&{\it mathematics} mode start and end \cr
+|$$<expression>$$|&{\it display mathematics} mode \dots  start and end \cr
+|#|&parameter indicator for definitions and in alignment preambles\cr
+|~|&the {\it tie} character \dots\ really an unbreakable space between words.
+For instance, the space between the initials  in D.E. Knuth allows the last
+name to be split from the initials at the end of the line. The sequence 
+|D.E.~Knuth| will leave the space but not allow the break.\cr
+\eshortcomlist
+
+
+\shead{controlprint}{Control Characters - Printing}
+The control characters 
+\begintt
+      {     }     #     $     %     &      _     \     ~     ^
+\endtt 
+\ls
+are obtained by the control sequences
+\begintt
+     $\{$    $\}$   \#    \$    \%    \&     \_     
+        $\backslash$   \^{ }   \~{ }
+\endtt
+\ls 
+respectively,  
+except as accents. The last two are actually 
+obtained by ``accenting'' a space. 
+In mathematics the ``~\^{ }~'' and the ``~\~{ }~'' must be obtained using
+the mathematic accents (see Section~\ref{mathaccent}) 
+as |\hat{ }| or |\tilde{ }|. 
+The net effect of this is that all characters are available in any mode. 
+
+\shead{activechar}{\intex\ Special Characters}
+\intex\  special characters are all active ---  meaning that they
+are single character control sequences. The complete list is
+given below. They are used for  specifying column separators
+in tables.
+\bshortcomlist
+\vrt&this is a \vrt\ in normal text, a \vrt\ {\it Rel} in mathematics (see
+Chapter~\ref{matsym}). While making a table inside \intex\
+|\begintable ... \endtable|, the \vrt\ is a vertical rule or line  column
+that is used to separate data columns and {\bf must 
+not be used in mathematics inside tables -- use |\vrt|} 
+    (see Chapter~\ref{align}).\cr
+|"|&the double quote should not be used in ordinary text. \intex\ will give
+you a gentle reminder to either |``| or |''|. It will then put the " in the
+text. The |"| is used while making tables for indicating a rule column where
+the rule is omitted.\cr
+\eshortcomlist
+
+\shead{specialtextsymbols}{Special Text Symbols}
+\tex\ supplies a number of special symbols that can be used in ordinary text,
+and some admonitions about those that should not. There are three kinds of
+dashes in normal typeset material and \tex\ supplies all three. They are 
+- -- --- and are produced by |-| |--| and |---| respectively. They are known
+officially as the {\it dash, endash,} and {\it emdash}. They are used as
+hyphens, word separators, and idea separators, respectively. 
+These are recognized by \tex\ as {\it ligatures}. Although the English
+ligatures such as ``ff'' and ``ffi'' are recognized by \tex, most in other
+languages are not.\footnote{\dagger}{However, it is easy to modify \tex\ so
+that it does recognize those ligatures. Meanwhile, it is necessary to live
+with the mechanism given.}
+These  require
+special symbols. In addition there are special symbols such as 
+\copyright\ and \dots\ that are also useful. 
+Here is a list supplied by {\it plain}
+\bshortcomlist
+\@|\aa, \AA|& the \aa\ and \AA \cr
+\@|\ae, \AE|& the ligature \ae\ or \AE \cr
+\@|\copyright|&the copyright symbol \copyright \cr
+\@|\dag|& the dagger \dag. The  math mode |$\dagger$| looks similar but 
+                    incorporates the spacing of a binary operator. \cr
+\@|\ddag|& the double dagger \ddag. The math mode
+                    |$\ddagger$|  looks similar but incorporates the 
+                     spacing of a binary operator. \cr
+ |\dots|&dots in text \dots\ like so \cr
+\@|{\it\$}|&the nonobvious British Pound {\it\$} \cr %indexing problem with $
+\@|{\it\&}|&the script ampersand {\it\&} \cr 
+\@|\i|&the dotless \i\ for use in \^\i \cr
+\@|\j|&the dotless \j\ for use in \^\j \cr
+\@|\l, \L|&the \l\ and \L \cr
+\@|\o, \O|&the \o\ and \O \cr 
+\@|\oe, \OE|&the ligature \oe\ or \OE \cr
+\@|\P|&the paragraph symbol \P \cr
+\@|\S|&the section symbol \S \cr
+\@|\ss|&the \ss \cr
+\eshortcomlist
+
+
+\shead{quotes}{Opening and Closing Quotes}
+The ``double quote'', |"| on the keyboard {\bf should not be used},
+except in its accent form |\"| to be described later in
+Section~{\ref{ordaccent}} on accents.
+For the |\englishversion| of \intex, opening {\bf double} quotes may be obtained either
+with the |``| in plain or using |\ldq|. The closing {\bf double} 
+quotes may be obtained
+similarly using the |''| or the |\rdq|. When |\versionfrancaise| is in force,
+|\ldq| and |\rdq| when used like so  |\ldq guillemets\rdq|\footnote{\ddagger}{This is the best we can
+do with the present fonts} will give {\language=1 \ldq guillemets\rdq}.
+Note that the |\rdq| is an ordinary command that will delete spaces following
+it. 
+
+
+\shead{ordaccent}{Ordinary Accents}
+The ordinary accents supplied in {\it plain} are for the occasional insertion
+of a foreign language in  English text. The mechanisms are complete, and the
+accents are quite well placed, but the method of obtaining them from
+keyboards with special characters is not built in. In \tex, the accent always
+precedes the letter accented. Thus |\'ecole| gives \'ecole, and |fran\c cais|
+gives fran\c cais. Note the annoying space after the |\c| in the word. This
+form of input reduces the readability of the text. Agreement is needed to
+obtain a consistent multi-language format. 
+
+The following is a list of the ordinary accents in \tex\ specified by {\it
+plain}.
+\bshortcomlist
+|\`<char>|&accent grave as in \`a\cr
+|\'<char>|&accent acute as in \'e \cr
+|\^<char>|&circumflex or ``hat'' as in \^o \cr
+|\"<char>|&umlaut as in \"o \cr
+|\~<char>|&tilde as in \~n \cr
+|\=<char>|&long vowel as in \=o \cr
+|\.<char>|&dot accent as in \.a \cr
+|\b|\]|<char>|&accent bar-under as in \b d, note space \] \cr
+|\c|\]|<char>|&accent cedilla as in \c c, note space \] \cr
+|\d|\]|<char>|&accent dot-under as in \d o, note space \] \cr
+|\u|\]|<char>|&accent breve as in \u o, note space \] \cr
+|\v|\]|<char>|&``check'' as in \v o \cr
+|\H|\]|<char>|&long Hungarian umlaut as in \H o\cr
+|\t|\]|<char><char>|&tie-after accent as in \t ao\cr 
+\eshortcomlist
+
+
+\shead{mathaccent}{Accents on Mathematical Symbols} 
+Placing accents on mathematical symbols requires a certain amount of care. 
+{\it Plain} \tex\ gives an extra set of commands that are to be used for characters in
+mathematics mode. All of the following should be used when in mathematics
+mode. Note the required space \], in almost all cases.
+\begingroup \descrwd=2in
+\bshortcomlist
+|<char>'|& the prime as in $x'$ \cr
+|<char>''|& the double prime as in $x''$ \cr 
+|\acute|\]|<char>|&as in $\acute x$ \cr
+|\bar|\]|<char>|&as in $\bar x$ \cr
+|\breve|\]|<char>|&as in $\breve x$ \cr
+|\check|\]|<char>|&as in $\check x$ \cr
+|\dot|\]|<char>|&as in $\dot x$ \cr
+|\ddot|\]|<char>|&as in $\ddot x$ \cr
+|\grave|\]|<char>|&as in $\grave x$\cr
+|\hat|\]|<char>|&as in $\hat x$ \cr
+|\tilde|\]|<char>|&as in $\tilde x$ \cr
+|\vec|\]|<char>|&as in $\vec x$ \cr
+|\widehat|\]|<char>[<char>][<char>]|& as in $\widehat{x},\widehat{xy},
+ \widehat{xyz}$\cr
+|\widetilde|\]|<char>[<char>][<char>]|& as in $\widetilde{x},\widetilde{xy},
+ \widetilde{xyz}$\cr
+\eshortcomlist
+\endgroup
+When using these in a technical paper or report, it is probably better to
+make a short definition for the accented character. This will reduce typing
+and facilitate the changing the style {\t consistently} throughout the paper.
+It is a very simple form of {generic typesetting}. 
+
+\ejectpage
+\done
+

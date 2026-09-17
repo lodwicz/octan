@@ -1,0 +1,858 @@
+% DVIPS version 
+
+% included are the changes required to make it work with DVIPS 
+% It should be modifiable to any other decent driver too
+
+% This is the complete texgraph macros ... for use with the INRS/Beebe 
+% Postscript driver
+
+% LaTeX version 
+
+% Graphics macros for TeX using POSTCRIPT
+
+% ----- Needs mod to count characters in special ... some drivers have an
+%   input limit of 500 characters in a \special 
+
+
+% ===============================================================
+% THIS VERSION IS FOR USE with a PostScript Driver with
+%          \p@sfile     to signal a file name 
+%          \p@sinline    to signal inline PostScript 
+%    processes \specials and dvi commands in order. 
+%    does not place a (save restore) pair about a \special. 
+%
+%   \printhv defines scale/directions for inline Postscript
+%   \filehv  defines scale/directions for file Postscript
+%  
+%  Both INRS's modification of Beebe's DVIALW and ArborText's PostScript 
+%    drivers satisfy these minimal requirements. 
+
+% It assumes that the underlying units are 300 pix/in
+% Standard PostScript Conventions 
+% This is easily changed by changing the \hpix or \vpix
+% It assumes that x,y are in the "normal" up/left direction.
+
+% File inclusions require the existence of a bounding box for the correct
+% spacing to be left. 
+
+% ===============================
+% Most arguments, excepting file names, are delimited by spaces. Thus 
+% braces { .... } will usually only occur around inserted text ... which
+% still must be followed by a space or end of line. 
+
+
+% ======================
+
+\catcode`\@=11
+
+% =============== Driver Signal Forms =======================
+
+%\xdef\p@sfile{ps: } % file signal INRS DVIALW
+ \xdef\p@sfile{ps: plotfile } % file signal DVIPS
+\xdef\p@sinline{ps:: }     % inline signal DVIPS ... INRS DVIALW
+
+% This translates the direction of the page if the printer assumptions
+%  are different than TeX. The values should be +-1. 
+\gdef\printhv #1 #2 {\gdef\p@hv{ #1 #2 scale }}
+\gdef\filehv #1 #2 {\gdef\f@schv{ #1 #2 scale }} 
+\gdef\rtdir #1 {\gdef\r@tdir{ #1 }} % neg or  nothing PS has no pos 
+
+
+
+
+
+% ============== LateX support =================
+
+\newenvironment{TeXgraph}{\btg}{\etg}
+
+% This is the only change between the LateX and INRSTeX versions 
+
+% ======= Simple Plotfile support ===========
+
+%  These are vanilla  forms for inserting an encapsulated PostScript file
+%  or creating a centered graphics environment. 
+
+% \centergraph needs to be very \long 
+
+\long\gdef\centergraph#1{\hbox to 
+                \hsize{\hss\vbox{#1\vgraphskip}\hgraphskip\hss}}
+\gdef\centerplotfile#1{\centergraph{\btg\includefile #1 \etg}}
+
+
+% if you use the Latex command to create the new texgraph environment, 
+% then you will automatically be "inside" Texgraph. This
+% means that you should use such commands as 
+%  \includefile  \incscmvfile \incscfile 
+
+
+
+
+% ========= error messages =========
+% \language=0 -- English, 1 - French
+\ifnum \language=0 \message{<< WARNING -- TeXGraph needs DVIPS >>}
+                   \xdef\bbmess{Searching for BoundingBox }
+                   \xdef\incfile{Graphics file}
+                   \xdef\badincfile{Size/Format Error in Graphics File}
+                   \xdef\noincfile{Missing Graphics File}
+             \else
+                   \message{<< AVERTISSMENT -- TeXGraph a besoin du DVIPS >>}
+                   \xdef\bbmess{Searching for BoundingBox }
+                   \xdef\incfile{Graphics file}
+                   \xdef\badincfile{Size/Format Error in Graphics File}
+                   \xdef\noincfile{Missing Graphics File}
+             \fi
+
+% ===== debugging code ===== 
+% will send out specials as messages 
+\gdef\dmess #1{}
+\gdef\bmess #1{}
+
+% ======== \global\newif =======
+% Plain defines the \newif as a local variable. We need a global
+% version if TeXgraph is to be brought in while inside a group.
+% This is a simpler, but less elegant version of \newif
+
+%#1 is \if<..> #2 -...true #3 ...false
+\gdef\gnewif#1#2#3{\global\let#1=\iffalse \gdef#2{\let#1=\iftrue}\relax
+                          \gdef#3{\let#1=\iffalse}}
+
+% ======== TeXGraph Macros ==========
+
+% Postcript allows for arbitrary translation, scaling, rotation and clipping.
+% This version saves the current segment scale(s), unit scale(s), rotation 
+% and translation and painfully computes and retores the correct form after 
+% a segment exit. The reason for this is that Postcript can stack only one 
+% CTM, text needs to have correct rotation and translation but default
+% scaling ...
+
+% It would be preferable not to convert any of the units. However, it is 
+% necessary to know the maximum excursions. Since the PS currentpoint is 
+% not accessible to TeX, we must keep it ourselves. 
+% Since negative numbers can be used both maximum and minimum excursions 
+% are required. 
+
+
+% ====== begin -- end graphics =======
+
+% The maximum and minimum extent in the h and v direction is recorded 
+% and is accessible
+% at the end of a \btg \etg pair (in points). The same value, in pixels is accessible at
+% all times 
+\newcount\maxhpospix
+\newcount\maxvpospix
+\newcount\minhpospix
+\newcount\minvpospix
+\newdimen\hgraphsize
+\newdimen\vgraphsize
+
+\gdef\vgraphskip{\vskip\vgraphsize}
+\gdef\hgraphskip{\hskip\hgraphsize}
+
+
+\gdef\beginTeXGraphics{\t@exgraphdef \i@ncgdepth  
+                    \vbox\bgroup\offinterlineskip
+                     \h@pos=0 
+                     \global\maxhpospix=\h@pos 
+                     \global\minhpospix=\h@pos 
+                     \v@pos=0
+                   \global\maxvpospix=\v@pos 
+                   \global\minvpospix=\v@pos 
+                     \h@segoff=\h@pos \v@segoff=\v@pos
+                     \edef\o@form{}\ifnum\g@depth=1  
+                     \p@sinit  \fi \p@sset % PS initialization 
+                      \s@save}
+% \s@save saves the initialization for the special output.
+% \g@save saves some local condition 
+
+\gdef\endTeXGraphics{\g@raphout\egroup\maxhvpos\p@srestore \d@ecgdepth }
+\global\let\btg=\beginTeXGraphics
+\global\let\etg=\endTeXGraphics
+\global\let\btg=\beginTeXGraphics
+\global\let\etg=\endTeXGraphics
+
+% ========== TeXGraph Nesting Depth ==========
+\newcount\g@depth \global\g@depth=0 % initializes at zero
+\gdef\i@ncgdepth{\global\advance\g@depth by 1 }
+\gdef\d@ecgdepth{\global\advance\g@depth by -1 }
+
+
+
+% =========== Complete Graph Scaling ===============
+% There is a separate scaling for the horizontal, vertical, and text
+
+
+\gdef\grscale h:#1 v:#2 {\gdef\h@grsc{#1}\gdef\v@grsc{#1}\e@xtend 
+                           {\o@form}{#1 #2 scale }}
+                           
+\gdef\tgrscale #1 {\e@xtend{\o@form}{#1 #1 scale }}
+              % text scale h and v the same
+
+
+
+
+% ======== PostScript initialization =========
+% 
+
+\gdef\t@exgrdictdef{/td 50 dict def }
+
+
+
+\gdef\t@exgrdictinit{ td begin  /mv {moveto} def
+                                 /lv {lineto} def
+                                 /st {stroke} def
+                                 /np {newpath} def
+                                 /sl {setlinewidth} def
+                                 /sd {setdash} def
+                                 /rt {rotate} def
+                                 /gs {gsave} def
+                                 /gr {grestore} def
+                                 /tr {translate} def
+                                 /cp {closepath} def
+                                 /sg {setgray} def
+                                 /chv {currentpoint} def
+                                 /cv {curveto} def
+                                 /slc {setlinecap} def
+                                 /slj {setlinejoin} def
+                                 /sc {scale} def
+                                 /at {neg atan rt} def
+                                 /mx {mv gs chv tr} def  
+%                                 \h@vinit
+                                end }        
+% ----- initial point move ... driver dependent -----
+\gdef\Xpos{Xp\the\g@depth\b@}
+\gdef\Ypos{Yp\the\g@depth\b@}
+ 
+\gdef\h@vinit{ chv /\Ypos   exch 
+               def /\Xpos  exch def }
+\gdef\h@vset{\t@rhv  \p@hv }
+\gdef\m@vhv{ \Xpos   \Ypos   mv } % INRS
+\gdef\t@rhv{ \Xpos  \Ypos  tr } % INRS
+\gdef\t@rneghv{ \Xpos neg \Ypos neg tr } % INRS
+                     
+\gdef\p@sinit{\edef\e@form{\special{\p@sinline   
+                               \t@exgrdictdef 
+                               \t@exgrdictinit}}
+\gdef\p@sset{\special{\p@sinline  td begin \h@vinit gs \t@rhv 
+                                   \p@hv end }}\e@form\dmess{\e@form}} 
+
+% ======== PostScript termination =========
+\gdef\p@srestore{\edef\e@form{\special{\p@sinline  grestore }}\e@form
+                            \dmess{\e@form}}
+               % resets to entry into TeXgraph and recovers memory 
+
+%========= macros for converting dimensions/units =========
+% --------- \box0 must not be void ----------
+\global\setbox0=\hbox{}
+
+%default values
+\gdef\graphdim#1 {\gdef\g@dim{#1\relax}}
+
+%pixels /dim unit
+\newcount\h@pix  % sp/pixel 
+\gdef\hpix#1/#2 {\wd0=1true#2\relax
+         \h@pix=\wd0 \divide\h@pix by #1 \relax}
+\newcount\v@pix  % sp/pixel 
+\gdef\vpix#1/#2 {\wd0=1true#2\relax
+         \v@pix=\wd0 \divide\v@pix by #1 \relax}
+
+% Assumes #1 is dimension #2 is count in pixels, #3 sp/pix, #4 scalefactor (real)
+% #2 is returned
+\gdef\gendimtopix#1#2#3#4{\wd0=#1\dimen0=#4\wd0\relax
+                  \wd0=\dimen0 #2=\wd0 \divide #2 by #3\relax}
+% #1 is returned, #5 -\global or {}
+\gdef\genpixtopt#1#2#3#4#5{\multiply #2 by #3\relax\wd0=#2sp
+                      #5#1=#4\wd0\relax}
+
+% ---------- Converts maxpix to maxdim removes offset -----
+\gdef\maxhvpos{\global\advance\maxhpospix by -\minhpospix\relax
+           \genpixtopt{\hgraphsize}{\maxhpospix}{\h@pix}{\h@grsc}{\global}\relax
+              \global\advance\maxvpospix by -\minvpospix\relax
+                   \genpixtopt{\vgraphsize}{\maxvpospix}{\v@pix}{\v@grsc}{\global}}
+
+
+
+% ======== The vector offsets my be relative or absolute =====
+
+\gnewif{\ifr@elpos}{\r@elpostrue}{\r@elposfalse} %default is absolute 
+\gdef\absoluteposition{\r@elposfalse}
+\gdef\relativeposition{\r@elpostrue}
+\global\let\abspos=\absoluteposition 
+\global\let\relpos=\relativeposition 
+\global\let\absolute=\absoluteposition % historical
+\global\let\relative=\relativeposition % historical
+
+% ====== update #1 by #2 r@elpos to #3, #4 is max #5 is min=======
+\gdef\u@pdate#1#2#3#4#5{\ifr@elpos \advance #1 by #2\else
+                        \advance #2 by #3\relax
+                           #1=#2\fi
+                    \ifnum #1>#4\global #4=#1\fi
+                    \ifnum #1<#5\global #5=#1\fi
+                    }
+\gdef\h@update #1{\u@pdate{\h@pos}{#1}{\h@segoff}{\maxhpospix}{\minhpospix}}
+\gdef\v@update #1{\u@pdate{\v@pos}{#1}{\v@segoff}{\maxvpospix}{\minvpospix}}
+
+% === pixel position r@elpos to initial offset starting position
+\newcount\h@pos \h@pos=0
+\newcount\v@pos \v@pos=0
+\newcount\r@ang \r@ang=0 % 1000 times degrees ?
+
+
+% ===== Check for pen up moves only =====
+% penup/down are used to determine whether a line needs to be stroked 
+% when a line pattern or penwidth is changed. 
+ \gnewif{\ifp@down}{\p@downtrue}{\p@downfalse} 
+
+
+% ===== present segment origin and rotation ==========
+
+\newcount\h@segoff
+\newcount\v@segoff 
+\newcount\r@segoff % 1000 times degrees 
+
+
+\gdef\beginsegment{\g@raphout\begingroup\s@eginit}
+
+% segment initialization is a trifle messy 
+\gdef\s@eginit{\h@segoff =\h@pos \v@segoff=\v@pos}
+
+
+% PS has the concept of a path  that is either 
+% completed with a "stroke" or "fill" ... stroking 
+% at the end or beginning of a segment, the special is written out. This is 
+% to ensure that the input order of the graphics reflects what entities are
+% on top of what others. Further it is assumed that the origin does not
+% change during an entire \btg ...\etg section. This means that every special
+% must first move to the point where the previous one left off. \s@save
+% defines \s@restore that restores, in case they had been modified, the line 
+% width, pattern, hpos, vpos, ... and any future things that need restoration.
+% all graphic specials are ended with a stroke (st), whether it needs it not. 
+
+% we need a special form to force a space after a \the\nnn form or \p@w 
+
+\gdef\b@{ }
+
+\gdef\endsegment{\g@raphout\endgroup
+       \edef\o@form{}\s@save}
+\gdef\s@pout #1#2{\edef\e@form{\special{#1\s@restore\o@form#2}}\dmess{\e@form}\e@form
+                  \edef\o@form{}\s@save}
+%\h@vset if there is  a move before each special 
+\gdef\g@raphout{\ifx\empty\o@form \else \ifp@down 
+                 \s@pout{\p@sinline  td begin }{ st end }\fi\fi\p@downfalse}
+\global\let\graphout=\g@raphout
+
+% ====== Segment and units scaling ========
+% The units in any segment may be scaled arbitrarily. A unit scale is local
+% to a segment but affects enclosed segments unless specifically overidden 
+% in that segment. In addition there is a graph or segment scale. This
+% scaling factor is accumulative and is applied on top of the unit scale.
+% These two scaling factors allow for a segment to be designed in nominal
+% units, scaled to a nominal size and then be affected by relative scaling
+% of an entire graph or segment. In addition there is a relative/absolute
+% scale switch that allows for any segment to be unaffected by a graphscale.
+
+% \u@nitsc -- present unit scale, \s@egsc -- present segment scale
+% \g@rsc -- present graphscale ... changes when ever either of the former do.
+
+% present implementation does not allow separate v h scaling
+
+% ------ Relative/Absolute Scale ------
+\gnewif{\ifr@elscale}{\r@elscaletrue}{\r@elscalefalse}
+\gdef\absolutescale{\r@elscalefalse}
+\gdef\relativescale{\r@elscaletrue}
+\global\let\abssc=\absolutescale
+\global\let\relsc=\relativescale
+
+% ----- unit scale -----
+\gdef\unitscale#1 {\edef\u@nitsc{#1}\newgraphscale}
+
+\global\let\graphscale=\unitscale % Historical 
+
+% ----- Segment Scale -----
+
+\gdef\segmentscale#1 {\ifr@elscale \realmult{#1}{\s@egsc}{\s@egsc}\else
+                          \edef\s@egsc{#1}\fi
+                       \newgraphscale}
+
+% ---- Graph Scale --------
+% This changes whenever either of the above change
+\gdef\newgraphscale{\realmult{\u@nitsc}{\s@egsc}{\g@rsc}}
+
+
+% ------ "Real" Multiplication --------
+% These functions use the fact that a box dimension may be scaled by
+% a real. The final step is to "clean" off the pt on the resulting dim
+
+% Cleans off the pt in a dimension ... pt has catcode 12
+{\catcode`\p=12 \catcode`\t=12
+\gdef\c@lean#1pt{\edef\cx{#1}}}
+% #1 and #2 are multiplicands #3 is a command to capture result
+\gdef\realmult#1#2#3{\wd0=1pt\dimen0=#1\wd0\wd0=\dimen0\dimen0=#2\wd0
+                   \edef\R@M{\the\dimen0}\expandafter\c@lean\R@M\edef#3{\cx}}
+\gdef\realadd#1#2#3{\dimen0=#1pt\dimen2=#2pt\advance\dimen0by\dimen2
+                   \edef\R@M{\the\dimen0}\expandafter\c@lean\R@M\edef#3{\cx}}
+
+
+% -------- Command to convert nominal values to pixels ------
+% #1 is a decimal number, #2 must be a count, #3 is sp/pix
+% This includes all scalings
+\gdef\grdimtopix#1#2#3{\gendimtopix{#1\g@dim}{#2}{#3}{\g@rsc}}
+
+                
+% ------- special forms to update positions ------
+
+\gdef\i@h#1{\grdimtopix{#1}{\d@umc}{\h@pix}\h@update{\d@umc}}
+\gdef\i@v#1{\grdimtopix{#1}{\d@umc}{\v@pix}\v@update{\d@umc}}
+\gdef\h@num#1#2{\grdimtopix{#1}{#2}{\h@pix}}
+\gdef\v@num#1#2{\grdimtopix{#1}{#2}{\v@pix}}
+
+
+%dummy variables
+\newcount\d@uma
+\newcount\d@umb
+\newcount\d@umc
+\newcount\d@umd
+\newcount\d@ume
+
+% ====== end macros for converting dimensions
+
+% ======== Some more Utility Macros ========
+% ======== recursive macros ========
+\gdef\e@xtend #1#2{\let\d@x=#1\edef #1{\d@x #2}}
+\xdef\s@pex{}
+\xdef\s@pin{ }
+\gdef\s@pexpand #1 #2!{\e@xtend{\s@pex}{#1\s@pin}\edef\t@x{#2}\ifx\t@x\empty\relax \else 
+                      \s@pexpand #2!\fi}
+
+% ========== A Do Loop Construction =========
+% \do <something> for <number of times>\od 
+% This is a specialization of the \loop in Plain.
+
+\newcount\d@count 
+\gdef\do #1 for #2\od{\d@count=#2\loop #1 \ifnum\d@count>1\advance
+                            \d@count by -1\repeat}
+
+
+% ========= Graphics specials =======
+\xdef\o@form{}
+\gdef\penwidth #1 {\h@num{#1}{\d@umc}\edef\p@w{\the\d@umc}\ifp@down \g@save 
+                     \e@xtend{\o@form}{st \g@restore }
+                       \else \e@xtend{\o@form}{\p@w\b@ sl }\fi}
+\gdef\linecap #1 {\edef\s@lc{#1}\ifp@down \g@save 
+                     \e@xtend{\o@form}{st \g@restore }
+                       \else \e@xtend{\o@form}{\s@lc\b@ slc }\fi}
+\gdef\linejoin #1 {\edef\s@lj{#1}\ifp@down \g@save 
+                     \e@xtend{\o@form}{st \g@restore }
+                       \else \e@xtend{\o@form}{\s@lj\b@ slj }\fi}
+\gdef\lpatt p:#1 {\edef\v@p{#1 0}\ifp@down \g@save 
+                     \e@xtend{\o@form}{st \g@restore }
+                       \else \e@xtend{\o@form}{\v@p\b@ sd }\fi}
+
+
+% ==== parameters are in units of the nominal dimension \g@dim ======
+
+\gdef\p@move #1#2#3{\i@h{#1}\i@v{#2}\e@xtend{\o@form}{\the\h@pos\b@ \the\v@pos\b@ #3 }}
+
+\gdef\lvec h:#1 v:#2 {\p@move{#1}{#2}{lv}\p@downtrue} %draws a line 
+
+\gdef\move h:#1 v:#2 {\p@move{#1}{#2}{mv}} %moves 
+
+
+% ======  a general  vector with dimensions in pixels ======
+
+% ========= General pixel dim vector ==========
+
+\gdef\lpix h:#1 v:#2 f:#3 {\e@xtend{\o@form}{ #1 #2 #3 }}
+
+
+%============== puts TeX text at this  position
+% These are pure TeX macros that use \h@pos and \v@pos for orientation
+% Text may be put horizontally (left/right) or vertically (down/up)
+
+% ======== sp form of \h@pos and \v@pos respectively ========
+\newdimen\t@hpos
+\newdimen\t@vpos
+\gdef\s@ettpos{\d@umc=\h@pos
+               \genpixtopt{\t@hpos}{\d@umc}{\h@pix}{}{}\relax
+               \d@umc=\v@pos
+               \genpixtopt{\t@vpos}{\d@umc}{\v@pix}{}{}\relax}
+
+
+
+% any one of nine reference point may be specified on the
+% TeX box. This is Vertical T,C,B and Horizontal L,C,R 
+% The actual box is 0 height and width. 
+\newbox\t@box 
+% #1 LCR default/error L #2 TCB default/error T #3 text -- in hbox
+
+% Sets the box glues \lhglue \rhglue \tvglue \bvglue
+% #1 x/h ref, #2 v/y ref
+\gdef\textref h:#1 v:#2 {\ifx#1R\edef\lhglue{\hss}\edef\rhglue{}\else
+                             \ifx#1C\edef\lhglue{\hss}\edef\rhglue{\hss}\else
+                               \edef\lhglue{}\edef\rhglue{\hss}\fi\fi
+                          \ifx#2B\edef\tvglue{\vss}\edef\bvglue{}\else
+                             \ifx#2C\edef\tvglue{\vss}\edef\bvglue{\vss}\else
+                               \edef\tvglue{}\edef\bvglue{\vss}\fi\fi}
+\global\let\tboxref=\textref
+
+\newcount\h@oldmaxpos \newcount\v@oldmaxpos
+ 
+           %needed to save max pos when texgraph is inside an h/vtext
+
+% ========== assumes driver location at initial \btg entry ========
+% 
+
+% #1 text #2 - begin rotation form  #3 - end rotation form 
+\long\gdef\m@text#1#2#3{\g@raphout\h@oldmaxpos=\maxhpospix\relax 
+                        \v@oldmaxpos=\maxvpospix\relax 
+       \edef\h@oldgrsc{\h@grsc}\edef\v@oldgrsc{\v@grsc}\s@ettpos
+            \setbox\t@box=\vbox{\normalbaselines
+              \vskip\t@vpos\hbox{\hskip\t@hpos
+             \t@init{#2}\relax
+             \vbox to 0pt{\normalbaselines
+                          \tvglue\hbox to 0pt{\lhglue\hbox{#1}\rhglue
+                              }\bvglue}}}\relax
+          \dp\t@box=0pt\ht\t@box=0pt\wd\t@box=0pt 
+            \box\t@box
+             \t@fin{#3}
+            \global\maxhpospix=\h@oldmaxpos\relax 
+             \global\maxvpospix=\v@oldmaxpos\relax 
+            \xdef\h@grsc{\h@oldgrsc}\edef\v@grsc{\v@oldgrsc}}
+         % saves maxh(v)pospix on stack 
+
+            
+% ========== PS text initializations and terminations ===========
+\gdef\t@init#1{\special{\p@sinline  td begin \h@vinit  gr gs 
+                         \t@rhv #1 \t@rneghv end }} 
+
+\gdef\t@fin#1{\special{\p@sinline  td begin \h@vinit gr gs \m@vhv \t@rhv \p@hv end }}
+
+% .... special test 
+%\gdef\t@init#1{}
+%\gdef\t@fin#1{}
+% ... end special test
+
+
+
+\long\gdef\htext #1 {\m@text{#1}{}{}}
+\long\gdef\vtext #1 {\m@text{#1}{  90 \r@tdir rt }{}}
+\long\gdef\rtext d:#1 t:#2 {\m@text{#2}{ #1 \r@tdir rt }{}}
+\long\gdef\rstext d:#1 sc:#2 t:#3 {\m@text{#3}{ #1 \r@tdir rt #2 #2 sc }{}}
+\global\let\tbox=\htext
+
+% ========= Various Restore forms ========
+\gdef\g@save{\edef\g@restore{\p@w\b@ sl \v@p\b@ sd \s@lc\b@ slc \s@lj\b@ slj
+                             np \the\h@pos\b@ \the\v@pos\b@ mv }}
+\gdef\s@save{\edef\s@restore{\p@w\b@ sl \v@p\b@ sd \s@lc\b@ slc \s@lj\b@ slj 
+                              np \the\h@pos\b@ \the\v@pos\b@ mv }}
+
+
+
+
+% ======== circle, arcs =========
+% The PS arc will connect the center of the arc to the circumference
+% if the newpath includes the move to this point. Thus we define a 
+% set of arc functions that include/exclude this feature. The default
+% does not include this form. 
+
+\gdef\larc r:#1 sd:#2 ed:#3 {\h@num{#1}{\d@umc}\p@downtrue 
+             \e@xtend{\o@form}{ st np \the\h@pos\b@ \the\v@pos\b@ \the\d@umc\b@ #2 #3 arc
+                                st np \the\h@pos\b@ \the\v@pos\b@ mv }}
+
+\gdef\lcir r:#1 {\larc r:#1 sd:0 ed:360 }
+
+% ------ this is a raw arc ... can be used in fills --------
+
+\gdef\arcc r:#1 sd:#2 ed:#3 {\h@num{#1}{\d@umc}\p@downtrue 
+             \e@xtend{\o@form}{\the\h@pos\b@ \the\v@pos\b@ \the\d@umc\b@ #2 #3 arc }}
+
+\gdef\arcn r:#1 sd:#2 ed:#3 {\h@num{#1}{\d@umc}\p@downtrue 
+             \e@xtend{\o@form}{\the\h@pos\b@ \the\v@pos\b@ 
+                       \the\d@umc\b@ #2 #3 arcn }}
+
+% ======= fill command ==========
+% The fill command is essentially a polygonal fill ... not a point spreading
+% this means that it is possible to erase with white ... The form here
+% completes with a closepath applies the fill, starts a newpath and moves 
+% to the current point. Pattern is a grey level. 
+% 0 is black 1 is white 
+
+\gdef\pfill p:#1 {\p@downtrue
+           \e@xtend{\o@form}{cp #1 sg fill np \the\h@pos\b@ \the\v@pos\b@ mv }}
+
+
+% this form both fills and strokes around the path 
+\gdef\lpfill p:#1 {\p@downtrue
+           \e@xtend{\o@form}{cp gs #1 sg fill gr st np \the\h@pos\b@ \the\v@pos\b@ mv }}
+
+% ======== Postscript special forms ========
+% This allows "raw" postscript to be put in the graph. 
+\gdef\pst #1{\e@xtend{\o@form}{#1 }}
+
+% These are some useful postscript compatible forms.
+
+\gdef\closepath{\e@xtend{\o@form}{cp }}
+\gdef\newpath{\e@xtend{\o@form}{np }}
+\gdef\stroke{\e@xtend{\o@form}{st }}
+
+
+
+% ========= including external files ==========
+% an external file is included at the present point on the graph area
+% moves are required to get there
+% The actual file is placed inside a \t@box and tex commands are used
+% to get to the place ... They probably can be nested 
+% #1 is the filename 
+
+% The file is opened, if possible, to read its size. If this exists, it
+% is used to update the maximum h/v position. 
+% The BoundingBox is determined 
+
+
+\newread\q@file 
+% #1 is the file name
+\gnewif{\ifq@read}{\q@readtrue}{\q@readfalse}
+\gnewif{\ifq@file}{\q@filetrue}{\q@filefalse}
+\gnewif{\ifb@boxexists}{\b@boxexiststrue}{\b@boxexistsfalse}
+% #1 == %%BoundingBox, #2 llh #3 llv #4 urh #5 urv #6 rest of line  
+
+
+\gdef\uncat{\catcode`"=12}
+
+{\catcode`\%=12 
+\gdef\l@shift{\ifx\l@lh\empty \xdef\l@lh{\l@lv}\xdef\l@lv{\u@rh}\xdef
+                                   \u@rh{\u@rv}\xdef\u@rv{\e@xt}\fi} 
+\gdef\B@Box{%%BoundingBox}
+\gdef\a@tend{(atend)}
+\gdef\a@tendtest{\l@shift\ifx\l@lh\a@tend\relax\else 
+           \global\b@boxexiststrue\q@readfalse\bmess{<< At End Test >>}\fi}
+        
+\long\gdef\q@inline #1:#2 #3 #4 #5 #6 #7//{\xdef
+                \q@bbtest{#1}\xdef\l@lh{#2}\xdef
+          \l@lv{#3}\xdef\u@rh{#4}\xdef\u@rv{#5}\xdef
+                \e@xt{#6}\ifx\q@bbtest\B@Box 
+             \a@tendtest\fi 
+             \ifeof\q@file \q@readfalse \fi}
+
+\gdef\s@bbox{\b@boxexistsfalse
+             \message{<< \bbmess -- \f@ilename>>}\q@readtrue
+              \loop \relax \ifq@read\r@eadline\repeat}
+
+\gdef\r@eadline{ {\uncat \global\read\q@file to\q@parms }
+  \expandafter\q@inline\q@parms {}:{\relax} {\relax} {\relax} {\relax}
+{\relax} \relax//\bmess{<<\q@parms>>}}
+
+\gdef\g@etpsize #1{{\catcode`\%=12\openin\q@file = #1\relax
+               \edef\q@parms{}\global\q@filetrue\xdef\f@ilename{#1}
+               \ifeof\q@file \message{<<\noincfile: #1 >>}\relax
+                             \global\q@filefalse\else
+                   \s@bbox
+                  \closein\q@file\fi}}
+
+} % end of % disable 
+
+\newcount\h@px \newcount\v@px \newcount\h@mx \newcount\v@mx 
+\gdef\s@avemaxpos{\global\h@px=\maxhpospix\global\v@px=\maxvpospix
+                  \global\h@mx=\minhpospix\global\v@mx=\minvpospix}
+\gdef\r@estoremaxpos{\global\maxhpospix=\h@px\global\maxvpospix\v@px
+                  \global\minhpospix=\h@mx\global\minvpospix\v@mx}
+
+\gdef\f@sc{\b@}
+\gdef\f@rt{\b@}
+\gdef\filerotate#1{\edef\f@rt{ XposR YposR tr   #1 \r@tdir rt XposR neg 
+                               YposR neg tr }}
+
+\gdef\filescale #1{\edef\f@sc{#1 #1 sc \f@schv}}
+\gdef\p@fileinit{  td begin \h@vinit gr gs \f@rt \t@rhv \f@sc end  
+                   /texgraph save def  /showpage {} def }
+\xdef\p@filefin{ texgraph  restore }
+\global\let\mvec=\move
+
+
+
+\gdef\includefile #1 {\incscfile f:#1 sc:1 d:0 }
+
+\gdef\incscfile f:#1 sc:#2 d:#3 {\g@etpsize{#1}\ifb@boxexists
+        \message{<<\incfile: #1 >>}\realadd{\u@rh}{-\l@lh}{\p@lh}
+                                   \realadd{\u@rv}{-\l@lv}{\p@lv}
+                                   \realmult{\p@lh}{.5}{\p@lhh}
+                                   \realmult{\p@lv}{.5}{\p@lvh}
+                            \beginsegment 
+                               \segmentscale #2 
+                               \global\let\g@dimo=\g@dim 
+                                \graphdim  pt 
+                                 \mvec h:{\p@lh} v:{\p@lv}
+                                 \mvec h:{\p@lhh} v:{\p@lvh}
+                                 \m@text{}{ /XposR \Xpos\b@ def 
+                                            /YposR \Ypos\b@ def }{}  
+                            \endsegment
+                            \s@avemaxpos
+                            \beginsegment \segmentscale #2 
+                                  \mvec h:{-\l@lh} v:{\u@rv}
+                              \htext{\filescale{#2}\filerotate{#3}\relax
+                                \special{\p@sinline\p@fileinit }
+                                \special{\p@sfile  #1 }
+                                \special{\p@sinline\p@filefin }}
+                            \endsegment
+                            \r@estoremaxpos 
+                            \global\let\g@dim=\g@dimo 
+                      \else\message{<<\badincfile: #1 >>}\fi  }
+
+\gdef\incscmvfile f:#1 sc:#2 d:#3 h:#4 v:#5 {\g@etpsize{#1}\ifb@boxexists
+        \message{<<\incfile: #1 >>}\realadd{\u@rh}{-\l@lh}{\p@lh}
+                                   \realadd{\u@rv}{-\l@lv}{\p@lv}
+                                   \realmult{\p@lh}{.5}{\p@lhh}
+                                   \realmult{\p@lv}{.5}{\p@lvh}
+     \ifx#4L \edef\f@h{0}\else \ifx#4C \edef\f@h{1} \else \edef\f@h{2}\fi\fi 
+     \ifx#5T \edef\f@v{0}\else \ifx#5C \edef\f@v{1} \else\edef\f@v{2}\fi\fi
+                                   \realmult{\p@lhh}{\f@h}{\h@off}
+                                   \realmult{\p@lvh}{\f@v}{\v@off}
+                            \beginsegment 
+                               \segmentscale #2 
+                               \global\let\g@dimo=\g@dim 
+                                \graphdim  pt 
+                                 \mvec h:{-\h@off} v:{-\v@off}
+                               \beginsegment
+                                 \mvec h:{\p@lh} v:{\p@lv}
+                                 \mvec h:{\p@lhh} v:{\p@lvh}
+                                 \m@text{}{ /XposR \Xpos\b@ def 
+                                            /YposR \Ypos\b@ def }{}
+                               \endsegment  
+                            \endsegment
+                            \s@avemaxpos
+                            \beginsegment \segmentscale #2 
+                                  \mvec h:{-\l@lh} v:{\u@rv}
+                             \beginsegment
+                              \mvec h:{-\h@off} v:{-\v@off}
+                              \htext{\filescale{#2}\filerotate{#3}\relax
+                                \special{\p@sinline\p@fileinit }
+                                \special{\p@sfile  #1 }
+                                \special{\p@sinline\p@filefin }}
+                             \endsegment
+                            \endsegment
+                            \r@estoremaxpos 
+                            \global\let\g@dim=\g@dimo 
+                      \else\message{<<\badincfile: #1 >>}\fi  }
+
+
+
+% ============ Design Grid ==============
+% This will lay down a grid at the present location. The grid nominally
+% at unit dimension intervals. The scale factor sc modifies this. The 
+% sc is local only to the grid 
+
+\newcount\gcount 
+\gdef\grid nh:#1 nv:#2 sc:#3 {\gcount= #1 
+                              \beginsegment
+                              \relative
+                              \penwidth .005
+                              \graphscale #3 
+                              \beginsegment 
+                              \loop \lvec h:#2 v:0
+                                    \move h:-#2 v:1 
+                                    \ifnum \gcount > 1 
+                                      \advance\gcount by -1 \repeat
+                              \endsegment
+                              \gcount = #2
+                              \beginsegment 
+                              \loop \lvec h:0 v:#1 
+                                    \move h:1 v:-#1 
+                                    \ifnum \gcount > 1 
+                                      \advance\gcount by -1 \repeat
+                              \endsegment
+                              \endsegment}
+%========= end design grid ================
+
+
+% =========== Arrow Vectors ==============
+% There are three types of arrow heads, filled, open V and triangle
+% These are always placed on the end of a vector. 
+
+% The basic design has the arrow head which is placed on the vector 
+% It theoretically can be placed on any curve where the angle is known or
+% computable. 
+
+
+\newcount\a@len
+\newcount\a@wid
+
+% Parameter specification for arrowheads.
+% #1 -- length #2 -- width 
+% The dimensions are interpreted at current graphscale in force and
+% are local to the segment group.
+\gdef\arrowheadscale{\arrowheadsize l:.16 w:.04 }
+\gdef\arrowheadsize l:#1 w:#2 {\grdimtopix{#1}{\a@len}{\h@pix
+                               }\grdimtopix{#2}{\a@wid}{\h@pix
+                                }}
+% postcript commands for inidividual arrow form 
+\gdef\arrowheadtype t:#1 {\ifx#1T\edef\a@com{cp gs 1 sg fill gr st }\else
+                          \ifx#1F\edef\a@com{cp 0 sg fill }\else
+                                 \edef\a@com{st }\fi\fi}
+\newcount\h@lp
+\newcount\v@lp 
+
+% assumes that  the dh and dv is in \h@lp \v@lp and present location is tip
+% of arrowhead 
+\gdef\a@draw{st np \the\h@pos\b@ \the\v@pos\b@ mx 
+                   \the\v@lp\b@ neg \the\h@lp\b@  at  
+                    -\the\a@len\b@ \the\a@wid\b@ mv 0 0 lv 
+                    -\the\a@len\b@ -\the\a@wid\b@ lv 
+                     \a@com gr }
+                    
+                
+
+\gdef\avec h:#1 v:#2 {\h@lp=\h@pos\relax \v@lp=\v@pos\relax
+                      \lvec h:#1 v:#2 \advance\h@lp by -\h@pos\relax
+                                      \advance\v@lp by -\v@pos\relax
+                     \e@xtend{\o@form}{\a@draw}}
+
+
+% ============= End Arrow Vectors =============
+
+% ========= Bezier Curve ==========
+% this is a cubic spline that is determined by four points. The initial 
+% point is assumed to be the current point. An arrow is easily added.
+
+
+\gdef\clvec h1:#1 v1:#2 h2:#3 v2:#4 h3:#5 v3:#6 {\i@h{#1}\d@uma=\h@pos
+            \i@v{#2}\d@umb=\v@pos\i@h{#3}\d@ume=\h@pos\i@v{#4}\d@umd=\v@pos
+            \i@h{#5}\i@v{#6}\e@xtend{\o@form}{\the\d@uma\b@ \the\d@umb\b@ 
+                  \the\d@ume\b@ \the\d@umd\b@ \the\h@pos\b@ \the\v@pos\b@ 
+                   cv }\p@downtrue}
+\gdef\clv (#1 #2) (#3 #4) (#5 #6){\clvec h1:#1 v1:#2 h2:#3 v2:#4 h3:#5 v3:#6 }
+
+\gdef\cavec h1:#1 v1:#2 h2:#3 v2:#4 h3:#5 v3:#6 {\clvec h1:#1 v1:#2 h2:#3 v2:#4 h3:#5 v3:#6 
+               \h@lp=\d@ume \relax \v@lp=\d@umd \relax
+               \advance\h@lp by -\h@pos\relax
+               \advance\v@lp by -\v@pos\relax
+                \e@xtend{\o@form}{\a@draw}}
+\gdef\cav (#1 #2) (#3 #4) (#5 #6){\cavec h1:#1 v1:#2 h2:#3 v2:#4 h3:#5 v3:#6 }
+
+
+
+
+
+% ======= default values =========
+% These are reset each time \btg is called
+\gdef\t@exgraphdef{\setbox0=\hbox{}\graphdim in
+\hpix 300/in % INRS Default
+\vpix 300/in % INRS Default
+\printhv 1 1 % DVIPS 300 dpi
+\filehv 4.17 -4.17 % DVIPS 300/72
+\rtdir neg  % DVIPS
+\def\h@grsc{1}\def\v@grsc{1}%sets default hor/vert scales 
+\absoluteposition
+\relativescale
+\unitscale 1
+\penwidth .015
+\lpatt  p:{[]}
+\linecap 1
+\linejoin 1 
+\arrowheadsize l:.16 w:.04 
+\arrowheadtype t:T 
+\textref h:L v:T }
+
+\xdef\s@egsc{1}% initial default 
+
+\catcode`\@=12 
+
+

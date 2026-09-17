@@ -1,0 +1,157 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{subdoc}
+
+\def\cqu{\cquote{Divide et Impera}{Ancient Roman political maxim}
+          \cquote{For example, when the author prepared this manual, he did
+               one chapter at a time,}{The \TeX book, Donald~E.~Knuth}
+}
+
+\chapterhead{subdoc}{\tex ING\cr PARTS\cr of DOCUMENTS}
+\intex\ allows for parts of documents,\footnote{\dagger}{\intex\ calls these
+{\it subdocuments}.}
+either complete sections or chapters
+to be processed individually for initial checking before \tex ing the entier
+document. The individual files can be used {\bf without change} in the final
+processing. In fact it is possible to \tex\ sections, combine them into a
+chapter, and then combine the chapters into a final document. With care, even
+parts of separate documents could be combined.
+
+The system works best with the automatic numbering and creation features of
+\intex\ but these are not required. With care and a little luck, it is
+possible to re \tex\ a section of the ``final'' version without redoing the
+complete document. 
+
+It is also possible to increase to automatically save the status of a
+subdocument. This feature is not an integral part of \intex\ but an example
+used for this book is given in Section~\ref{subauto}. 
+
+
+\shead{subdoccomlist}{Command List}
+\line{
+\ext|\inputsubdocument|\hss
+\ext|\following|\hss
+\ext|\subdocumentmacros|
+}
+
+\shead{subdocformat}{Subdocument Forms}
+The form required for creating a subdocument and \tex ing it is quite simple.
+It should be of this form:
+\begintt
+\subdocumentmacros{<macro list>}
+<text>
+\done 
+\endtt
+The |<macro list>| contains the information needed to \tex\ this part of the
+document by itself. Only {\bf one} |\subdocumentmacros| command is allowed in
+a subdocument. This |<macro list>| is executed when the subdocument is
+processed by itself and {\bf completely} ignored when it is processed as part
+of a larger document. A typical |<macro list>| for a chapter of this book
+was
+\begintt
+\input helphdr
+\following\chnum = 28
+\pagenumber = 88
+\endtt
+This list contained {\bf all} the special macros for the book in the file
+|helphdr.tex|. Since the \tex ing was being done on a chapter basis, the
+|\following\chnum| sets the next chapter 
+number, and the |\pagenumber| set the
+pagenumber. If this were the third section in a chapter, then 
+|\following\shnum = 3|, might be also included. If any special numbers ought to be
+set, they should be also inserted. 
+
+It should be emphasized that these numbers affect the subdocument when it is
+being processed by itself only. The normal \intex\ autonumbering will override
+them when it is being inserted as a subdocument.
+To insert a subdocument in another, use
+\begintt
+\inputsubdocument{<filename>}
+\endtt
+The |\done| in the subdocument will {\bf not} terminate the
+processing. However, a |\bye| or |\end| will. 
+
+\shead{subauto}{Automatic Saving of Status of a Subdocument}
+The commands given below were intended to save the status of each chapter. It
+was assumed that a chapter had a |<tag>| and that the status was saved in a
+command that had the same name as that tag. The commands are stored in a file
+called |status.tex|. At the top of each subdocument the following two
+commands are inserted:
+\begintt
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{subdoc} % subdoc is the <tag> for this chapter
+\endtt
+The first line essentially checks to see if the |status| definitions have
+been inputted. If they have not, they are brought in. The |status.tex|
+defines |\chcode{<tag>}| so it must be input before |\chcode| is called. 
+The actual |status| definitions follow. They are probably only understandable
+to \tex\ writers and should be skipped by novices. 
+\begingroup\eightpoint
+\begintt
+% Status commands for each chapter. 
+% these write out the chapter code, page number, and previous chapter number.
+
+\newwrite\docstatus % gets new output file
+\def\openstatusfile{\immediate\openout\docstatus=\jobname.sta} 
+           % this is called in the outer master program
+\def\closestatusfile{\closeout\docstatus}
+\def\writestatus#1{\immediate\write
+          \docstatus{\string\chstatus//#1//\the\chnum//\the\pageno//}}
+            % this writes out the actual string when the page is output
+\def\chstatus//#1//#2//#3//{\expandafter\def\csname#1:\endcsname{\chnum=#2
+                             \pagenumber=#3}}
+            % this creates a command with the name #1 and sets values for
+            % the chapter number and page number ... the only status of 
+            % interest here.
+\def\getstatus#1{\csname#1:\endcsname}
+            % executes the status with name #1 
+\def\chcode#1{\subdocumentmacros{\input helphdr \bookstyle % macros/style
+                                    \input masth.sta % status file name
+                                    \autonumberingon % opens local tag file
+                                    \input masth.tag % master tag file
+                                    \getstatus{#1}
+                                    \def\writestatus##1{}%disables writestatus
+                                      }
+              \writestatus{#1}} % will write status unless disabled
+\endtt
+\endgroup
+Note that this imbeds a |\subdocumentmacros| inside the |\chcode|. The status
+is written unless |\subdocumentmacros| is actually executed. 
+
+
+
+\shead{subdocstyle}{Command Forms}
+\beginblockmode
+\ext\@|\inputsubdocument{<file name>}|
+\nbr
+This command inserts the subdocument into the present part of the document.
+It encloses the subdocument in a group so that any changes to variables or
+commands made in that subdocument, unless they are specifically |\global|,
+will {\bf not} affect the rest of the document. It disables the effect of
+|\done|, but not |\bye| or |\end|. It ignores everything that is inside the
+|\subdocumentmacros| command.
+
+\mbr
+\ext\@|\following\...hnum|
+\nbr
+The |\chead| and various |\s..head| commands increment their respective
+number upon entering the command. The |\following| command automatically
+compensates for this. So |\following\chnum = 4| {\bf before} the
+|\chead|,  means that the chapter beginning with the next |\chead| will
+be 4 
+and not 5. The same command also works for |\shnum|, |\sshnum| and |\ssshnum|.
+
+\mbr
+\ext\@|\subdocumentmacros{<macros for subdocument>}|
+\nbr
+This is the means of introducing information to the subdocument that is
+needed to reasonably process the subdocument, 
+but that might create disaster, or \tex\
+overload if read in more than once. A single subdocument may have only {\bf
+one} |\subdocumentmacros| command. Typical information included in this macro
+would be section numbers, chapter numbers, tag files, or citation files. No
+|\outer| command is allowed. 
+\endblockmode
+\ejectpage
+
+\done

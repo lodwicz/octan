@@ -1,0 +1,29 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+%========= ABSTRACT/TITLE FORMS =======
+% These generate a centered abstract in the \smallerfont of a family 
+
+\newdimen\absindent 
+%\def\ABSTRACT{ABSTRACT} see English/French titles
+\newtoks\everyabstract
+\newtoks\e@veryabstract
+\def\beginabstract{\begingroup
+                         \par 
+                         \leftskip= .1\hsize \rightskip=.1\hsize
+                         \noindent
+                         \ABSTRACT\par\noindent \smallerfont
+                         \the\e@veryabstract
+                         \the\everyabstract}
+\def\endabstract{\par\endgroup\vskip 2.8ex}
+
+
+%\def\titlemessage{Title} % see english/french titles
+%\def\titlefraction{0.9} % see inrsdef.tex
+%\def\titlespacing{1.5} % see inrsdef.tex
+\def\title #1{\titlepagestyle\toks0={#1}
+              \writeterm{<\titlemessage: \the\toks0>}{}{}
+              \centerline{\vbox{\hsize = \titlefraction\hsize 
+                           \titlefont\spacing{\titlespacing}
+                            \paragraphcenterline #1}}} 

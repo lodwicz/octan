@@ -1,0 +1,14 @@
+% compatability macros for multilingual and extened TeX 2.992 plus
+% assumes the existence of \charsublist 
+
+% #1 -- extended character to be exchanged 
+% #2 -- accent macro invocation letter 
+% #3 -- base character for this code
+
+\def\csubinverse #1#2#3{\expandafter\def\csname #2#3\endcsname{#1}}
+                        
+\catcode`\@=11
+\def\i{^^P}
+\def\j{^^Q}
+
+

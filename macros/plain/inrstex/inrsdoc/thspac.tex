@@ -1,0 +1,204 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{spac}
+
+\def\cqu{\cquote{It is a very sad thing that nowadays there is so little useless
+information.}{Oscar~Wilde (1854-1900)}}
+
+\chapterhead{spac}{SPACING}
+This chapter discusses the various mechanisms in \tex\ for creating and
+controlling spaces in a document. All spacing involves the insertion of glue
+that may or may not have stretch or shrink. This chapter also includes a
+description of |\beginttverbatim...\endttverbatim| that allows text to be
+inserted in a typewriter font with the original spacing. It is useful for
+such things as computer listings. 
+
+{\bf You should never need to use |\vskip| or  |\hskip| or its relatives
+while using \intex\ \dots\ except perhaps when trying to place boxes on a
+page.} \intex\ has easily modified parameters for all spacing. If you don't
+like the spacing before or after an |\shead|, check first that there is no
+underfull box and then modify |\prsheadskipsize| and |\posheadskipsize| as
+necessary. 
+
+\shead{spacomlist}{Command List}
+\begintwocolumn
+\ext|\beginttverbatim|
+\pla|\bigskip|
+\ext|\endttverbatim|
+\pla|\enskip|
+\pri|\hskip|
+\pri|\kern|
+\pla|\medskip|
+\pri|\mkern|
+\pri|\mskip|
+\pla|\quad|
+\pla|\qquad|
+\pla|\smallskip|
+\ext|\spacing|
+\pri|\vglue|
+\pri|\vskip|
+\endtwocolumn
+
+\shead{basicspac}{Basic Spacing Mechanisms}
+The basic spacing commands in \tex\ are |\hskip|, |\vskip|, and |\mskip| that
+are used in horizontal, vertical and mathematics mode respectively. All of
+these take |<glue>| in the standard form of 
+|[+ -] <dimen> [plus <dimen>] [minus <dimen>]| except |\mskip| which
+must have |<mudimen>| or units of |mu|. The stretch and shrink
+parameters are optional but the first |<dimen>| is not. In general \tex\ allows
+for line or page breaks to occur after glue in a list. If spacing is desired
+without the possibility of breaks or glue disposal, then the commands
+|\kern| and |\mkern| are 
+used. These are the ones used for placing accents. 
+
+When \tex\ breaks a page or a line, the glue at the beginning of the line or
+page is discarded, unless it is put there via a |\kern|. This means that a
+special command is needed to force glue at the top of a page. This command is
+|\vglue|. It is like |\vskip| but works at the top of the page. 
+
+
+Special preset skips in vertical mode are |\smallskip|, |\medskip|,
+|\bigskip| and for horizontal mode |\quad|, |\qquad|, and |\enspace|. The
+latter three are font size dependent and also will work in math mode.
+
+Finally |\spacing| is an \intex\ command that allows for a changing of the
+spacing between the lines of a document. For instance |\spacing{1.5}| will
+produce 1.5 line spacing. |\spacing| modifies the vertical skip that \tex\
+puts between adjacent lines. {\bf However, lists, 
+the various types of section heads, figure and table captions, and footnotes
+are all forced to be single spacing.} All those forms that have an
+|\every...| may be modified. For example 
+|\everylist = {\spacing{1.5}}|
+will force every list to have 1.5 spacing. If |\everysublist| and 
+|\everysubsublist| have not been modified, sublists and subsublists will also
+be spacing 1.5.
+
+
+\shead{verbatim}{Verbatim or ``No Fill'' Forms}
+\intex\ supplies, as an external command list, a method of producing a
+listing with the same spacing that exists in the original form. This is only
+supplied for typewriter |\tt| fonts as these are the only monospaced fonts
+available. For a monospaced font, all characters are the same width so that
+it is possible to ensure that spacing will be identical to that seen on a
+normal typewriter or terminal screen. All characters except the backslash
+``~|\|~'' are allowed. 
+For example 
+\begingroup \catcode`\^=7
+\beginttverbatim
+This is
+     an example
+        where the 
+              first word of each
+                    line starts below the
+                         second one of 
+                                the previous line. 
+\endttverbatim 
+\catcode`\^^M=13 \global\let^^M=\par\endgroup
+It was given by the following code 
+\begintt
+\beginttverbatim
+This is
+     an example
+        where the 
+              first word of each
+                    line starts below the
+                         second one of 
+                                the previous line. 
+\endtt
+|\endttverbatim|
+
+\shead{spaccomforms}{Command Forms}
+\beginblockmode
+\ext\@|\beginttverbatim|
+\nbr 
+Begins a section of ``verbatim'' or ``no fill'' mode in typewriter font. All
+characters except the backslash ``~|\|~'' are allowed. This form must
+terminate with an |\endttverbatim|. At the cost of a one character offset,
+the |\def\@{\char'134}| will drop a |\| in using |\@|. 
+
+
+\mbr
+\pla\@|\bigskip|
+\nbr
+Vertical skip of size \quad\vbox{\hrule width .25in\bigskip\hrule}.
+
+\mbr
+\ext\@|\endttverbatim|
+\nbr 
+Ends a section of ``verbatim'' or ``no fill'' mode in typewriter font. All
+characters except the backslash ``~|\|~'' are allowed. This form must
+begin with a |\beginttverbatim|. 
+
+\mbr
+\pla\@|\enskip|
+\nbr
+Horizontal skip of \hbox{\strut\vrule\enspace\vrule} -- one |\enspace| or
+.5em.
+
+\mbr
+\pri\@|\hskip [+ -] <dimen> [plus <dimen>] [minus <dimen>]|
+\nbr
+This is the basic positive and negative skip in horizontal mode.
+
+
+\mbr
+\pri\@|\kern [+ -] <dimen>|
+\nbr
+This produces an unbreakable space vertically, in vertical mode, and
+horizontally, in horizontal mode.
+
+\mbr
+\pri\@|\mkern [+ -] <decimal number>mu|
+\nbr
+This is the basic unbreakable space in math mode. It is always in |mu| units.
+Note that there are 18 |mu| to an |em|. For instance |$]\mkern -1mu[$| gives
+$]\mkern -1mu[$. 
+
+\mbr
+\pri\@|\mskip [+ -] <mudimen> [plus <mudimen>] [minus <mudimen>]|
+\nbr
+A |<mudimen>| is |<decimal number>mu|. This is the basic horizontal 
+math |mu| skip with glue. It is valid only in math mode.
+
+\mbr
+\pla\@|\medskip|
+\nbr
+This is a vertical skip of the size \quad\vbox{\hrule width .25in\medskip\hrule}.
+
+
+
+\mbr
+\pla\@|\quad \qquad|
+\nbr
+These are horizontal skips of 1em and 2em respectively. They correspond in
+this font to \hbox{\strut\vrule\quad\vrule} and 
+\hbox{\strut\vrule\qquad\vrule} respectively.
+
+\mbr
+\pla\@|\smallskip|
+\nbr
+This is a vertical skip of the size \quad \vbox{\hrule width .25in\smallskip\hrule}.
+
+\mbr
+\ext\@|\spacing {<decimal number>}|
+\nbr
+The spacing becomes |<decimal number>| times the normal spacing. The normal
+spacing is usually referred to as {\it single} spacing.
+
+
+
+\mbr
+\pri\@|\vglue [=] [+ -] <dimen> [plus <dimen>] [minus <dimen>]|
+\nbr
+This puts nondiscardable glue into a vertical list. It is usually used to
+put a vertical skip at the top of a page.
+
+\mbr
+\pri\@|\vskip [=] [+ -] <dimen> [plus <dimen>] [minus <dimen>]|
+\nbr
+This is the standard vertical skip command. If used in horizontal mode, it
+automatically causes a switch to vertical mode.
+
+\endblockmode
+\ejectpage
+\done

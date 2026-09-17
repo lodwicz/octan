@@ -1,0 +1,90 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+%========= Autonumbering, Tagging and Autoreferencing =========
+
+% These macros give the facility to symbolically refer to sections, equations,
+% tables, and references and to automatically number them.
+% Autonumber, automatically numbers sections, equations, ....
+% Autoreferencing, causes \ref{tag} to drop the tag-value in the text.
+
+% Although it is possible to have only autonumbering, referring to 
+% sections or other parts is quite difficult without referencing 
+
+
+
+% When autonumbering or autoreferencing is first turned on, 
+% a tag file is brought in.
+% Tags are written to a new file as they are generated.
+
+\newif\ifautoreference
+\newif\ifautonumber
+\newif\ift@agfilein
+\newwrite\t@agfile
+
+\newtoks\inputtagfiles \inputtagfiles={\inputwithcheck {\jobname.tag} }
+%\newtoks\inputtagfiles \inputtagfiles={\inputwithcheck {@\jobname.tag} }
+% MSDOS version with renaming 
+\def\g@ettagfile{\ift@agfilein
+                           \else 
+                             \the\inputtagfiles
+                             \immediate\openout\t@agfile=\jobname.tag
+                             \t@agfileintrue
+                           \fi}
+\def\autonumberingon{\g@ettagfile\autonumbertrue}
+\def\autonumberingoff{\autonumberfalse}
+\def\autoreferencingon{\g@ettagfile\autoreferencetrue}
+\def\autoreferencingoff{\autoreferencefalse}
+
+%-------- general tag setups --- new autonumbers
+%#1 tagtype #2 pre
+%tagrefformat will be called by \...tagrefformat and will be initially
+% defined as \...tagrefformat --> \Prerefform\...numform\Postrefform
+% and \...numform -->\the\...num
+\def\Prerefform{} \def\Postrefform{}
+
+%---- makes the tex commands for tag refformats -----
+\def\m@aketagrefformat#1#2{\edef\nnxt{
+    \noexpand\def\csname #1tagrefformat\endcsname{\noexpand\Prerefform #2\noexpand\Postrefform}}
+       \nnxt}
+
+% ----list of specials to be reset .... all are done together unless overidden
+\newtoks\s@presetlist 
+
+
+
+% ------ newautonum -------
+% This is used to produce the commands necessary to have a tag that can be
+% associated with a counter and to have the format styles for printing the
+% numbers. They are used for such things a figures, tables, equations. 
+% Three are actually defined. 
+
+%  #1 is the name of then new autonum --- 3 or less characters
+% since it might be the needed for list files
+% if #1=xy, makes an \xynum, \xynumform \xytagrefformat
+% sets \xynumform to \the\xynum
+\def\newautonum#1{
+                 \expandafter\n@ewcount\csname #1num\endcsname %allocates counter
+                \edef\n@ext{{\global\expandafter\csname #1num\endcsname = 0}}
+                 \expandafter\toks0\n@ext
+                 \appendtoks{\s@presetlist}{\toks0}
+                 \expandafter\let \csname #1tagrefformat\endcsname = \relax
+                      %inhibits expansion later on
+                 \edef\n@ext##1{\noexpand\def\csname auto#1num\endcsname
+                     ##1{\noexpand\a@utotag{##1}{\csname #1num\endcsname
+                         }{\csname #1tagrefformat\endcsname
+                         }{\csname #1tagrefformat\endcsname}{##1}}}
+                 \n@ext{##1} %makes \auto#1num
+                 \m@aketagrefformat{#1}{\csname #1numform\endcsname}
+                 \edef\n@ext{ %initializes \#1numform
+                 \noexpand\def\csname #1numform\endcsname
+                   {\noexpand\the\csname #1num\endcsname}}
+                 \n@ext
+                 }
+
+%===== Allocates the autonums to eq, fig and tbl =======
+\newautonum{eq}
+\newautonum{fig}
+\newautonum{tbl}
+%--------------------

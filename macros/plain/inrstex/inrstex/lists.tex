@@ -1,0 +1,135 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+%======== List macros ==========
+% there is only one kind of list in this system, namely on that is
+% right justified in the particular box that the list appears
+% extensions may be made to include a center
+% These list macros work relative to \rightskip and \leftskip defined
+% outside the lists. In addition, they preserve the glue that already
+% exists in \rightskip and \leftskip 
+
+% the actual skip values are set in inrsdef.tex
+
+\newskip\prlistskip %\prlistskip= 2ex plus 3pt minus 2pt
+\newskip\prsublistskip %\prsublistskip = 1ex plus 2pt minus 1pt
+\newskip\prsubsublistskip %\prsubsublistskip = .5ex plus 1pt minus 1pt
+
+\newskip\polistskip %\polistskip= 2ex plus 1pt minus 1pt
+\newskip\posublistskip %\posublistskip= 1ex plus 1pt minus 1pt
+\newskip\posubsublistskip %\posubsublistskip= .5ex plus 1pt minus 1pt
+
+\newskip\listitemskip %\listitemskip = 2ex plus 1pt minus 1pt
+\newskip\sublistitemskip %\sublistitemskip =1ex plus .75pt minus .75pt
+\newskip\subsublistitemskip %\subsublistitemskip = .5ex plus .5pt minus .5pt
+
+\newskip\l@istitemskip 
+
+\newdimen\listindent %\listindent = 3em
+\newdimen\sublistindent %\sublistindent = 6em
+\newdimen\subsublistindent %\subsublistindent = 9em
+\newdimen\listitemmarksize  %\listitemmarksize = 1.5em
+
+\newtoks\everylist
+\newtoks\everysublist
+\newtoks\everysubsublist
+\newtoks\e@verylist
+\newtoks\e@verysublist
+\newtoks\e@verysubsublist
+
+\newif\iff@irstli  % allows first li to set list parameters
+
+
+% t@ightenlist will cause the list item spacing to drop to #1 of its
+% original value 
+
+%------ scales a skip .... makes plus glue .1 of skip, minus .1 ----
+% #1 is the skip, #2 is the scale
+\def\s@caleskip#1#2{\setbox0=\hbox{\hskip#1} 
+                    \dimen0=.1\wd0 \dimen2=.1\wd0
+                    #1 = #2\wd0 plus #2\dimen0 minus #2\dimen2}
+
+
+\def\t@ightenlist#1{\s@caleskip{\listitemskip}{#1}
+                    \s@caleskip{\sublistitemskip}{#1}
+                    \s@caleskip{\subsublistitemskip}{#1}}
+\def\tightenlist{\t@ightenlist{.5}}
+\def\loosenlist{\t@ightenlist{2}} 
+
+%sample list mark .... used for  creating lists where the listitem 
+%mark size may be big or varied.
+% This is one of the most useful features of this list package. 
+
+\def\samplemark#1{\setbox0 = \hbox{#1\enspace}
+                  \advance \listindent by -\listitemmarksize
+                  \advance \sublistindent by -\listitemmarksize
+                  \advance \subsublistindent by -\listitemmarksize
+                  \listitemmarksize=\wd0
+                  \advance \listindent by \listitemmarksize
+                  \advance \sublistindent by \listitemmarksize
+                  \advance \subsublistindent by \listitemmarksize}
+
+%beginlist takes arbitrary parameters that affect the whole list such
+%  as font changes ... they are local to the list and will be undone by
+% the endlist
+\newcount\l@iststate \l@iststate=0  % 0 -- outside lists , 1 in list, 2 sublist ...
+
+%#1 - liststate, #2 - break value, #3 - listskip 
+\newif\ifo@utsidelist \o@utsidelisttrue 
+\newdimen\leftlistoffset 
+\newdimen\rightlistoffset 
+\def\b@eginlist #1#2#3{\par\penaltybreak{#2}{#3}\begingroup\parskip=0pt
+                         \normalbaselines
+                         \f@irstlitrue
+                         \ifo@utsidelist \rightlistoffset =\rightskip
+                            \leftlistoffset=\leftskip \o@utsidelistfalse\fi 
+                          \the\b@@el\the\b@el\l@iststate=#1}
+
+%\def\endlistmessage#1{<< endlist mismatch --- expected \the\l@iststate : 
+%   actual #1 >> } see english/french titles ... #2 .. skip #3= penalty
+\def\e@ndlist #1#2#3{\par \removelastskip 
+                   \ifnum \l@iststate = #1 \else \message{\endlistmessage{#1}} \fi
+                   \endgroup \penaltybreak{#3}{#2}}
+% The first list item actually sets the list parameters. This allows for
+% changes in at the beginning of a list in listitem indent and spacing.
+\def\s@etlistparms{\iff@irstli \n@ewlistparms 
+                          \advance\l@istindent by \leftlistoffset
+                          \a@dvance{\leftskip}{\l@istindent}\f@irstlifalse
+                      \fi}
+\def\n@ewlistparms{\ifcase\l@iststate 
+                    \or \let\l@istindent =\listindent
+                        \let\l@istitemskip = \listitemskip
+                    \or \let\l@istindent =\sublistindent
+                        \let\l@istitemskip = \sublistitemskip
+                    \or \let\l@istindent =\subsublistindent
+                        \let\l@istitemskip = \subsublistitemskip \fi}
+
+% #1 = itemskip #2 = leftindent #3= item flag
+\def\listitem#1 {\par
+                 \penaltybreak{-50}{\l@istitemskip}\s@etlistparms
+                 \setbox0=\hbox{#1\enspace\hss}
+                 \ifdim\wd0 < \listitemmarksize  \wd0= \listitemmarksize \fi
+                 \noindent\hskip -\listitemmarksize
+                 \box0\relax}
+\def\beginlist {\let\b@@el=\e@verylist\let\b@el=\everylist 
+                  \b@eginlist{1}{0}{\prlistskip}}
+\def\beginsublist {\let\b@@el=\e@verysublist\let\b@el=\everysublist 
+                  \b@eginlist{2}{100}{\prsublistskip}}
+\def\beginsubsublist {\let\b@@el=\e@verysubsublist\let\b@el=\everysubsublist
+                    \b@eginlist{3}{200}{\prsubsublistskip}}
+                   
+
+\def\endlist {\e@ndlist{1}{\polistskip}{-200}}
+\def\endsublist {\e@ndlist{2}{\posublistskip}{-100}}
+\def\endsubsublist {\e@ndlist{3}{\posubsublistskip}{-50}}
+
+% ----- These are official short forms for the various items ----- 
+
+\let\li =\listitem
+\let\bl =\beginlist
+\let\bsl=\beginsublist
+\let\bssl=\beginsubsublist
+\let\el=\endlist
+\let\esl = \endsublist
+\let\essl = \endsubsublist

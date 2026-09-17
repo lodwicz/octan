@@ -1,0 +1,164 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+% ======== INRSTeX Utilities ======
+
+
+% ========= Houskeeping Utilities =========
+
+% These are houskeeping utilities and should be kept. They will most likely
+% not interfere with any other commands. 
+
+\newif\ifsilent  \silentfalse % defaults to not quiet ... used in \a@utonum
+
+\def\silent#1{\setbox0=\hbox{#1}} % causes #1 to be silently expanded
+
+% ----- #1 break penalty , #2 skip amount
+\def\penaltybreak#1#2{\par\ifdim\lastskip<#2 
+  \removelastskip\penalty #1\vskip #2 \fi}
+
+% ------  advances only the dimension part of a glue statement 
+% must be of form \a@dvance #1 by #2 where #2 is a dimension
+           % coerces glue to be a dimen
+\def\a@dvance #1#2{\dimen0 = #1\relax 
+                     \advance #1 by -\dimen0\relax
+                     \advance #1 by #2\relax}
+
+
+%------- appends a second token list onto a first one ----
+%#1 token list #2 token list #1 is resulting name
+% used in creating autonumbers 
+\def\appendtoks#1#2{ \edef\next{\noexpand #1 = {\the#1 \the#2} } 
+                    \next}
+
+%---------- non outer allocations same as in plain ---------
+\def\n@ewcount{\alloc@0\count\countdef\insc@unt}
+\let\n@ewtoks=\relax % we do this to allow inrs.tex to be read in twice
+\def\n@ewtoks{\alloc@5\toks\toksdef\@cclvi}
+\def\n@ewwrite{\alloc@7\write\chardef\sixt@@n}
+\def\n@ewswitch#1{\expandafter\let\csname if#1\endcsname\relax
+  \toks@{\iftrue}%
+  \expandafter\edef\csname#1true\endcsname
+  {\let\csname if#1\endcsname=\the\toks@}%
+  \toks@{\iffalse}%
+  \expandafter\edef\csname#1false\endcsname
+  {\let\csname if#1\endcsname=\the\toks@}%
+  \csname#1false\endcsname} % the switch starts out false
+
+
+% --- undefined command check --- 7.7 from the texbook
+\def\ifundefined#1{\expandafter\ifx\csname #1\endcsname\relax} % needs \fi to end
+
+% ------ Input a file. If it does not exist, treat it as a null file. 
+%  #1  file name.
+\def\inputwithcheck#1{\edef\i@wc{#1}\openin1=\i@wc\relax 
+               \ifeof1
+                  \closein1
+               \else
+                  \closein1
+                  \input \i@wc \relax
+               \fi}
+
+% \writeterm
+%  ----------- Write to the terminal --------
+%  Format is similar to \writelistfile. Its main claim is that 
+%  it removes ugly \cr and ~ that might lead to problems. 
+%  #1#2#3  the three arguments are concatenated in the output text.
+\def\writeterm#1#2#3{{\def\cr{ }\def~{ }\immediate\write32{#1#2#3}}}
+
+
+% ======= Single/Multicolumn Page Eject and Insert Control ======
+% "\end..." is only used in conjunction with a matched "\begin...
+% However "\end" has not been redefined. 
+
+\def\ejectcolumn{\par\vfill\eject}
+\let\ejectpage=\ejectcolumn
+\def\superejectpage{\par\vfill\supereject}
+\def\done{\superejectpage\end} % to be modified
+\def\ejectinsert{\ifnum\insertpenalties>0 \null\ejectcolumn\ejectinsert\fi}
+\let\ejectinserts=\ejectinsert % historical error 
+
+
+% =========  Miscellaneous Paragraph Shape Macros =========
+
+% ---- a symmetric narrowing of the page ----
+\newtoks\everynarrowtext
+
+\def\beginnarrowtext #1 {\par
+                    \begingroup
+                    \advance\leftskip by #1\relax
+                    \advance\rightskip by #1\relax
+                    \the\everynarrowtext}
+\def\endnarrowtext {\par \endgroup}
+
+
+% ----- centers lines in paragraph ---------
+% This is used in Titles ...
+
+\def\paragraphcenterline{\advance\rightskip by 0pt plus 1fill 
+                         \advance\leftskip  by 
+                            0pt plus 1fill \def\cr{\par}\parindent = 0pt}
+
+
+% --- a very ragged right ... will suppress all hyphenation for title/sections
+\def\veryraggedright{\advance\rightskip by 0pt plus 1fil\relax}
+
+%----- linebreak in horizontal mode
+\def\linebreak{\hfil\break}
+
+% ========= Half quad ==========
+\def\hquad{\hskip .5em}
+
+
+% =========  Year/Month/Day =========
+% This is used in the Output Routine 
+% --- form for version 
+\def\date{\the\year/\the\month/\the\day}
+\def\version{Version: \date}
+
+% =========== New Boxit =============
+
+% --- puts rules around the outside of a box
+% #1 line thickness, #2 border separation #3 box
+\long\def\boxit#1#2#3{\vbox{\dimen0=#1 \dimen2=#2 \hrule height \dimen0
+     \hbox{\vrule width\dimen0 \hskip\dimen2\vbox{\vskip \dimen2
+                                                  \vbox{#3}
+                                                  \vskip \dimen2}\hskip
+                                      \dimen2 \vrule width\dimen0}
+                   \hrule height \dimen0}}
+
+
+% ============== Number Format Conversion Forms =============
+
+% ------ This gives an uppercase alphabetic form for a number ----
+% There should be an easier way! 
+
+\def\Alphabetic#1{\ifcase #1\or A\or B\or C\or D\or E\or
+                                F\or G\or H\or I\or J\or 
+                                K\or L\or M\or N\or O\or
+                                P\or Q\or R\or S\or T\or
+                                U\or V\or W\or X\or Y\or
+                                Z\else #1\fi}
+
+\def\alphabetic#1{\ifcase #1\or a\or b\or c\or d\or e\or
+                                f\or g\or h\or i\or j\or 
+                                k\or l\or m\or n\or o\or
+                                p\or q\or r\or s\or t\or
+                                u\or v\or w\or x\or y\or
+                                z\else #1\fi}
+
+% ------ This does the same for roman numerals --- from TeXbook
+\def\UpperRoman#1{\uppercase\expandafter{\romannumeral #1}}
+
+
+% ========= These are dangerous macros that easily allow for loss of @
+%    protection =========
+
+% ======= general protect/unprotect =======
+\def\protect{\catcode`\@=12}
+\def\unprotect{\catcode`@=11}
+
+% ======= Activate/deactivate =========
+\def\activate{\catcode`\"=\active \catcode`\|=\active}
+\def\deactivate{\catcode`\"=12 \catcode`\|=12}

@@ -1,0 +1,177 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+% =========== Document Styles, Page Numbering and Page Sizes ======
+% These are the macros for setting page sizes nad the various flags 
+% the header/footer styles 
+
+
+
+% ============== Document Style =============
+% Such things as page sizes, header/footer fonts headers and footers should
+% be active for an entire document. \documentstyle  is defined so that the
+% correct switches are in force to control the document. In addition
+% a \setpagesizes causes any page size changes to be made.
+
+\newif\ifd@ocsty  % switch for document style
+
+\def\documentstyle#1{\d@ocstytrue 
+                     #1\setpagesizes\d@ocstyfalse}
+% this is not done inside a group because the various assignments cannot be
+% defined global 
+
+% The switch \d@ocsty is used in to control the locality of the 
+% various page styles. 
+
+
+
+
+
+%====== page numbering ==========
+\newif\ifp@agenoadv  % determines whether to advance the page number
+\def\nopagenumberadvance{\p@agenoadvfalse}  % lasts for one page
+\p@agenoadvtrue  % defaults to advanceing on first page
+\def\n@egpagno{\global\multiply\pageno by -1 \relax}
+\def\romanpagenumber{\afterassignment\n@egpagno \global\pageno }
+\def\pagenumber{\global\pageno }
+
+
+
+
+
+
+% ===== Macros for setting page sizes ====== 
+% Pages involve margins, headers, footers, and column sizes. 
+% These set the styles and flags for single and multicolumn.
+
+% ======= dimensions for pages headers etc ======
+% the simple output fixes the header and footer size but allows
+% for the header and footer to be killed as required.
+\newdimen\hpapersize %\hpapersize= 8.5in
+\newdimen\vpapersize %\vpapersize= 11.5in
+\newdimen\vouterpagesize 
+\newdimen\houterpagesize 
+\newdimen\vinnerpagesize 
+\newdimen\hinnerpagesize 
+\newdimen\hcolumnsize
+\newdimen\vcolumnsize
+\newdimen\topmarginsize 
+\newdimen\leftmarginsize
+\newdimen\vheadersize 
+\newdimen\vfootersize
+
+% ===== Historical compatibilities =====
+\let\leftmargin=\leftmarginsize
+\let\topmargin=\topmarginsize
+
+% ===== Margin Macros ======
+\def\leftmarginskip{\hskip \leftmarginsize}
+\def\topmarginskip{\vskip \topmarginsize}
+
+%======= page style forms  ====== 
+
+\newcount\p@agetype \p@agetype=2  %normal ... not used 
+\newcount\h@eadertype \h@eadertype=2 %normal
+\newcount\f@ootertype \f@ootertype=2 %normal
+
+
+% ----- General forms  for multicolumn -------
+\def\c@ompvinnersize{\dimen0 = \vouterpagesize
+                   \ifcase\h@eadertype \relax % delete header
+                          \else \advance \dimen0  by -\vheadersize \fi
+                   \ifcase\f@ootertype \relax % delete footer
+                           \else \advance\dimen0  by -\vfootersize \fi
+                   \global\vinnerpagesize = \dimen0
+                   \ifb@alance \global\vcolumnsize = \b@alancevsize
+                      \else
+                        \advance\dimen0 by -\ht\t@opmultibox
+                        \advance\dimen0 by -\ht\b@otmultibox \relax
+\tmessage{Vcolsize - vc:\the\dimen0 - vt:\the\ht\t@opmultibox - vb:\the\ht\b@otmultibox - bs:\the\b@alancevsize - }
+                        \global\vcolumnsize=\dimen0
+                      \fi}
+
+\def\s@etvsize{\global\vsize=\vcolumnsize}
+
+% columnsize = (hinnerpagsize  - (numcols-1)intercol)/numcol
+
+\def\c@omphinnersize{\dimen0 = \houterpagesize
+                     \advance\dimen0 by -\firstcolumnoffset
+                     \advance\dimen0 by -\firstcolumnoffset \relax
+                     \global\hinnerpagesize = \dimen0}
+
+\def\s@ethsize{\setbox0=\hbox{\the\intercolumnsep}
+                     \dimen0= \numcolumns\wd0 %\the\dimen0
+                     \advance\dimen0 by -\wd0 %\the\dimen0
+                     \dimen2 = \hinnerpagesize %\the\dimen2
+                     \advance\dimen2 by -\dimen0 %\the\dimen0
+                     \divide\dimen2 by \numcolumns \relax
+                     \global\hcolumnsize = \dimen2
+                     \global\hsize = \hcolumnsize}
+\def\c@omputevsize{\c@ompvinnersize\s@etvsize}
+\def\c@omputehsize{\c@omphinnersize\s@ethsize}
+\def\setpagesizes{\c@omputevsize \c@omputehsize}
+
+
+
+% ==== headers, footers, pagestyles ========
+
+
+\newtoks\h@eaderline \newtoks\headertext \newtoks\specialheadertext
+\long\def\h@eaderform {\vbox to \vheadersize
+                         {\hsize\houterpagesize \headerfont
+                          \testhrule
+                          \the\h@eaderline\par\vfil\testhrule}\relax}
+
+\newtoks\f@ooterline    \newtoks\footertext \newtoks\specialfootertext
+\long\def\f@ooterform{ \vbox to \vfootersize
+                         {\hsize\houterpagesize \footerfont
+                          \testhrule
+                          \vfil
+                          \the\f@ooterline\par\testhrule}\relax}
+\def\m@akeheadertext{\ifcase\h@eadertype \relax  % deleted
+                            \or \vskip \vheadersize % blanked
+                            \or \let\h@eaderline = \headertext \h@eaderform
+                            \or \let\h@eaderline = \specialheadertext
+                                     \h@eaderform \fi
+                     }
+\def\m@akefootertext{\ifcase\f@ootertype \relax  % deleted
+                            \or \vskip \vfootersize % blanked
+                            \or \let\f@ooterline=\footertext \f@ooterform 
+                            \or \let\f@ooterline=\specialfootertext 
+                                    \f@ooterform \fi
+                     }
+
+%=== these last only for one page and are reset by output routine ====
+\def\blankheaderstyle{\global\h@eadertype = 1 
+                      \ifd@ocsty \global\d@ocumentheader = 1 \fi\c@omputevsize}
+\def\normalheaderstyle{\global\h@eadertype= 2 
+                      \ifd@ocsty \global\d@ocumentheader = 2 \fi\c@omputevsize}
+\def\noheaderstyle{\global\h@eadertype =0 
+                      \ifd@ocsty \global\d@ocumentheader = 0 \fi\c@omputevsize}
+\def\blankfooterstyle{\global\f@ootertype = 1 
+                      \ifd@ocsty \global\d@ocumentfooter = 1 \fi\c@omputevsize}
+\def\normalfooterstyle{\global\f@ootertype =2 
+                      \ifd@ocsty \global\d@ocumentfooter = 2 \fi\c@omputevsize}
+\def\nofooterstyle{\global\f@ootertype =0 
+                      \ifd@ocsty \global\d@ocumentfooter = 0 \fi\c@omputevsize}
+\let\specialheaderstyle=\normalheaderstyle % default
+\let\specialfooterstyle=\normalfooterstyle % default
+
+% ----- some convenient combinations -----
+\def\titlepagestyle{\global\p@agetype=1 \blankheaderstyle
+                     \blankfooterstyle}
+\def\normalpagestyle{\global\p@agetype =2 \normalheaderstyle 
+                      \normalfooterstyle}
+
+\def\specialpagestyle{\global\p@agetype =2 \specialheaderstyle
+                      \specialfooterstyle}
+\def\fullpagestyle{\global\p@agetype =0 \noheaderstyle
+                    \nofooterstyle}
+
+
+
+
+% ======== #1 is one of \<...>style --- reset values for output routine
+\newcount\d@ocumentheader
+\newcount\d@ocumentfooter

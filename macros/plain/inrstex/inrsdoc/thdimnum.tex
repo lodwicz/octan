@@ -1,0 +1,141 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{dimnum}
+
+\def\cqu{\cquote{Number the simplest and most universal idea}{
+Concerning Human Understanding, Book II, Chap. XVI, 
+John~Locke (1632-1704)}}
+
+
+\chapterhead{dimnum}{DIMENSIONS\cr NUMBERS\cr and GLUE}
+\tex\ is very concerned with the sizes of boxes and letters and the amount of
+freedom to place letters, lines and boxes on a page. Along with the normal
+page numbers, \intex\ keeps track of, among others, chapters, sections,
+subsections and equation numbers. This means that \tex\ has {\it dimensions,
+numbers}, or {\it counters}, and {\it glue}. This chapter introduces the
+valid units of measure and the forms for glue. 
+\shead{dimcomlist}{Command List}
+\beginthreecolumn
+\pri|\advance|
+\pri|\multiply|
+\pri|\divide|
+\pri\@|<units of measure>
+   cm em ex in 
+   mu pt sp|
+\pla|\newcount|
+\pla|\newdimen|
+\pla|\newskip|
+\endthreecolumn
+
+\shead{dimensions}{Dimensions}
+A dimension, or |<dimen>|, consists of a
+|[+ -]<decimal number><unit of measure>|. 
+The |<decimal number>| can be an integer, (called a {\it number}
+in the \texbook), or include a decimal point and a decimal
+fraction. The plus or minus signs are optional. 
+
+{\TeX}  recognizes English, Metric,  Printers, and font relative
+|<units of measure>|.
+Some examples, but not all, are 
+\bshortcomlist
+ |cm|&{centimeters \dots\ meters are unknown}\cr
+ |em|&{the width of an ``M'' in the current font}\cr
+ |ex|&{the height of an ``x'' in the current font}\cr
+ |in|&{inches \dots\ feet and yards are unknown}\cr
+ |mu|&{math units, there are 18 to an |em| \dots\ used only in math mode}\cr
+ |pt|&{72.2666 points to an inch}\cr
+ |sp|&scaled points \dots\ \tex's internal measure. There are 16384 |sp| to a |pt|\cr
+ |<scale factor>\dp<box number>|&the depth of box |<box number>| scaled by 
+                                 |<scale factor>|\cr
+ |<scale factor>\ht<box number>|&the height of box |<box number>| scaled by 
+                                 |<scale factor>|\cr
+ |<scale factor>\wd<box number>|&the width of box |<box number>| scaled by 
+                                 |<scale factor>|\cr
+\eshortcomlist
+The last three are dimensions, which may be scaled, of boxes and the previous
+two, |em| and |ex| are relative to a font. This means that a change in the
+font will automatically cause these values to change. Most measurements,
+involving spacing should be font dependent. |sp|, scaled points are \tex's
+internal dimension measure. All \tex\ arithmetic involving dimensions is done
+with integers.
+
+\sshead{dimalloc}{Dimension Allocation}
+\tex\ has 256 registers available for storing dimensions. These are named
+internally using integers from 0 to 255. However, both {\it plain} and
+\intex\ use some of the 256. To obtain a new one, use 
+\@|\newdimen\<dimen name>|. \tex\ will assign the next free dimension register
+to the name |\<dimen name>|. For instance \intex\ uses this mechanism to
+obtain a dimension for the horizontal  and vertical dimensions
+of the outer page, namely |\houterpagesize| and |\vouterpagesize|
+respectively. If you only want to use a dimension register within a single
+macro definition, then |\dimen0| to |\dimen9| are available. 
+
+\shead{numbers}{Numbers or Integers}
+\tex\ supplies 256 integer registers or counters. A number of these 
+are already used. For instance |\count0|, the |0| counter is used for
+page numbering. 
+To obtain a new count use \@|\newcount\<count name>|. 
+
+\shead{glue}{Glue and Skips}
+Glue is the basis for spacing. It consists of three components, a nominal
+size, a stretch and a shrink. The general form of glue is |<nominal dimen>
+[plus <stretch dimen>] [minus <shrink dimen>]|. The |<nominal dimen>| is required
+in all glue assignments but the stretch and shrink are optional. If they are
+not specified, they are set to zero. The use of stretch and shrink glue
+is used for creating ragged right borders on a page. 
+
+To obtain a new glue variable, use \@|\newskip\<skip or glue name>|. Specified
+glues are used for skips, and spacing. For instance, the skip at the end of a
+list in \intex\ is just one of many allocated for various spacings in \tex\
+
+\shead{assigndim}{Assignments: Giving dimensions, counts, and skips values}
+The general form of counter, dimension, and glue assignments are 
+\beginblockmode
+\mbr
+\@|\<count name> [=] <integer, dimen, glue>|
+\nbr
+The assignment result is always an |<integer>|.
+\mbr
+\@|\<dimen name> [=] < dimen, glue>|
+\nbr
+The assignment result is always a |<dimen>|.
+
+\mbr
+\@|\<skip or glue name> [=]  <dimen> 
+      [plus <dimen>] [minus<dimen>]|
+\nbr
+The assignment result is always a |<glue>|.
+\endblockmode
+The quantities in the |[...]| are optional. Neither the square |[ ]| nor angle
+brackets |< >| are typed. If a dimension variable is made equal to a glue
+variable, the stretch and shrink parts of the glue variable are lost. If a
+counter or integer is made equal to a dimension, the fractional part of the
+dimension is lost. 
+
+\shead{arithmetic}{Arithmetic with Dimensions, Numbers and Glue}
+\tex\ supplies three commands for doing arithmetic with dimensions and such. 
+Addition, and subtraction are handled by |\advance|, multiplication by an
+integer by |\multiply|, and division by an integer by |\divide|
+
+\beginblockmode
+\mbr
+\@|\advance \<count, dimen, glue name> by [+ -]<count, dimen, glue>|
+\nbr
+The result is of the appropriate type, |<count>, <dimen>| or |<glue>| with
+extra parameters set to zero.
+
+\mbr
+\@|\multiply \<count, dimen, glue name> by [+ -]<integer>|
+\nbr
+All parts of the |<glue>| are multiplied by the integer.
+
+\@|\divide \<count, dimen, glue name> by [+ -]<integer>|
+\nbr
+All parts of the |<glue>| are divided by the integer.
+
+There is another way to effect arithmetic. This is to note that the
+|\wd|, |\ht|, and |\dp| can take scale factors. Thus multiplication of
+dimensions is possible if the required dimension is acquired by a box.
+\endblockmode
+\ejectpage
+\done

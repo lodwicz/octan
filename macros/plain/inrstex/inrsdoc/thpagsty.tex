@@ -1,0 +1,219 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{pagsty}
+
+\def\cqu{\cquote{Insanity is often the logic of an accurate mind overtaxed.}{The
+Autocrat at the Breakfast Table, Oliver~Wendell~Holmes (1809-1894)}
+}
+
+\chapterhead{pagsty}{HEADERS\cr FOOTERS\cr and PAGE NUMBERS}
+\vskip 0pt plus 30pt 
+\intex\ supplies a large number of facilities for controlling the style of
+such things as headers, footers, and page numbering. This chapter discusses
+those facilities. Multicolumn formatting is discussed separately (see 
+Chapter~\ref{mulcol}). Of special importance is the command
+|\documentstyle{<page styles>}|. This command sets the default values for the
+entire document. Thus 
+\begintt
+\documentstyle{\twelvepoint
+               \normalheaderstyle
+               \normalfooterstyle
+               \vheadersize=1.5cm
+               \vfootersize=2cm}
+\endtt
+would set the entire document in |\twelvepoint| fonts,  set the default
+header and footer styles to ``normal'', and set the header and footer
+vertical sizes. |\documentstyle| does a |\setpagesizes| to ensure that the
+page sizes have been computed. 
+\shead{pagstycomlist}{COMMAND LIST}
+\begintwocolumn
+\hfuzz=20pt
+\ext|\blankheaderstyle|
+\ext|\blankfooterstyle|
+\ext|\documentstyle|
+\pla|\folio|
+\ext|\footerfont|
+\ext|\footertext|
+\ext|\fullpagestyle|
+\ext|\headerfont|
+\ext|\headertext|
+\ext|\noheaderstyle|
+\ext|\nofooterstyle|
+\ext|\nopagenumberadvance|
+\ext|\normalpagestyle|
+\ext|\normalheaderstyle|
+\ext|\normalfooterstyle|
+\ext|\pagenumber|
+\ext|\romanpagenumber|
+\ext|\specialfootertext|
+\ext|\specialheadertext|
+\ext|\specialpagestyle|
+\ext|\titlepagestyle|
+\ext|\vheadersize|
+\ext|\vfootersize|
+\endthreecolumn
+
+\shead{pagenumbers}{Page Numbers}
+Page numbers are assigned by |\pagenumber [=] <new page number>| where 
+|<new page number>| is an integer. Similarly  roman numerals are assigned
+by |\romanpagenumber [=] <new page number>| again where |<new page number>|
+is an integer. To print the current page number use |\folio|. This will
+give a lowercase roman or an ordinary integer. To obtain uppercase roman use
+|\uppercase{\folio}| where the number is expected to be roman. Roman
+numbers are actually held inside \tex\ as negative numbers and print out
+negative as well when the file is being processed.
+
+Normally the page number advances at the end of each page. However, it is
+possible to prevent it from advancing for one page only, at a time, by
+inserting |\nopagenumberadvance| into the file.
+
+\beginblockmode
+\mbr
+\pla\@|\folio|
+\nbr
+This prints out the current page number in either arabic or lower case roman
+as the case may be. \@|\uppercase\folio| produces an uppercase roman page
+number, or an integer, if the page number is not roman.
+
+\mbr
+\ext\@|\nopagenumberadvance|
+\nbr
+This command in the file means that the page number will not advance for this
+page. It lasts for only {\bf one} page.
+
+\mbr
+\ext\@|\pagenumber [=] <new page number>|
+\nbr
+This assigns the pagenumber to be the integer value of |<new page number>|.
+
+\mbr
+\ext\@|\romanpagenumber [=] <new page number>|
+\nbr
+This sets the  pagenumber to be roman style with 
+the integer value of |<new page number>|.
+\endblockmode
+
+\shead{headfoot}{Header and Footer Styles}
+Headers and footers appear at the top and bottom of a page respectively. In
+general they carry information such as page number, section number, or even
+report and paper type. In this book the footer does not exist and the header
+carries the chapter name and page number on even pages and the current
+section and page on odd pages. Three styles of header and footer are
+supported, blank, normal or special (with text), and none. 
+Headers and footers are boxes
+with width |\houterpagesize| and height determined by the setting of
+\@|\vheadersize = <dimen>| and \@|\vfootersize = <dimen>| respectively. 
+Blank headers/footers exist
+but have nothing printed in them. Normal (special) 
+headers/footers have the normal (special)
+header/footer text printed, and no headers/footers have the space that is
+normally taken up by the header/footer box returned to the main page. The
+three headers styles are called by |\blankheaderstyle|, |\normalheaderstyle|,
+and |\noheaderstyle|. Similarly for footers. However, all of these styles
+last for {\bf one} page only {\bf unless included as an argument to} 
+\@|\documentstyle| whereupon they become the default values of the document.
+
+Finally several
+styles have been gathered together.  |\titlepagestyle| h blanks out
+the header and footer, while  |\fullpagestyle| which deletes both headers and
+footers. |\normalpagestyle| prints the text defined by |\headertext| and
+|\footertext| while |\specialpagestyle| prints out the text defined by
+|\specialheadertext| and |\specialfootertext|.  All of these styles last for
+{\bf one} page only, whereupon the system reverts to the document style.
+ 
+\beginblockmode
+\mbr
+\ext\@|\blankheaderstyle  \blankfooterstyle|
+\nbr
+Does not allow the header/footer text to be printed and  lasts for one
+page only.
+
+\mbr
+\ext\@|\documentstyle{<list of style types>}|
+\nbr
+Sets the default or document style types to those in 
+|<list of style types>|.  The default style types may be changed as often as
+desired in any given document. 
+
+\mbr
+\ext\@|\fullpagestyle|
+\nbr
+This is equivalent to both |\noheaderstyle| and |\nofooterstyle|. It lasts
+one page only.
+
+\mbr
+\ext\@|\noheaderstyle  \nofooterstyle|
+\nbr
+This effectively returns the space occupied by the header/footer to the inner
+page. Either one lasts for one page only. 
+
+\mbr
+\ext\@|\normalheaderstyle \normalfooterstyle|
+\nbr
+The normal header/footer text prints in the box assigned to it.
+
+\mbr
+\ext\@|\normalpagestyle|
+\nbr
+This is equivalent to both |\normalheaderstyle| and |\normalfooterstyle|. It
+lasts for one page only.
+
+\mbr
+\ext\@|\specialheaderstyle \specialfooterstyle|
+\nbr
+The special header/footer text prints in the header/footer box on 
+that particular page only.
+
+\mbr
+\ext\@|\specialpagestyle|
+\nbr
+This is equivalent to both |\specialheaderstyle| and |\specialfooterstyle|. It
+lasts for one page only.
+
+
+
+\mbr
+\ext\@|\titlepagestyle|
+\nbr
+This is equivalent to |\blankheaderstyle| and |\blankfooterstyle|. It last
+only one page.
+\endblockmode
+
+\shead{headfoottext}{Header and Footer Text/Sizes}
+The header and footer text should be thought of a token string that is being
+put into a box of the appropriate size and shape. Any logic to test pages for
+placing information in different ways on, say even or odd pages should be
+included in this text. 
+\beginblockmode
+\mbr
+\ext\@|\headertext [=] {<token list>}|
+\nbr
+\ext\@|\footertext [=] {<token list>}|
+\nbr
+\ext\@|\specialheadertext [=] {<token list>}|
+\nbr
+\ext\@|\specialfootertext [=] {<token list>}|
+\nbr
+This is the text that creates the formats for the headers and footers in the
+various styles. The \tex\ commands that do the formatting are  
+the |<token list>|. The defaults are no header and a footer with a centered
+page number for the |<<PAPER STYLE>>|, the ones in this book for the 
+|<<BOOK STYLE>>|. Others will be indicated when those styles are discussed.
+The |\special...text| forms are used whenever a |\special...style| is in
+force. 
+
+\mbr
+\ext\@|\vheadersize [=] <dimen>|
+\nbr
+\ext\@|\vfooterersize [=] <dimen>|
+\nbr
+These commands set the size of the headers and footers respectively. 
+In order to ensure that the correct innerpagesize results after a header or
+footer size change, they should be followed with a |\setpagesizes|.
+They
+should be made large enough to include all the |\headertext| or
+|\footertext|, and some additional white space.
+\endblockmode
+
+\ejectpage
+\done

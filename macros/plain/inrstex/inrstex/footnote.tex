@@ -1,0 +1,22 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+%=========== Footnotes ---- similar to that in the  texbook ======
+
+%\newinsert\footins
+\newtoks\everyfootnote  % token list inserted before every footnote
+                        % but after the parameters -- cannot affect \footins
+\def\up#1{\nobreak$^{#1}\relax$}
+\def\footnote#1{\let\@sf\empty
+  \ifhmode\edef\@sf{\spacefactor\the\spacefactor}\fi
+  \up{#1}\@sf\sfootnote{#1}}
+\def\sfootnote#1{\insert\footins\bgroup\footnotefont
+      \interlinepenalty100 \let\par=\endgraf
+        \leftskip=\z@skip \rightskip=\z@skip
+        \splittopskip=3ex plus 1pt minus 1pt \floatingpenalty=20000
+        \smallskip\the\everyfootnote\relax
+        \item{\up{#1}}\bgroup\strut\aftergroup\@foot\let\next}
+\skip\footins=3ex plus 2pt minus 4pt % space added when footnote is present
+%\count\footins=1000 % footnote magnification factor (1 to 1)
+\dimen\footins=10in % maximum footnotes per page

@@ -1,0 +1,65 @@
+\catcode`@=11
+% ======= elevenpoint fonts not in plain.tex ======= 
+\font\eleventex=cmtex10 scaled 1095
+\font\elevenssb = cmssbx10 scaled 1095  % no ss bold
+\font\elevencsc = cmcsc10 scaled 1095 % caps and small caps
+\font\elevenbfx = cmbx10 scaled 1095 % bold wide
+\font\elevenbfy = cmbsy10 scaled 1095 %bold math symbols?
+
+% ===== elevenpoint fonts 
+\font\elevenrm= cmr10 scaled 1095
+\font\elevenrmsca = cmr10 scaled 1095
+\font\elevenbf = cmb10 scaled 1095
+\font\elevenbfxsca = cmbx10 scaled 1095
+\font\elevenss = cmss10 scaled 1095 
+\font\elevenit = cmti10 scaled 1095
+\font\eleveni = cmmi10 scaled 1095
+\font\elevensl = cmsl10 scaled 1095
+\font\elevensy = cmsy10 scaled 1095
+\font\eleventt = cmtt10 scaled 1095
+\font\elevensc = cmcsc10 scaled 1095
+\let\sanss = \elevenss
+
+\let\elevenex=\tenex
+
+
+\def\elevenpoint{\def\pointsize{eleven}%
+  \def\rm{\fam0\elevenrm}%
+  \textfont0=\elevenrm \scriptfont0=\eightrm \scriptscriptfont0=\sixrm
+  \textfont1=\eleveni \scriptfont1=\eighti \scriptscriptfont1=\sixi
+  \textfont2=\elevensy \scriptfont2=\eightsy \scriptscriptfont2=\sixsy
+  \textfont3=\elevenex \scriptfont3=\elevenex \scriptscriptfont3=\elevenex
+  \def\it{\fam\itfam\elevenit}%
+  \textfont\itfam=\elevenit
+  \def\sl{\fam\slfam\elevensl}%
+  \textfont\slfam=\elevensl
+  \def\bf{\fam\bffam\elevenbf}%
+  \textfont\bffam=\elevenbf \scriptfont\bffam=\eightbfx
+   \scriptscriptfont\bffam=\sixbfx
+  \def\tt{\fam\ttfam\eleventt}%
+  \textfont\ttfam=\eleventt \scriptfont\ttfam=\tentt
+  \tt \ttglue=.5em plus .25em minus .15em
+  \normalbaselines\rm % now so resets are ok. 
+  \setstrut
+  \ifd@ocsty \def\documentpointsize{eleven}%
+              \let\footerfont=\elevenit
+              \let\headerfont=\elevenit 
+              \let\footnotefont = \ninepoint
+              \let\smallerfont = \ninepoint
+              \let\cheadfont = \eighteenrmsca
+              \let\sheadfont=\fourteenbfxsca
+              \let\ssheadfont=\elevenbfxsca
+              \let\sssheadfont=\elevenbfxsca
+              \let\dsssheadfont=\elevenbfxsca
+              \let\captionnumfont=\elevenbfxsca
+              \let\captiontitlefont=\relax
+              \let\captionbodyfont=\relax
+              \let\eqnumfont=\rm
+              \setspacings\fi
+  \let\bigfont = \twelvermsca
+  \let\biggfont = \fourteenrmsca
+  \let\bigggfont = \eighteenrmsca
+  \let\titlefont = \bigggfont
+  \let\sc=\ninerm
+  }
+\catcode`@=12

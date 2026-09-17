@@ -1,0 +1,8 @@
+%====== bugs in plain
+\catcode`\	=10 %  version in plain does not stick
+
+%======= modifications to plain =======
+\let\newcount=\n@ewcount
+      % needs to be inner for assigning counts to such things as problems
+      % when part of subdocuments 
+                                              

@@ -1,0 +1,125 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{glue}
+\def\cqu{}
+
+\chapterhead{glue}{GLUE -- REVISITED}
+Glue is the binder that lets \tex\ do its job. This chapter discusses some
+preset forms of glue and their uses. Along with glue parameters there are a
+number of special commands for inserting glue. The most interesting have
+different degrees of infinity, namely |\hfil|, |\hfill|, |\hfilneg|, |\hss|,
+and their vertical counterparts. 
+
+Because of the special spacing requirements of mathematics, \tex\ defines
+skips and spacing that are valid in mathematics mode only. Examples are the
+are the special preset |mu| glues of |\thickmuskip|,
+|\medmuskip|, |\thinmuskip|.
+The |\newskip| and |\newmuskip| commands allocate skip (or really glue)
+or muskip registers respectively for special uses. For example the specific
+glues surrounding section heads are held in glue registers. 
+
+It should be noted that the various |\...muskip| do not cause horizontal
+spacing in math mode by themselves. They are used with |\mskip| to actually
+cause the insertion of the glue.
+
+
+\shead{gluecomlist}{Command List}
+\beginthreecolumn
+\pla|\hfil \hfill|
+\pla|\hfilneg|
+\pla|\hss|
+\pla|\medmuskip|
+\pla|\newskip|
+\pla|\newmuskip|
+\pla|\thickmuskip|
+\pla|\thinmuskip|
+\pla|\vfil \vfill|
+\pla|\vfilneg|
+\pla|\vss|
+\endthreecolumn
+
+
+\shead{gluecomform}{Command Forms}
+\beginblockmode
+\pla\@|\hfil \hfill|
+\nbr
+\pla\@|\hfilneg|
+\nbr
+\pla\@|\hss|
+\nbr
+%\tracingall \tracingonline=0
+These are all various forms of horizontal (or math) mode commands that insert
+infinite quantities of glue. |\hfil|, |\hfill|, |\hfilneg|, and |\hss| insert
+|plus 1fil|, |plus 1fill|, |minus 1fil|, and |plus 1fil minus 1fil|. 
+The first two are {\it stretch} glues, the third is {\it shrink} glue and the
+last is both. It
+should be noted that when \tex\ tries to stretch or shrink glue values, they
+vary according to their value. If there exists both |fil| and finite value
+glue in a box or line, then all the stretch if it is |plus| glue 
+or shrink if it is |minus| glue will be in
+the section with the |fil| glue. If there is |fill| glue and either |fil| or
+finite glue, then all the stretch or shrink will be in the |fill| sections.
+Similarly with |filll| glue, which is not supplied in as readily usable form.
+The difference in behaviour between |\hfil| and |\hss| is that |\hss| glue
+will allow the contents of a box to spill outside without resulting in an
+overfull box while |\hfil| will only fill or push contents to the edge of the
+box. The major use for these glues are to center or to force stuff to either
+edge of a box.  For instance this
+\begintt
+\line{\vrule \hfil one \hfil two \hfil three 
+         \hfill four \hfil five \hfil six 
+         \hfill seven \hfil eight \hfil nine\vrule}
+\endtt
+gives
+
+\line{\vrule \hfil one \hfil two \hfil three 
+         \hfill four \hfil five \hfil six 
+         \hfill seven \hfil eight \hfil nine\vrule}
+
+
+
+\mbr
+\pla\@|\medmuskip|
+\nbr
+This is a preset |mu| glue. |\medmuskip = 4mu plus 2mu minus 4mu| for use
+with |\mskip|. This is \hbox{\strut\vrule$\mskip\medmuskip$\vrule}.
+
+
+\mbr
+\pla\@|\newskip\<skip name>|
+\nbr
+This assigns a new skip or glue register to the name |\<skip name>|. Glue
+values may be assigned to it by |\<skip name> [=] <glue>|.
+
+\mbr
+\pla\@|\newmuskip\<muskip name>|
+\nbr
+This assigns a new muskip or muglue register to the name |\<muskip name>|. Glue
+values may be assigned to it by |\<muskip name> [=] <muglue>|.
+
+\mbr
+\pla\@|\thickmuskip|
+\nbr
+This is a preset |mu| glue. |\thickmuskip = 5mu plus 5mu| for use
+with |\mskip|. This is \hbox{\strut\vrule$\mskip\thickmuskip$\vrule}.
+
+
+\mbr
+\pla\@|\thinmuskip|
+\nbr
+This is a preset |mu| glue. |\thinmuskip = 3mu| for use
+with |\mskip|. This is \hbox{\strut\vrule$\mskip\thinmuskip$\vrule}
+
+
+\mbr
+\pla\@|\vfil \vfill|
+\nbr
+\pla\@|\vfilneg|
+\nbr
+\pla\@|\vss|
+\nbr
+These are the vertical analogues to the infinite horizontal glues and act in
+much the same manner. See the section on |\hfil ...|.
+\endblockmode
+\ejectpage
+\done

@@ -1,0 +1,93 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+% ============ Tag Generation ==========
+% These are the macros that generate the actual tags. They are used in 
+% automatic equation numbering, section heads and any \auto...num{tag} form. 
+
+
+% ============== Symbol that is dropped in when a tag is undefined ======
+\def\undefsymbol{\hbox{\vrule width 1em height .7em}}
+
+% ========== Tag types ============
+% Two types of tags are now supported. They differ in that one form is
+% immediate, and hence can refer only to things that have been defined while
+% the other is delayed until the page is printed. These latter sometimes do
+% migrate all the way out of internal boxes. 
+% \ptag is the delayed form and \tag is the immediate form 
+
+% page tags may turn out to be rather expensive. They are turned on through 
+% the following form 
+\newif\ifp@tag 
+\def\pagetagson{\p@tagtrue} % this may require more work later 
+\def\pagetagsoff{\p@tagfalse} % this is the default 
+
+
+% ============ Tag macros =========
+%    #1 is tag string 
+%    #2 is tag value  (defined as the macro ":@#1")
+
+\def\tag#1#2{\expandafter\xdef\csname :@#1\endcsname{#2}}
+
+%   #1 is tag string 
+%   #2 is tag value (defined as the macro ";@#1") 
+
+\def\ptag#1#2{\expandafter\xdef\csname ;@#1\endcsname{#2}}
+
+% \newttag makes an immediate \tag and writes it out immediately 
+
+\def\newttag#1#2{\def\next{#1}\ifx \next\empty\tag{#1}{#2}\else
+                  \tag{#1}{#2}\ift@agfilein \immediate\write\t@agfile 
+               {\string\tag{#1}{#2}}\fi\proofmargin{#1 ==> #2}\fi}
+
+% \newptag makes a page tag by writing it out to a file .. it is 
+% not made immediately              
+
+
+\def\newptag#1{\def\next{#1}\ifx \next\empty\relax\else
+                  \ift@agfilein 
+                   {\let\folio=\relax\xdef\next{\write\t@agfile 
+          {\string\ptag{#1}{\folio}}}}\else\xdef\next{\relax}\fi
+                   \fi\next}
+
+\def\newtag#1#2{\newttag{#1}{#2}\ifp@tag\newptag{#1}\fi}
+
+
+%undefined tag message
+
+%\def\undeftagmessage#1{ <<<tag:#1 = undefined>>> } see english/french titles
+
+% Tag reference macro
+%    #1 is the string that was originally used in the tag
+\def\r@ef#1#2{\def\doit{\ifundefined{#2#1}\writeterm{\undeftagmessage{#1}}{}{}\proofmargin
+          {tag: #1 <-- undefined}\undefsymbol\else
+           \proofmargin{ #1 <-- \csname #2#1\endcsname
+             }\csname #2#1\endcsname
+                       \fi}\relax
+            \ifautoreference \doit \else#1\fi}
+\def\q@ref#1#2{\ifautoreference \csname #2#1\endcsname\else#1\fi}
+
+% ========= Normal Section Tag References ===========
+\def\ref#1{\r@ef{#1}{:@}}
+\def\quietref#1{\q@ref{#1}{:@}}
+
+% ======== Page References ==========
+\def\pageref#1{\r@ef{#1}{;@}}
+\def\pagequietref#1{\q@ref{#1}{;@}}
+\let\pref=\pageref
+\let\qref=\quietref
+\let\pqref=\pagequietref
+
+
+% General autotag generation, used for equation numbers, figure numbers etc.
+%    #1 = tag
+%    #2 = counter
+%    #3 = tag format
+%    #4 = auto text
+%    #5 = noauto text
+%  does not generate text if \silenttrue 
+\def\a@utotag#1#2#3#4#5{\ifautonumber
+                           \global\advance #2 by 1 \relax 
+                    \newtag{#1}{#3}\edef\t@ext{#4}\else \edef\t@ext{#5}\fi
+                    \ifsilent\else\t@ext\fi}

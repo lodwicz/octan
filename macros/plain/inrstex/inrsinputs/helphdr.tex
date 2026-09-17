@@ -1,0 +1,306 @@
+
+% -*-tex-*-
+% tex 1.1
+% special definitions
+\catcode`\@=11
+% subdocument macros fix 
+
+\def\lb{ \li $\bullet$ }
+
+\def\subdocumentmacros#1{\ifs@ubdocument #1 \fi\s@ubdocumentfalse}
+
+
+%simple line skip
+\def\ls{\vskip \baselineskip \noindent}
+
+%vphantom "bug"
+\def\sphantom#1{\setbox0=\hbox{#1} \setbox2=\null \ht2=\ht0 \dp2=\dp0 \box2}
+
+% INRS
+\def\INRS{INRS-\kern-.1emT\'el\'e\-com\-muni\-ca\-tions}
+
+%check form %will print in proof mode only
+\long\def\proofcheck#1{\ifproofmode \par Proofcheck: \par #1 \fi}
+
+\def\comhead#1{\penaltybreak{-1000}{2.8ex}\centerline{\sssheadfont #1}\smallskip\nobreak}
+
+\let\tex = \TeX    % its easier to type
+\def\inprint{INRSprint}
+\def\mtex{T\kern-.1667em\lower.5ex\hbox{\^E}\kern-.125emX}
+\def\texbook{\tex book}
+\def\plain{{\it plain}}
+\def\intex{INRS\mtex}
+
+\def\vrt{\hbox{\tt\char`\|}} % vertical line
+\def\dnArrow{\hbox{\tt\char'14}} % downward arrow
+\def\upArrow{\hbox{\tt\char'13}} % upward arrow
+\def\]{\hbox{\tt\char`\ }} % visible space
+
+%special boxits
+
+\def\hhboxit#1{\hbox{\vrule\vbox{\hrule\hbox{#1}\hrule}\vrule}}
+\def\hvboxit#1{\hbox{\vrule\vbox{\hrule\hbox{\vbox{#1}}\hrule}\vrule}}
+\def\vvboxit#1{\vbox{\hrule\hbox{\vrule\vbox{#1}\vrule}\hrule}}
+\def\vhboxit#1{\vbox{\hrule\hbox{\vrule\vbox{\hbox{#1}}\vrule}\hrule}}
+\let \hh=\hhboxit \let \vh=\vhboxit \let \vv=\vvboxit \let \hv=\hvboxit 
+
+
+
+%========== simple forms for prim,plain,ext ended commands =======
+\def\pri{\leavevmode\llap{$\bullet$\kern 5pt}\nobreak}
+\def\pla{\leavevmode\llap{$\diamond$\kern 5pt}\nobreak}
+\def\ext{\leavevmode\llap{$\star$\kern 5pt}\nobreak}
+
+%======== simple multicolumn for symbols and commands 
+% must fit on single page and have no inserts
+% will be balanced
+
+\newbox\simpgalleybox
+\newdimen\simphcolumnsize
+\newdimen\simpfirstoffset \simpfirstoffset = 1em
+\newtoks\simpcolumnsep \simpcolumnsep = {\vrule\hskip 2em\vrule}
+\newcount\simpnumcolumns 
+\def\setsimphsize{\setbox0=\hbox{\the\simpcolumnsep}
+                     \dimen0= \simpnumcolumns\wd0 %\the\dimen0
+                     \advance\dimen0 by -\wd0 %\the\dimen0
+                     \advance\dimen0 by \simpfirstoffset
+                     \dimen2 = \hcolumnsize %\the\dimen2
+                     \advance\dimen2 by -\dimen0 %\the\dimen0
+                     \divide\dimen2 by \simpnumcolumns
+                     \global\simphcolumnsize = \dimen2
+                     }
+
+\def\beginsimplemulticolumn{
+       \setbox\simpgalleybox = \vbox\bgroup \hsize\simphcolumnsize}
+
+
+\def\endsimplemulticolumn{ \egroup \dimen0 = \ht\simpgalleybox
+                           \advance\dimen0 by \dp\simpgalleybox
+                           \divide\dimen0 by \simpnumcolumns
+                           \advance\dimen0 by 0pt % size of split box
+                           \count255=1
+                           \splitmaxdepth=\maxdepth 
+                           \splittopskip=0pt
+                           \setbox2 = \vsplit\simpgalleybox to \dimen0
+                           \setbox0 = \hbox{\vbox to \dimen0{\unvbox2\vss}}
+                           \loop \ifnum \count255 < \simpnumcolumns
+                                  \setbox2 = \vsplit\simpgalleybox to\dimen0
+                  \setbox0 = \hbox{\unhbox0\the\simpcolumnsep
+                                    \vbox to \dimen0{\unvbox2\vss}}
+                                  \advance\count255 by 1
+                                \repeat
+                           \centerline{\box0}}
+
+%use default values
+\def\beginthreecolumn{\begincolumns 3}
+\def\begintwocolumn{\begincolumns 2}
+\def\begincolumns#1{\par\simpnumcolumns= #1
+                      \simpfirstoffset = 10pt 
+                      \simpcolumnsep = {\hskip 2em}
+                      \setsimphsize
+                      \beginsimplemulticolumn \obeylines
+                      \advance\parskip by 0pt plus 2pt minus 2pt
+                      \parindent =0pt}
+\let\endthreecolumn=\endsimplemulticolumn
+\let\endmulticolumn=\endsimplemulticolumn
+\let\endtwocolumn = \endsimplemulticolumn
+%command followed by explanation or short example
+\newdimen\descrwd \descrwd = 2.5in
+\def\bshortcomlist{\begingroup$$\tabskip=1em plus 1fil 
+              minus 1fil\halign\bgroup##\dotfill&\quad 
+                  \vtop{\hsize \descrwd \veryraggedright\noindent\strut ##\strut} \cr}
+\def\eshortcomlist{\crcr \egroup$$\endgroup}
+
+
+% macros for verbatim scanning
+\chardef\bslash=`\\
+\chardef\other=12
+\def\space{\leavevmode\hskip.5emplus1ptminus1pt\relax}
+{\obeyspaces %makes a space active for inside def 
+\gdef\ttverbatim{\begingroup
+\def|{\char`\|}\catcode`\\=\other
+\catcode`\{=\other
+\catcode`\}=\other
+\catcode`\$=\other
+\catcode`\&=\other
+\catcode`\#=\other
+\catcode`\%=\other
+\catcode`\~=\other
+\catcode`\_=\other
+\catcode`\^=\other
+\catcode`\<=\other
+\catcode`\>=\other
+\parindent0pt\parskip0pt plus1pt%
+\obeyspaces\let =\space
+\obeylines\tt}}
+
+\def\hendgraf{\endgraf\leavevmode}
+\outer\def\begintt{\vskip-\baselineskip$$\let\par=\hendgraf\ttverbatim%
+\catcode`\|=0\ttfinish}
+{\catcode`\|=0 |catcode`|\=\other% | is temporary escape character
+|obeylines% end of line is active
+|gdef|ttfinish#1^^M#2\endtt{|vbox{#2}|endgroup$$|vskip-|baselineskip|noindent|ignorespaces}}
+
+{\catcode`\|=\active \gdef\g@et #1|{\gdef\text{#1}#1\endgroup 
+                  \ifindexit \makexref \fi \indexitfalse}}
+
+\catcode`\|=\active %defines | as an active character in the entire document
+{\obeylines \gdef|{\ttverbatim\spaceskip\ttglue\g@et}}
+%\def\ttspace{{\tt\hskip\ttglue}}
+
+%  ========= \ in \beginttverbatim ========
+\def\1{\char'134} 
+
+%More useful stuff from TeX manual Header
+
+
+\def\bull{\vrule height .9ex width .8ex depth -.1ex } % square bullet
+\def\SS{{\it SS}} % scriptscript style
+
+% \box\bigdot is a null box with a bullet at its reference point
+\newbox\bigdot \newbox\smalldot
+\setbox0=\hbox{$\vcenter{}$} % \ht0 is the axis height
+\setbox1=\hbox to 0pt{$\hss\bullet\hss$} % bullet is centered on the axis
+\setbox\bigdot=\vbox to 0pt{\kern-\ht1 \kern\ht0 \box1 \vss}
+\setbox1=\hbox to0pt{$\hss\cdot\hss$} % cdot is centered on the axis
+\setbox\smalldot=\vbox to0pt{\kern-\ht1 \kern\ht0 \box1 \vss}
+ 
+% \samplebox makes the outline of a box, with big dot at reference point
+\def\samplebox#1#2#3#4{% #1=ht, #2=dp, #3=wd, #4=text
+  {\setbox0=\vtop{\vbox to #1{\hbox to #3{}\vss}
+      \nointerlineskip
+      \vbox to #2{}}% now \box0 has the desired ht, dp, and wd
+    \hbox{\copy\bigdot
+      \vrule height.2pt depth.2pt width#3%
+      \kern-#3%
+      \makelightbox
+      \kern-#3%
+      \raise#1\vbox{\hbox to #3{\hss#4\hss}
+        \kern 3pt}}}}
+
+% \sampleglue makes glue between sample boxes
+\def\sampleglue#1#2{% #1=width, #2=text
+  \vtop{\hbox to #1{\xleaders\hbox to .5\varunit{\hss\copy\smalldot\hss}\hfil}
+    \kern3pt
+    \tabskip 0pt plus 1fil
+    \halign to #1{\hfil##\cr#2\cr}}}
+
+
+% indexing macros mods of texbook
+
+% there is an interaction between \beginttverbatim and indexing wrt ^ 
+% thus change of ^ active to \@ !!!!! 
+
+
+
+\def\indxx{\xref}
+\def\xref{\relax}
+\let\@=\indxx
+\newif\ifindexit 
+
+{\obeylines
+\gdef\makexref{{\def\space{ }\def^^M{*/*}% spaces are important
+\xdef\writeit{\write\ind@file{!\text!\space\string\indpg\space\noexpand\number\pageno.}}\writeit}}}
+
+
+\outer\def\indexingon{\openlistfile{ind}\def\xref{\indexittrue}}
+
+      
+\outer\def\indexingoff{\closelistfile{ind}\def\xref{\relax}}
+
+    
+   
+% Command description macro
+% Format will be 
+% \bc
+% |<command>|\par-- for input
+% nobreak
+% Block based description
+% bigbreak
+\def\beginblockmode {\begingroup\parindent=0pt
+        \parskip= \smallskipamount  
+        \def\nbr{\par\nobreak\smallskip}
+        \let\sbr=\smallbreak
+        \let\mbr=\bigbreak
+        \let\bbr=\bigbreak}
+\def\endblockmode{\par\endgroup}
+
+%multipoint eqalign
+\def\multieqalign#1{\,\vcenter{\openup\jot\m@th
+  \ialign{&\quad\strut\hfil$\displaystyle{##}$&$\displaystyle
+              {{}##}$\hfil\quad&##\crcr#1\crcr}}\,}
+
+\bookstyle
+%special changes for this book
+
+\def\cqu{}
+\newskip\qsk \qsk=3in plus 1fill
+\def\cquote#1#2{\par\vfill\leftskip=\qsk {\it #1}\par\bigskip{\bf #2}}
+
+\def\pslide #1//#2//{\vfill\hslide #1//#2//} 
+
+\def\chapterstartform{\ifodd\pageno \relax\else
+                               \line{}{\cqu\par\ejectpage}\fi
+                        \gdef\cqu{}\titlepagestyle}
+% modification of header format
+\def\leftheadertext{\line{\llap{\ssheadfont\folio\qquad}\def\cr{ }CHAPTER 
+                     \chnumform: \the\chaptername \hss}}
+\def\rightheadertext{\line{\hss\topmark\rlap{\ssheadfont\qquad\folio}}}
+\let\chapterhead=\chead
+\let\bookstyle=\relax % removes the second try
+\input texgrct %POSTCRIPT 
+\input inrssl%POSTCRIPT 
+
+\def\textpagestyle{}
+
+\inrsform
+\textform
+%boxexample
+\def\boxexample{
+\def\wid{{\tt wd}}
+\def\hei{{\tt ht}}
+\def\dpt{{\tt dp}}
+\def\boxpoint{\setbox2=\hbox{\vrule width 8pt height 3pt depth 5pt} \wd2 =0pt
+              \ht2=0pt \dp2=0pt \hskip -8pt \box2}
+\setbox4=\hbox{\hei}
+\def\vbrule{\vrule width 1pt}
+\def\hbrule{\hrule height 1pt}
+\setbox0=\hbox to 1.2in{\vbrule$\longleftarrow \hss \wid \hss\longrightarrow$\vbrule}
+\setbox8=\vbox to 2in{\offinterlineskip\hbox to \wd4{\hss$\uparrow$\hss}
+               \hbox to \wd4{\hss $\Bigg\vert$\hss}\vss
+               \hbox to \wd4{\hss \hei\hss}\vss
+               \hbox to \wd4{\hss $\Bigg\vert$\hss}
+               \hbox to \wd4{\hss$\downarrow$\hss}}
+\setbox6=\vbox{\hbox to \wd4{\hss$\uparrow$\hss}
+               \hbox to \wd4{\hss \dpt\hss}
+               \hbox to \wd4{\hss$\downarrow$\hss}}
+\bigbreak\line{\hss
+                 \vtop{\copy0 \offinterlineskip
+                       \smallskip
+                       \hbrule
+                       \hbox to \wd0{\vbrule height \ht8 
+                                     \boxpoint \hss
+                                     \hskip 4pt\copy8 \hss
+                                     \vbrule height \ht8}
+                       \hbrule 
+                       \hbox to \wd0{\vbrule height \ht6 \hss
+                                     \copy6 \hss
+                                     \vbrule height \ht6}
+                       \hbrule
+                       } 
+                     \vtop{\hrule height 0pt
+                           \vskip 1in
+                           \hbox{\qquad \vrule height 6pt width 8pt depth 2pt
+                                 \quad $\Leftarrow$ Reference Point}
+                           \vskip 62pt
+                           \hbox{$\Leftarrow$ Baseline}}
+                     \hss}\medskip}
+
+
+\def\ftn{}
+
+\hfuzz=5pt
+\let\prule=\relax \let\ptrule=\relax
+\marginnotesfalse
+
+\ejectpag

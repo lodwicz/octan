@@ -1,0 +1,417 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{figtbl}
+
+\def\cqu{\cquote{Example is always more efficacious than precept.}{Rasselas,
+Samuel~Johnson (1709-1784)} 
+}
+
+
+\chapterhead{figtbl}{FIGURE\cr and\cr TABLE INSERTS}
+\vskip 0pt plus 20pt 
+\intex\ supplies two basic commands |\figureform| and |\tableform| 
+that places figures in the current position, writes to the appropriate files
+for the generation of 
+lists of figures and tables, and
+does automatic numbering if
+|\autonumberingon|. The commands |\figureinsert| and |\tableinsert|
+are identical except that the figure is put in place only if there is room on
+the current page. Otherwise, it is placed at the top of the following page.
+
+\intex\  also provides three commands for delayed insertion
+of text. These are |\begintopinsert|, |\beginmidinsert|, and |\beginpageinsert|, which will
+place the text at the top of the page, in place if there is room, or take the
+full next page, respectively. These commands are terminated, by an
+|\endtopinsert|, |\endmidinsert| and |\endpageinsert| respectively. 
+
+Finally, |\ejectinserts| forces deferred figures or tables to be printed so
+that they do not spill over into following chapters. This may be necessary,
+for example, before a set of appendices. 
+
+\begingroup \hfuzz=20pt
+\shead{figtblcomlist}{Command List}
+\beginthreecolumn
+\ext|\beginmidinsert|
+\ext|\beginpageinsert|
+\ext|\begintopinsert|
+\ext|\captionbox|
+\ext|\captionnumfont|
+\ext|\captiontextfraction|
+\ext|\captiontitlefont|
+\ext|\captionbodyfont|
+\ext|\captionbody|
+\ext|\captionbodyon|
+\ext|\captionbodyoff|
+\ext|\centergraph|
+\ext|\centerplotfile|
+\ext|\ejectinserts|
+\ext|\endmidinsert|
+\ext|\endpageinsert|
+\ext|\endtopinsert|
+\ext|\figureform|
+\ext|\figureinsert|
+\ext|\figurelabel|
+\ext|\rect|
+\ext|\tableform|
+\ext|\tableinsert|
+\ext|\tablelabel|
+\ext|\topcaptiontrue|
+\ext|\topcaptionfalse|
+\endthreecolumn
+\endgroup 
+
+\shead{figures}{Possible Figures -- \tex Graph}
+\intex\ supplies a |\rect <hdim> by <vdim>| that will put an empty rectangle
+in the position of the actual figure. The addition of
+\tex Graph allows for the insertion of actual figures. A \tex Graph figure
+may be centered using |\centergraph{<figure>}|. An external plot file, may be
+placed in position by the use of |\centerplotfile{<filename>}|. Both these
+commands use information supplied by \tex Graph to determine the amount of
+space to leave. All files must be processed to be \tex Graph compatible. For
+details on \tex Graph, see ``An Introduction to \tex Graph''.
+
+\shead{caption}{Figure and Table Captions}
+\intex\ supplies a number of facilities for captions. A specific example is
+given as Figure~\ref{dummyfig}. The caption is broken down into four parts.
+The first is the {\bf Fig.} whose value is determined by |\figurelabel| that
+is language dependent. The second part is the number that may or may not be
+automatically generated. These font of these first two parts is determined by
+|\captionnumfont|. The second and third parts are the caption title and
+caption body respectively. The caption title will appear in the list of
+figures while the caption body will not. |\captiontitlefont| and
+|\captionbodyfont| determine the fonts of these latter two sections
+respectively. \intex\ defaults both these to |\rm| at the moment.
+
+|\captionbodyon|, which is the default, allows the |\captionbody| to be
+printed.
+However the command |\captionbodyoff| will turn off the
+printing of everything inside a |\captionbody|. This is done when the list of
+figures or tables are made using a |\makefiglist| or |\maketbllist| 
+although it is not really necessary as the |\captionbody| is not 
+even written out to a list file. Finally
+if |\topcaptiontrue|, the caption is placed above the figure while if it is
+false, the default, it is placed below. 
+
+\shead{deferredinserts}{Deferred Inserts}
+\intex\ supplies\footnote{\dagger}{The commands in this section are
+essentially {\it plain} commands. They have been renamed to maintain
+consistency with the |\begin...| and |\end...| conventions of \intex.}
+commands of the form |\begin<type>insert| and corresponding
+|\end<type>insert|. These commands form a group and take the |<text>| between
+the |\begin...| and |\end...| and insert it, or defer it as the spacing
+warrants. A |<type>| of |top| will put the |<text>| at the top of the current
+page, if there is room, or on the next page if there is not. |mid| will put
+it at the location it is called out, if there is room, or at the top of the
+next page if there is not. |page| will reserve the entire next page for the
+|<text>|. 
+
+\shead{figtablex}{Deferred Figures or Table Inserts}
+The basic command |\figureform| takes three parameters, the figure number or tag,
+the figure caption, and the figure itself as described in 
+Section~\ref{figures}. It places the figure in the text at the present
+position whether there is room or not. Usually the desirable effect is to
+defer the figure until the following page if there is not enough room on the
+present one. The command |\figureinsert| does just that. 
+The following command will insert the figure as shown. Autonumbering is on.
+\begingroup 
+\let\captionnumfont = \twelvebfxsca
+\let\captiontitlefont = \twelvess 
+\let\captionbodyfont=\tenss
+\figureinsert{dummyfig}{This is not a very 
+    Exciting Figure \captionbody{-- It does show though it is
+    entirely possible to use the font freedom to create a less
+    than pleasing final result. The group here prevents this 
+    disaster from spreading.}}{\rect 4cm by 6cm}
+\endgroup
+\beginttverbatim
+\1begingroup 
+\1let\1captionnumfont = \1twelvebfxsca % scaled 10pt
+\1let\1captiontitlefont = \1twelvess 
+\1let\1captionbodyfont=\1tenss
+\1figureinsert{dummyfig}{This is not a very 
+    Exciting Figure \1captionbody{-- It does show though it is
+    entirely possible to use the font freedom to create a less
+    than pleasing final result. The group here prevents this 
+    disaster from spreading.}}{\1rect 4cm by 6cm}
+\1endgroup
+\endttverbatim
+The spacing between the figure and the caption is determined by the value of
+|\captionskip|. If new values are desired, these are produced by 
+|\captionskip = <dimen>|. 
+
+Figure~\ref{target} uses the facilities of \tex Graph and a deferred 
+insert. 
+Assume that |\target| is the graphics description for the
+figure. The figure is called out here. 
+\ifundefined{textref}
+     \begingroup \catcode`\^=12 \input texgraph \endgroup \fi
+\let\dmess=\message
+\def\target{\btg \unitscale .5 
+            \move h:2 v:2
+            \lcir r:1.5 \pfill p:.7
+            \lcir r:1  \pfill p:.5
+            \lcir r:.5  \pfill p:.3
+            \move h:4 v:4
+             \etg}
+\figureinsert{target}{This is a 
+          Figure Insertion Involving Graphics}{\centergraph{\target}}
+The commands were 
+\beginttverbatim
+\1def\1target{\1btg \1unitscale .5 
+            \1move h:2 v:2
+            \1lcir r:1.5 \1pfill p:.7
+            \1lcir r:1  \1pfill p:.5
+            \1lcir r:.5  \1pfill p:.3
+            \1move h:4 v:4
+             \1etg}
+\1figureinsert{target}{This is a 
+      Figure Insertion Involving Graphics}{\1centergraph{\1target}}
+\endttverbatim
+\tex Graph commands are documented in ``texgraph.doc''.
+
+
+
+The format of the |\tableform| and |\tableinsert| commands
+ is the same with the last argument
+replaced by the table itself or an |\input{<filename>}| that would bring
+in the file. The ``Fig.'' in the caption is in the command |\figurelabel|.
+There is an equivalent |\tablelabel|. 
+
+\shead{fullpagefig}{Full Page Figure/Table Inserts} 
+Full page figure/table inserts are complicated by the need to position the
+caption differently if the figure/table exists or not. The following is used
+for a full page figure if there is no figure and the caption is required at
+the bottom of the page. 
+\begintt
+\beginpageinsert
+\captionskip = 0pt plus 1 fill % pushes caption to bottom of page
+\figureform{<tag or number>}{<title>}{} % note empty last parameter
+\endpageinsert
+\endtt
+If there is a figure, it will be placed at the top of the page and
+the caption, a |\captionskip| below it. The commands for this are 
+\begintt
+\beginpageinsert
+\figureform{<tag or number>}{<title>}{<figure>} 
+\endpageinsert
+\endtt
+Tables are inserted similarly. 
+
+To insert a table or figure vertically on a page, \tex Graph must be used. 
+
+\shead{figcomp}{Complications  and Unusual Cases}
+Insertions are not without there complications. The following problems can
+occur:
+\beginlist
+\li $\bullet$ Two or more figure insertions reverse their order: This will
+occur when there is room to insert the second figure called out but not the
+first. {\bf Solutions(?):} call them out in different order; use
+|\figureform| to force the insertion and accept the consequences; make the
+figures smaller. 
+\li $\bullet$ A figure has one or two lines of text below it: This will
+happen if the inserted figure is almost a full page. It is even possible to
+have an almost blank page preceding it. {\bf Solution:} Change the
+|\figureinsert| to an full page insert as described in
+Section~\ref{fullpagefig}. 
+\li $\bullet$ Two full page figures in row are really parts 1 and 2 of the
+same figure: This is complication both with the automatic numbering of the
+figures and the list of figures. The solution is somewhat complicated. 
+Only the numbering problem is considered here. See Chapter~\ref{auto}
+for the details on autonumbering. {\bf Solution:} 
+\begintt
+\silent{\autofignum{<figtag>}}
+\begingroup
+\autonumberingoff
+\beginpageinsert
+\figureform{\ref{<figtag>}(a)}{<part (a) caption>}{<fig a>}
+\endpageinsert
+\beginpageinsert
+\figureform{\ref{<figtag>}(b)}{<part (b) caption>}{<fig a>}
+\endpageinsert
+\endgroup
+\endtt
+\li $\bullet$ Figures from a previous chapter or section spill over into the
+next: {\bf Solution:} Follow the last figure with |\ejectinserts|. If a new
+page is required, follow this by |\ejectpage|. 
+
+\endlist
+
+
+
+\shead{figtblcomforms}{Command Forms}
+\beginblockmode
+\ext\@|\beginmidinsert|
+\nbr
+\ext\@|\beginpageinsert|
+\nbr
+\ext\@|\begintopinsert|
+\nbr
+These basic deferred text insertion commands start a group and define the
+beginning of |<text>| that will be inserted either in place or at the top of
+the next page if there is no room, on the entire next page, or at the top of
+the page respectively.
+
+\mbr
+\ext\@|\captionbox{<number text>}{<title>}|
+\nbr
+This command is used for captioning figures or tables. If the |<number text>|
+plus the |<title>| is shorter than 
+|\captiontextfraction|  of the size of the enclosing box or
+page, the two are centered. If the total is greater, the title is put in a box,
+in ragged format and will be automatically broken if it takes more than the
+one line. The spacing is always one. |\captiontextfraction| is defaulted to
+0.8.
+The captionbox is used  in both |\figureform| and |\tableform| but is
+available for other captioning as necessary. 
+
+\mbr
+\ext\@|\captionbody{<text>}|
+\nbr 
+This command is optionally placed in title field of a caption. it is used to
+write an essay about a figure or table that you do not want to turn up in the
+list of figures or tables. It is printed if |\captionbodyon| and is not
+printed if |\captionbodyoff|. |\captionbodyon| is the default. The
+|\captionbody| is {\bf not} written out to the |.fig| or |.tbl| file.
+
+\mbr
+\ext\@|\captionbodyon \captionbodyoff| 
+\nbr 
+|\captionbodyon| allows a |\captionbody| text to be output -- 
+|\captionbodyoff| prevents it. The default in normal text is |\captionbodyon|
+but in lists of figures or tables produced by |\makefiglist| or
+|\maketbllist| is |\captionbodyoff|.
+
+
+
+\mbr
+\ext\@|\captionbodyfont|
+\nbr 
+This command sets font of the body of the caption of a Figure or Table. 
+The material affected by this font will not appear in a list of tables or
+figures. 
+The default is the same as current active font. 
+
+
+\mbr
+\ext\@|\captionnumfont|
+\nbr 
+This command sets font of the herald {\bf Fig.} and the number. 
+It is set in a consistent way as part of the document font specification in a
+font family. The default is the same as the |\ssheadfont|. 
+
+\mbr
+\ext\@|\captiontitlefont|
+\nbr 
+This command sets font of the title of a Figure or Table. 
+The default is the same as current active font. 
+
+
+
+
+
+\mbr
+\ext\@|\captionskip [=] <dimen>|
+\nbr 
+This command sets the spacing between the figure/table and the following
+|\captionbox|. It is assigned |0pt plus 1fill| to force the caption box to the
+bottom of the page for a full page figure. 
+
+
+\mbr
+\ext\@|\captiontextfraction|
+\nbr 
+This value controls the fraction of the width of the page that will be used
+to determine whether the caption text is set as a single line or as several
+lines. It is defined in {\tt inrsdef.tex} as |\def\captiontextfraction{0.8}|.
+
+\mbr
+\ext\@|\ejectinserts|
+\nbr
+This command forces out all of the inserts, be they footnotes or deferred
+figures and leaves the position at the end of the last insert. If a new page
+is desired, the |\ejectinserts| should be followed by an |\ejectpage|.
+
+
+\mbr
+\ext\@|\endmidinsert|
+\nbr
+\ext\@|\endpageinsert|
+\nbr
+\ext\@|\endtopinsert|
+\nbr
+These commands terminate their respective |\begin..insert| and close the
+group.
+
+
+\mbr
+\ext\@|\figureform{<tag or number>}{<title>}{<figure box>}|
+\nbr
+This is the basic command for inserting and captioning space for a figure in
+a document. If |autonumbering| is on, the |<tag or number>| becomes the tag
+for the figure for in text reference. The actual text inserted in the figure
+caption is |\figurelabel<figure number>| where the |<figure number>| is
+computed determined from the tag value. For instance ``|\ref{dummyfig}|'' gives
+``\ref{dummyfig}''. If autonumbering is off, the text of the 
+|<tag or number>| is inserted. The |<figure box>| should take up the same
+amount of space as the actual figure, less captions. If the |.fig| file is
+open, the |\figtoc| command with its |<number>|, |<title>| and 
+|<page number>| arguments are written to it.
+
+\mbr
+\ext\@|\figureinsert{<tag or number>}{<title>}{<figure box>}|
+\nbr
+This is equivalent to 
+\begintt
+\beginmidinsert
+\figureform{<tag or number>}{<title>}{<figure box>}|
+\endmidinsert
+\endtt
+The effect is to place the figure at the present location, if there is enough
+room on the page, or defer it to the top of the next page if there is not.
+See Section~\ref{figcomp} for complications. 
+
+\mbr
+\ext\@|\figurelabel|
+\nbr
+This command is defined to give the text that precedes the |<figure number>|
+in the caption. In \intex\ this is ``\figurelabel''.  This is modified by
+redefining it with a |\def\figurelabel {<new label>}|.
+
+\mbr
+\ext\@|\rect <horizontal dimen> by <vertical dimen>|
+\nbr
+This creates a line boxed rectangle with the dimensions given and then places
+it in a |\centerline|.
+
+\mbr
+\ext\@|\tableform{<tag or number>}{<title>}{<table>}|
+\nbr
+This command is almost identical to |\figureform| except that the |listfile|
+is |.tbl|, the prenumber caption, which is ``\tablelabel'' is 
+defined by the command |\tablelabel|,  
+and the final argument will usually be the actual table. 
+
+\mbr
+\ext\@|\tableinsert{<tag or number>}{<title>}{<figure box>}|
+\nbr
+This is equivalent to 
+\begintt
+\beginmidinsert
+\tableform{<tag or number>}{<title>}{<figure box>}|
+\endmidinsert
+\endtt
+The effect is to place the table at the present location, if there is enough
+room on the page, or defer it to the top of the next page if there is not.
+See Section~\ref{figcomp} for complications. 
+
+
+\mbr
+\ext\@|\tablelabel|
+\nbr
+This command is defined to be the prestring to the table number. It defaults
+to ``\tablelabel''. This is modified by
+redefining it with a |\def\tablelabel {<new label>}|.
+
+\endblockmode
+\ejectpage
+\done

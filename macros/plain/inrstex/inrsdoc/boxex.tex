@@ -1,0 +1,41 @@
+%-*-tex-*-
+%boxexample
+\def\wid{{\tt wd}}
+\def\hei{{\tt ht}}
+\def\dpt{{\tt dp}}
+\def\boxpoint{\setbox2=\hbox{\vrule width 8pt height 3pt depth 5pt} \wd2 =0pt
+              \ht2=0pt \dp2=0pt \hskip -8pt \box2}
+\setbox4=\hbox{\hei}
+\def\vbrule{\vrule width 1pt}
+\def\hbrule{\hrule height 1pt}
+\setbox0=\hbox to 1.2in{\vbrule$\longleftarrow \hss \wid \hss\longrightarrow$\vbrule}
+\setbox8=\vbox to 2in{\offinterlineskip\hbox to \wd4{\hss$\uparrow$\hss}
+               \hbox to \wd4{\hss $\Bigg\vert$\hss}\vss
+               \hbox to \wd4{\hss \hei\hss}\vss
+               \hbox to \wd4{\hss $\Bigg\vert$\hss}
+               \hbox to \wd4{\hss$\downarrow$\hss}}
+\setbox6=\vbox{\hbox to \wd4{\hss$\uparrow$\hss}
+               \hbox to \wd4{\hss \dpt\hss}
+               \hbox to \wd4{\hss$\downarrow$\hss}}
+
+\def\boxexample{\bigbreak\line{\hss
+                 \vtop{\copy0 \offinterlineskip
+                       \smallskip
+                       \hbrule
+                       \hbox to \wd0{\vbrule height \ht8 
+                                     \boxpoint \hss
+                                     \hskip 4pt\copy8 \hss
+                                     \vbrule height \ht8}
+                       \hbrule 
+                       \hbox to \wd0{\vbrule height \ht6 \hss
+                                     \copy6 \hss
+                                     \vbrule height \ht6}
+                       \hbrule
+                       } 
+                     \vtop{\hrule height 0pt
+                           \vskip 1in
+                           \hbox{\qquad \vrule height 6pt width 8pt depth 2pt
+                                 \quad $\Leftarrow$ Reference Point}
+                           \vskip 62pt
+                           \hbox{$\Leftarrow$ Baseline}}
+                     \hss}\medskip}

@@ -1,0 +1,1002 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{align}
+
+\def\cqu{}
+
+\chapterhead{align}{BASIC ALIGNMENT}
+Since letters in most fonts are variable width, the only sure way to ensure
+that words, numbers or vertical rules line up is to tell \tex\ to put them in
+the right place. Old ways of placing text on the editor's screen will not
+work. The basic way of doing this in \tex\ is through the alignment commands.
+
+The most common use of alignment commands is to make tables, but the uses go
+well beyond this. For instance, the |\eqalign| for display mathematics is
+built using the basic |\halign| command.
+
+
+{\it Plain} \tex\ provides two basic alignment formats. The first is the
+|tabbing| form that is very similar to tabs on a typewriter, and the second is
+the more basic |\halign| form. In fact the |tabbing| form is built from the
+basic |\halign|.
+
+\intex\ supplies a set of commands for building tables, especially those
+involving lines (commonly called vertical and  horizontal rules). 
+The intent of these commands is to produce tables that are
+easy to specify and that look, on the editing screen, somewhat like the final
+product.  The commands are built from the |\halign| and preserve all
+the power of this basic command. They commands are discussed in 
+Section~\ref{intable}.
+
+Details on the basic uses of the |\halign| 
+can be found in the chapter on alignment in the \texbook\ and
+examples of \intex\ tables and uses in the \tex\ Example Book \dots\ to be published. 
+
+\shead{aligncomlist}{Command List}
+The command list in this section is organized into |tabbing|, |\halign|, and
+\intex\ |table| commands. The |\halign| commands are useful in the |table|
+form.
+\bigbreak
+\centerline{\sssheadfont Tabbing Commands}
+\nobreak
+\begintwocolumn
+\pla|\+ ... \cr|
+\pla|\cleartabs|
+\pla|\settabs <integer> \columns|
+\pla|\tabalign ...\cr|
+\endthreecolumn
+\bigbreak
+\centerline{\sssheadfont Plain \tex\  halign  Commands}
+\begintwocolumn
+\pri|&|
+\pri|#|
+\pri|\cr|
+\pri|\halign|
+\pla|\hidewidth|
+\pla|\ialign|
+\pla|\multispan|
+\pri|\noalign|
+\pla|\oalign|
+\pri|\omit|
+\pla|\openup| 
+\pri|\span|
+\ext|\strut|
+\pri|\tabskip|
+\pri|\valign|
+\endthreecolumn
+\bigbreak
+
+\centerline{\sssheadfont \intex\ Table Commands}
+\begintwocolumn
+\ext\vrt
+\ext|"|
+\ext|\|\vrt
+\ext|~|
+\ext|\:|
+\ext|\-|
+\ext|\br  \er|
+\ext|\begintable|
+\ext|\begintableformat|
+\ext|\endtable|
+\ext|\endtableformat|
+\ext|\center|
+\ext|\displaymath|
+\ext|\everytable|
+\ext|\fulltablerule|
+\ext|\left|
+\ext|\math|
+\ext|\midtabglue|
+\ext|\modifystrut \mst|
+\ext|\right|
+\ext|\sa|
+\ext|\sprule|
+\ext|\tablespread|
+\ext|\tcs|
+\ext|\thrule|
+\ext|\tr|
+\ext|\tvrule|
+\ext|\use|
+\ext|\zerocenteredbox \zb|
+\endthreecolumn
+
+\shead{tabbing}{Tabs for Alignment}
+\tex\ supplies a format that behaves similarly, but not identically, to {\it
+tabs} on an ordinary typewriter. The |\settabs <integer> \columns| sets tabs so
+that there are |<integer>| number of columns across the page. Once set, these
+{\it tabs} stay set until changed or leaving the group in which they were
+defined. \tex\ uses the command |\+| to indicate the beginning of a row, the
+|&| to indicate the {\bf next} column, and the |\cr| to indicate the end of
+the row. If the text for one column is too wide for that column it will spill
+over into the next. If it spills, and there is text in the next column, they
+will superimpose. An example is given below.
+\begintt
+\settabs 3 \columns
+\+This is text in the first Column &THIS IS TEXT IN THE 
+  SECOND COLUMN & This is text in the third column \cr
+\+First Column &&Third Column\cr
+\endtt
+which gives 
+\settabs 3 \columns
+\+This is text in the first Column &THIS IS TEXT IN THE 
+  SECOND COLUMN & This is text in the third column \cr
+\+First Column &&Third Column\cr
+Note the mess in the first row. The second is better formed. For some simple
+tables, without rules or lines. This may be the simplest way. 
+
+If a line starts with the form 
+\begintt
+\settabs\+<sample first column>& ... &<sample last column>\cr 
+\+<first real text row>\cr
+   ...
+\endtt
+then \tex\ will set the tabs as indicated by the sample row, and will not
+actually print it in the text. To use this, look ahead in the table and find
+the  widest fields. These, and some extra space, can be used to set the tabs. 
+
+
+The tabbing format is even more versatile than this. Suppose that there are 2
+tabs set. If the input row |\+ ... \cr| has a third or more |&|, then this
+new tab is added to the set of tabs. Furthermore, the command |\cleartabs|
+will remove all tabs to the right of the current one, in effect making it the
+last one in a row. The result is that it is possible to set tabs that change
+from row to row. For example
+\begintt
+\+\cleartabs 
+This text &is to the &left and \cr
+\+        &this row lines up with the ``is'' \cr
+\+        &          &but this one with the ``left'' \cr
+\+        &\cleartabs This &row sets new tabs \cr
+\+        & &so this lines up with ``row''\cr
+\endtt
+gives the following
+\+\cleartabs 
+This text &is to the &left and \cr
+\+        &this row lines up with the ``is'' \cr
+\+        &          &but this one with the ``left'' \cr
+\+        &\cleartabs This &row sets new tabs \cr
+\+        & &so this lines up with ``row''\cr
+
+Note the tab location change in the fourth row. Indentation of computer
+programs is relatively simple with these mechanisms. 
+
+
+
+\shead{halignform}{The  {\twelvett \string\halign }  }
+The fundamental alignment command, which is in fact 
+used to build the {\it tabbing} commands in the previous
+section and the \intex\ {\it table} commands in the next,  
+is the |\halign| .
+While inside  an |\halign|, \tex\ is in {\it
+internal horizontal mode}. This means that text may be centered or justified 
+by the appropriate use of the infinite glues such as |\hss|. It also means
+that |$...$|,  |\math|, or |\displaymath| are required 
+to switch, perhaps back, into math mode. 
+
+A |<preamble>\cr|,  terminated by the first |\cr|,  describes the pattern
+of the alignment. This pattern is used for every row of the alignment but
+there are a  set of commands |\span|, |\multispan|, and |\omit| that
+allow for the skipping or merging of several adjacent columns. This makes it
+easy to have text that spans several columns. Finally, {\bf between} 
+each column,
+there is the provision for placing |\tabskip| glue. This glue allows the
+entire set of columns to stretch or shrink to fill the page as desired. Some
+special variants of |\halign| such as |\ialign|, force the |\tabskip|
+glue to be zero.
+
+Detailed use of the |\halign| and its associated commands will be found in
+the \texbook\ with examples in the \tex\ Example Book. The command
+descriptions in Section~\ref{aligncomforms} give some insight into their use.
+
+\shead{intable}{\intex\ Table Commands}
+\intex\ supplies a set of commands designed to reduce the pain in making
+tables. The major intent of the commands is to make have the tables being
+designed appear on the editor screen in a reasonable manner. Although the
+commands appear to avoid the basic |\halign| commands and forms of |\cr|,
+|&|, and |#|, their insertion in the tables are not precluded by the
+structure. The loss by doing this will be some readability but the gain is
+flexibility.
+
+The \intex\ table commands really use two different types of columns: {\it
+rule} columns for insertion (or omission) of vertical rules and {\it data}
+columns 
+for the insertion of normal data entries. Generally it is assumed that every
+data column is separated by a {\it rule} column. In addition, \intex\
+requires that there be a rule column at the  left and right hand sides.
+\intex\ makes the insertion or omission of a vertical rule or column as
+simple as placing a |"| or a \vrt\ in the text. 
+
+A now classic table for demonstrating the table making skills of a set of
+macros is shown below. This is reported in the \texbook\ and originally was
+found in [\cite{[Lesk76]}]. The resulting table is {\bf not}
+identical to that in the \texbook. It is, however, very close.
+
+\centerline{
+\begintable
+\begintableformat
+\center " \center " \center
+\endtableformat
+\br{} \sa{Dividend} "\sa{Dividend} "\sa{Dividend}  \er{} %sample line 
+\-
+\br{\:|} \use{3}    AT\&T Common Stock         \er{|}
+\-
+\br{\:|}     Year |   Price |  Dividend       \er{|}
+\-
+\br{\:|}     1971 | 41--54  |    \$2.60        \er{|}
+\-
+\br{\:|}     ~~~2 | 41--54  |     ~2.70        \er{|}
+\-
+\br{\:|}     ~~~3 | 46--55  |     ~2.87        \er{|}
+\-
+\br{\:|}     ~~~4 | 40--53  |     ~3.24        \er{|}
+\-
+\br{\:|}     ~~~5 | 45--52  |     ~3.40        \er{|}
+\-
+\br{\:|}     ~~~6 | 51--59  |     ~~.95\rlap*  \er{|}
+\-
+\br{\:}\use{3} \left{* (first quarter only)} 
+\endtable 
+}
+
+This table is given by the following:
+\begingroup \eightpoint
+\begintt
+\centerline{
+\begintable
+\begintableformat
+\center " \center " \center
+\endtableformat
+\br{} \sa{Dividend} "\sa{Dividend} "\sa{Dividend}  \er{} %sample line 
+\-
+\br{\:|} \use{3}    AT\&T Common Stock         \er{|}
+\-
+\br{\:|}     Year |   Price |  Dividend       \er{|}
+\-
+\br{\:|}     1971 | 41--54  |    \$2.60        \er{|}
+\-
+\br{\:|}     ~~~2 | 41--54  |     ~2.70        \er{|}
+\-
+\br{\:|}     ~~~3 | 46--55  |     ~2.87        \er{|}
+\-
+\br{\:|}     ~~~4 | 40--53  |     ~3.24        \er{|}
+\-
+\br{\:|}     ~~~5 | 45--52  |     ~3.40        \er{|}
+\-
+\br{\:|}     ~~~6 | 51--59  |     ~~.95\rlap*  \er{|}
+\-
+\br{\:}\use{3} \left{* (first quarter only)} 
+\endtable 
+}
+\endtt
+\endgroup
+The basic structure of the table is given by this example. A
+|\begintable... \endtable| pair  delineates it, while the row format is
+defined inside the pair |\begintableformat... \endtableformat|. 
+The entirely optional {\it sample row}, immediately after the 
+|\endtableformat| forces all
+three columns the same width. This use the fact that
+|Dividends| was the largest word which  was then put in a {\it
+sample} command |\sa{..}| in each of the three columns. This row, which is
+invisible in the final table effectively set the width of the columns. The
+|~| is a space that is exactly the width of a number. Thus the data is lined
+up in the desired way. The \vrt\ are separators that insert vertical rules or
+lines and also allow spaces to be ignored after the data in a column. This
+makes the columns look nicer and more readable. Other details about this
+table will be apparent later.
+
+
+The \intex\ table commands have been designed to be most useful when the following
+conventions are obeyed:
+\beginlist
+\li {\bull} A rule column is defined in the table format
+using a |"|. Successive data columns are separated by a rule column.
+The actual rule is inserted in the text with a \vrt\ or omitted with a 
+|"|  rather than being put in the format.
+\li {\bull} A rule column is appended to each end of the table format
+statement. In general this means that there is a rule column on both sides of
+the table. The actual insertion or not of the rule is very easy.
+\li {\bull} Struts for maintaining row height are inserted in each row rather
+than in the table format.
+\endlist
+
+The commands make it very easy to include struts, and insert or omit rules as
+needed. In fact it is no more difficult than inserting a |&| in the
+appropriate place. The advantage of following this discipline is that partial
+horizontal lines (rules) are quite easy, as is the exact vertical placement 
+of items in different  data columns.
+
+The basic format for building a table is
+\begintt
+\begintable
+<special table forms>
+\begintableformat
+<table format>
+\endtableformat
+<first row>
+    ...
+<last row>
+\endtable
+\endtt
+Each row has the form
+\begintt
+\br{<..>}  <item> | <item> " <item> ... | <item> \er{<..>}
+\endtt
+where the \vrt\ means to put in a vertical rule and the |"| means to leave it
+out of the corresponding rule column. 
+The |\br{..}| and |\er{..}| signify the beginning and end of the row
+respectively. The |\br{..}| and |\er{..}| are intended for rules and/or
+struts if needed. For instance a |\br{\:|\vrt|}| indicates that this line has a
+standard strut |\:| and a standard vrule. The |\br{\: height 2pt}|
+indicates that this row has no strut but that the initial vrule has a height
+of 2pt. The strut could just as easily been put in the |\er{\:}| instead. 
+The form |\br{}| or |\br{"}| indicates a row with no initial strut or vrule. 
+
+\intex\ supplies a second flavour of vrule that is user definable. The
+command |\|\vrt\ may be used in exactly the same way as \vrt. The {\it
+insides} of the |\|\vrt\ are defined by redefining a command |\sprule|, a {\it
+special rule}. 
+
+An \intex\ table format is a template for the table, and corresponds to the
+normal {\it preamble} in an |\halign|. In fact any valid |\halign| preamble
+may be used in the table format, as long as the |#| are replaced by |##|.
+However, \intex\ adds a rule column  to the beginning and end of the {\bf format}
+list for 
+beginning and terminating rules. Thus a repeating field specification, which
+is indicated by an (extra) |&| in the format should
+{\bf not} start at a vrule indicator or the result will be two adjacent rules.
+
+Simple column formats are indicated by the use of the commands |\left|,
+|\center|, |\right|, |\math|, and |\displaymath|. The two |\..math| forms are
+{\bf never} used alone but rather in conjunction with the first three. 
+These forms are {\bf always} separated\footnote{\dagger}{In fact any field
+of the form |&<optional stuff>##<optional stuff>&| is acceptable.}
+ by |"|, which allows for, but does not put in, a
+vertical rule.
+The simplest table format, and probably the most useful is 
+\begintt
+\begintableformat
+&\center 
+\endtableformat
+\endtt
+This is a repeating format, as indicated by the |&|, and thus allows for any
+number of columns. The data in each column is centered. 
+
+Another simple table format example is 
+\begintt
+\begintableformat
+\left " \right " \math\center 
+\endtableformat
+\endtt
+This table would have three data columns; the first data column 
+is ordinary text, left
+justified; the second data column is right justified text; and the last 
+data column is centered mathematics. Each data column is separated by a rule
+column indicated by |"|. \intex\ will add rule columns to the left and right
+hand ends of the specification.
+The commands |\right|, |\left|, and |\center| insert the appropriate glues and
+spacing at the both sides of the column. The width of this spacing |\tcs|,
+the {\it table column separation}, is a |dimen|. This may be modified if
+desired for all tables by putting it in the |\everytable| token list or for a
+specific table by placing it in the 
+|<special table forms>|. 
+
+The following is a repeating column specification:
+\begintt
+\begintableformat
+\left " \right " &\math\center 
+\endtableformat
+\endtt
+This is identical to the previous one except that the data column format 
+and the implicit rule column added by \intex, 
+|\math\center|~|"|,  is repeated indefinitely. 
+For almost all tables, the only |&| that
+should appear in the table format is that indicating the start of a repeating
+field. 
+
+Horizontal rules are specified by |\-| for the standard |\tr| width rule. An
+hrule the full width of the table should appear all by itself on a line
+between an |\er| and the following |\br|, or immediately after the table
+format. Other |\noalign| commands may be inserted as desired. 
+A partial horizontal rule is specified using an |\msp|, the special \intex\ 
+version of the multispan, and the |\-|.  
+
+\intex\ does place some restrictions on the automatic insertion of tabskip glue.
+Hopefully these will be minor. \intex\ sets the initial and final tabskip
+glues to 0pt. This should create no problems. A parameter |\midtabglue| may
+be modified. This is set just after the first rule column and is turned off
+at the last rule column. Finally  |\tablespread = {to <dimen>}| will force
+the table to be |<dimen>| wide, assuming there is 
+enough tabskip glue
+available.
+
+The following set of commands produce the rather contrived table on the
+following page.
+\begingroup
+\eightpoint
+\beginttverbatim 
+\1centerline{
+\1begintable
+\1begintableformat
+ &\1center
+\1endtableformat 
+\1-
+\1br{\1:|} \1use{6}             XYZABC     \1er{|\1mst{\1:}{3pt}{3pt}\1rlap{ \1it ** i}}
+\1-
+\1br{\1:|} \1use{3}   XYZ          | \1use{3}    ABC    \1er{|\1mst{\1:}{2pt}{2pt}} 
+\1-
+\1br{\1:|}      X   |  Y    |   Z |   A  |   B  |  C  \1er{|}
+\1-     
+\1br{\1:|} 372.466  | 493.7 "  45 | 124 \1|  489 | 280 \1er{|}
+\1- 
+\1br{\1:|} 372.40~  | 493.7 |  45 | 124  |  489 | 280 \1er{|}
+\1br{|}            "       "     | \1use{3}\1-         \1er{|}
+\1br{\1:|} 372.~~~  | 493.7 |  45 | 124  |  489 | 280 \1er{|\1rlap{ \1it ** ii}}
+\1-
+\1br{\1:|} \1use{2}          | 832 | abc  |  774 |$\1int$\1er{|\1mst{$\1int$}{0pt}{3pt}}
+\1br{|} \1use{2}\1zb{XY/A}   |\1use{4}\1-                \1er{|}
+\1br{\1:|} \1use{2}          | qrr | aaa  |  799 |     \1er{|\1rlap{ \1it ** iii}}
+\1-
+\1endtable}
+\endttverbatim
+\endgroup
+
+The actual table is
+$$
+\centerline{
+\begintable
+\begintableformat
+ &\center
+\endtableformat 
+\-
+\br{\:|} \use{6}             XYZABC                   \er{|\mst{\:}{3pt}{3pt}\rlap{ \it ** i}}
+\-
+\br{\:|} \use{3}   XYZ          | \use{3}    ABC      \er{|\mst{\:}{2pt}{2pt}} 
+\-
+\br{\:|}      X   |  Y    |   Z |   A  |   B  |   C   \er{|}
+\-     
+\br{\:|} 372.466  | 493.7 "  45 | 124 \|  489 |  280  \er{|}
+\- 
+\br{\:|} 372.40~  | 493.7 |  45 | 124  |  489 | 280   \er{|}
+\br{|}            "       "     | \use{3}\-           \er{|}
+\br{\:|} 372.~~~  | 493.7 |  45 | 124  |  489 | 280   \er{|\rlap{ \it ** ii}}
+\-
+\br{\:|} \use{2}          | 832 | abc  |  774 | $\int$\er{|\mst{$\int$}{0pt}{3pt}}
+\br{|} \use{2}\zb{XY/A}   |\use{4}\-                  \er{|}
+\br{\:|} \use{2}          | qrr | aaa  |  799 |       \er{|\rlap{ \it ** iii}}
+\-
+\endtable
+}
+$$
+This example 
+illustrates the  power and flexibility of the  commands.
+Row {\it i} shows the
+modification of the standard strut, which is 2.5ex high and .9ex deep, by
+changing the height and depth. The |\mst| is used again in row {\it iii}
+where some extra space is added at the bottom of the integral sign, but not
+at the top. The |\mst| takes three arguments or parameters. The first is the
+character from which the strut is derived, the second is the additional
+space on the top of the character and the third is on the bottom. The first two
+rows of this table had additional space at both the top and bottom while the
+``integral'' row had changes only at the bottom. This fine tuning of tables
+can improve their visual form immensely. Row {\it iii} demonstrates the use
+of a |\zb| or ``zero-centered box'' for putting items in the center of
+larger boxes. This row with the |\zb| has {\bf no} struts. In addition, the
+|\zb| boxes are centered and have zero height and depth. This means that they
+take up no vertical space so that a partial horizontal line or rule may be
+inserted. This is done with the |\use{4}\-| which tells \intex\ to use 4
+(data) columns for the horizontal rule.
+
+Many variations exist. The commands available in \intex\ for
+tables are described in the following section.
+
+
+\shead{aligncomforms}{Command Forms}
+The command forms in this section are organized under three different
+headings, tabbing, basic |\halign|, and \intex\ table commands.
+
+\dssshead{Tabbing Commands}
+\beginblockmode
+\pla\@|\+<text>&<text> ... &<text>\cr|
+\nbr
+This is the command for entering a line of text in the {\it tab} format. The
+|<text>| in each column is optional and will spill over into the next column
+if there is no room. If there are $n$ tabs set, all |&| beyond the $n$ will
+set tabs at the location they appear in the text. The |\cr| terminates the
+line. See Section \ref{tabbing} for examples.
+
+\mbr
+\pla\@|\cleartabs|
+\nbr
+This command clears tabs to the right of the current one, on all subsequent
+lines. See Section \ref{tabbing} for examples.
+
+\mbr
+\pla\@|\tabalign ... \cr|
+\nbr
+This is a non |\outer| form of |\+| and can be used in definitions.
+\endblockmode
+
+
+\dssshead{Basic {\tentt \string\halign }  Command Forms}
+\beginblockmode
+\pla\@|\halign{<preamble>\cr <first row>\cr ... <last row>\cr}|
+\nbr
+This is the basic alignment command. It is necessary to be in (internal)
+vertical  or display math mode to use it. 
+The |<preamble>| describes a template or
+form for interpreting the text fields in following rows. Each field in an
+|\halign| is like an individual |\hbox| whose size is calculated by \tex.
+Between each of these field boxes is |\tabskip| glue that is allowed to
+stretch or shrink in order to vary the overall size of the alignment. An
+example of a preamble that creates three columns, the first left justified,
+the second centered and the third right justified is 
+\begintt
+<preamble> --> #\hss &\hss #\hss&\hss #
+\endtt
+The |#| shows where the text in that particular column should be placed, with
+respect to the glue, and the |&| indicates the end of the field. 
+\begintt
+$$
+\halign{#\hss &\hss #\hss&\hss #\cr
+ This particular & example & will give the text \cr
+ shown           &below in its& \TeX\ form.\cr
+ It              &could &have had mathematics, $x^y$ too.\cr}
+$$
+\endtt
+will in fact produce, as promised, 
+$$
+\halign{#\hss &\hss #\hss&\hss #\cr
+ This particular & example & will give the text \cr
+ shown           &below in its& \TeX\ form.\cr
+ It              &could &have had mathematics, $x^y$ too.\cr}
+$$
+The |$$...$$| is a convenient way of centering the |\halign|.
+
+If the preamble has an extra |&| in its definition, then \tex\ pretends
+that the pattern between
+the extra |&| and the |\cr| is repeated an infinite number of times. This
+means that it is quite easy to define a single |\halign| that can be used
+even when the number of columns is unknown. If the |<preamble>| above were
+replaced by |&<preamble>|, then the entire sequence of left, center, right
+justified columns would be repeated.
+
+
+
+\mbr
+\pla\@|\hidewidth|
+\nbr
+This command is used to allow an entry in an alignment field to stick out the
+side of the field. If it is used on both sides, of an entry, the width of the
+column is unaffected by that field. This is used when column widths
+should  be determined by the data entries and not the titles. It is probably
+not  to useful in a pure \intex\ table format.
+
+
+
+\mbr
+\pla\@|\ialign{<preamble>\cr <first row>\cr ... <last row>\cr}|
+\nbr
+This is identical to an |\halign| except that the |\tabskip| glue has been
+preset to be zero. 
+
+\mbr
+\pla\@|\multispan {<integer>}|
+\nbr
+This effectively combines the |<integer>| number of columns into one column
+and leaves the simple |#| template or pattern. Note that any implicit spacing
+at the edges of the column is lost. 
+
+\mbr
+\pri\@|\noalign {<text>}|
+\nbr
+This will place the |<text>| between this and the following row of an
+alignment. It must be the first token after the |\cr|. It has many uses
+including placing horizontal separator lines in tables. 
+
+\mbr
+\pla\@|\oalign{<first row>\cr ... &<last row>\cr}|
+This creates a vertical list of the elements in each of the rows. There is
+only {\bf one} element allowed in each row. For instance
+\begintt
+$$
+\oalign{this\cr is\cr a\cr vertical\cr list\cr}
+$$
+\endtt
+gives
+$$
+\oalign{this\cr is\cr a\cr vertical\cr list\cr}
+$$
+Note that there are no struts in the rows.
+
+\mbr
+\pri\@|\omit|
+\nbr
+If |\omit| is the first token after the |&|, or the replacing |\span|, then
+the template pattern for that field is replaced with the simple |#|. Any
+tabskip glue is left intact.
+
+\mbr
+\pri\@|\span|
+\nbr
+This command in the text fields of an |\halign| can be used to replace the
+|&|. When this is done, the template or formats of the
+adjacent columns are butted against each other and results in both data
+fields placed in a box of the combined size of both columns, including any
+tabskip glue. This command in the preamble field of an |\halign| will cause
+the following command to be expanded. \intex\ uses this to transfer the
+information in format field to the actual |\halign| of the table.
+
+
+
+\mbr
+\pri\@|\valign{<preamble>\cr <first column>\cr ... <last column>\cr}|
+\nbr
+This is the vertical equivalent of the |\halign|. 
+\endblockmode
+
+\dssshead{\intex\ Table Command Forms}
+\beginblockmode
+\ext\vrt
+\nbr
+This command will put a vertical rule of width |\tr| at the point indicated.
+It should be used only in the text rows and not in the format. The |"| should
+be used to represent a rule column in the format. This command removes spaces to its left or, equivalently to the
+right of the item in the previous data column.
+
+\silent{\@{\char'42}}
+\mbr
+\ext|"|
+\nbr
+In text rows this is used to leave the vertical rule out of a rule column. In
+the format it is used to indicate the existence of a rule column. As a matter
+of style, \intex\ data columns should always be separated by a rule column.
+If there is no rule, this is indicated in the text rows by using |"| instead
+of \vrt.  This command removes spaces to its left or, equivalently to the
+right of the item in the previous data column.
+
+\mbr
+\ext|\|\vrt
+\nbr
+This command is used in text rows to insert a rule that has been defined by
+the command name |\sprule|. The default for this rule is a thick vertical
+rule.
+
+\mbr
+\ext\@|~|
+\nbr
+This is used to force a space exactly the width of the numerals ``0''. 
+Since all numerals are the same width, this enables the  lining up of 
+numeric data. If it is used in text mode in a table, it will still {\it tie} but
+the space will be slightly larger than outside tables.
+
+\mbr
+\ext\@|\:|
+\nbr
+This command puts a strut of height 2.5ex and depth .9ex. A strut is an
+invisible vrule of width 0pt. Thus the definition of |\:| is 
+|\vrule height 2.5ex depth .9ex width 0pt|. A |\:| may be modified in place
+by putting a new height, depth or width {\bf immediately} after it. 
+This command removes spaces to its left or, equivalently to the
+right of the item in the previous data column.
+
+
+\mbr
+\ext\@|\-|
+\nbr
+This command draws a horizontal line across the table. If it is used between
+rows it draws a line the entire width of the table. If it used in a data
+column, it draws a line the width of the column.
+It is commonly used in conjunction with |\use|. The commands
+|\use{3}\-| will draw a horizontal line across 3 columns.
+
+\mbr
+\ext\@|\br{<rules..>}   \er{<rules..>}|
+\nbr
+These two commands are used at the beginning and end of row respectively.
+Since \intex\ places a rule column at the beginning and end of each table the
+|<rules..>| are put into those columns. This information includes struts for
+spacing, such as |\:| or \vrt for the entry of a vertical rule. 
+|\er| removes spaces to its left or, equivalently to the
+right of the item in the previous data column.
+
+\mbr
+\ext\@|\begintable ... \endtable|
+\nbr
+This is the command that is used to begin a table. It starts a group and
+must have a corresponding |\endtable|. There is a corresponding |\everytable|
+token list.
+
+\mbr
+\ext\@|\begintableformat ... \endtableformat|
+\nbr
+This command starts the format definition of the table. It must have an
+associated |\endtableformat|. \intex\ searches for this 
+|\endtableformat| {\bf before}
+actually processing the format information. Disaster ensues if it is not
+there. {\bf \intex\ adds a rule column to the beginning and the end of all
+formats.} A valid format is given below
+\begingroup 
+\begintt
+\begintableformat
+\center " &\right " \hss A.B ## \hss " \center &X##X& \math\left
+\endtableformat
+\endtt
+\endgroup
+Note that the |##| must always appear as a pair rather than as single |#| in
+the ordinary |\halign| preamble. The |"| indicates a rule column. The |&|
+before the |\right| indicates that the format from this point to the end,
+including the {\bf additional} rule column inserted by \intex\ will be
+infinitely repeated. The |&X##X&| indicates a column with an |X| on either
+side of the data position. If an |"| were put in this position in the row, a
+column of |XX| would result. 
+
+The simplest format, and perhaps the most useful is 
+\begingroup
+\begintt
+\begintableformat
+&\center
+\endtableformat
+\endtt\endgroup
+which results in a potentially infinite number of centered data columns
+separated by rule columns. If any individual data item needs a different
+format, the use of a |\left{data}| or similar form may be used.
+
+\mbr
+\ext\@|\center  \center{<argument>}|
+\nbr
+The first form of |\center| is used in a table format statement to create a
+centered data column. The second form is used in the data position of a data
+column to override the column format given in the format statement. Thus if
+the column format were |\center|, an entry of |\left{<text>}| would put the
+|<text>| at the left of the column. If the format entry were |\math\left|
+then a data column entry of |\center{<text>}| would center the |<text>| in
+the column but would still be in mathematics mode. An entry of 
+|\omit\center{<text>}| would center the data, remove the mathematics mode,
+{\bf and} remove the spacing at both sides of the data entry. This latter
+aspect would not show up with |\center| but would with |\left| or |\right|.
+
+
+\mbr
+\ext\@|\displaymath{<argument>}|
+\nbr
+In the table format, this command must be used with one of |\center|, |\right|, or
+|\left|, or any other valid data column specification. For example, 
+a data column where the input data needs  to be
+in display mathematics format and then right justified is given by
+|\displaymath\right|.
+
+In the text rows, this command will take the |<argument>| and put it in
+display mathematics format. It will not affect the table format specification
+of |\right|, |\left| or |\center|.
+
+
+\mbr
+\ext\@|\everytable|
+\nbr
+This is a token list of commands that should be executed for every table.
+For instance
+\begintt
+\everytable ={\ninepoint}
+\endtt
+will make very table with |\ninepoint| fonts.
+
+
+
+\mbr
+\ext\@|\fulltablerule{<dimen>}|
+\nbr
+This draws a horizontal line across the width of the entire table of
+thickness |<dimen>|. |\tr| is used in vertical rules for widths and should be
+used here. For instance |\fulltablerule{2.5\tr}| will draw a horizontal line
+2.5 times the thickness of the vertical rule given by \vrt which has the 
+width |\tr|.
+
+\mbr
+\ext\@|\left|
+\nbr
+This command behaves identically to |\center| but {\bf left} justifies the data
+entry. See |\center| for more details.
+
+
+\mbr
+\ext\@|\math{<argument>}|
+\nbr
+This command is similar to |\displaymath| except that it sets up a normal
+text mathematics mode. Thus |\math{\alpha}| is equivalent to |$\alpha$|. In a
+table format, it is used in conjunction with the |\center|, |\right|, and
+|\left|. Thus |\math\center| produces a data column in text mathematics mode.
+
+\mbr
+\ext\@|\midtabglue [=] <glue>|
+\nbr
+Changing the |<glue>| value of this parameter will insert tabskip glue into
+the internal columns in the table. The first and last column tabskip
+glues  are set to 0pt plus 1fill. This is really only useful in conjunction with
+|\tablespread| when it is required that a table stretch to a bigger size. 
+
+\mbr
+\ext\@|\modifystrut{<original>}{<add to height>}{<add to depth>}
+\mst = \modifystrut|
+\nbr
+|\modifystrut| and its abbreviation |\mst| will create and insert a strut
+that is |<add to height>| higher and |<add to depth>| lower. These latter are 
+dimensions and may be negative. The |<original>| may be a strut or a complete
+expression. |<original>| could even be a duplication of the row, 
+as long as the row contained no explicit |&| characters and excluding the
+|\br| and |\er|. However, the arguments of the |\br| and |\er| could be
+included.
+
+
+\mbr
+\ext\@|\right|
+\nbr
+This command behaves identically to |\center| but {\bf right} justifies the data
+entry. See |\center| for more details.
+
+
+\mbr
+\ext\@|\sa{<text>}|
+\nbr
+This command creates an empty box of zero height and depth with the width of
+the natural width of |<text>|. It is, in effect, a horizontal strut and is used to
+create columns that have the minimum  width as others in the table, without
+measuring. It was used to make a sample line in the {\it AT\&T} table in
+Section~\ref{intable}.
+
+\mbr
+\ext\@|\sprule|
+\nbr
+This is the name of the command that is inserted in a rule column by the
+command |\|\vrt. It is usually a rule but in fact is unrestricted. It is
+initially definded as a vrule of width |2.5\tr|.
+
+
+\mbr
+\ext\@|\tablespread = {<halign specification>}|
+\nbr
+This is a token list that can include any specification that is valid for an
+|\halign|, or equivalently a box. See Chapter~\ref{basbox} for details. A
+simple example is when a table is supposed to be exactly 8cm --- assuming that
+its natural width is less. Then a |\tablespread = {to 8cm}|, added just 
+after the |\begintable|,  along with the
+default tabskip glue, will produce it. An example is the {\it AT\&T} table at
+the beginning of the section.
+$$
+\centerline{
+\begintable
+\tablespread = {to 8cm}
+\begintableformat
+\center " \center " \center
+\endtableformat
+\br{} \sa{Dividend} "\sa{Dividend} "\sa{Dividend}  \er{} %sample line 
+\-
+\br{\:|} \use{3}    AT\&T Common Stock         \er{|}
+\-
+\br{\:|}     Year |   Price |  Dividend       \er{|}
+\-
+\br{\:|}     1971 | 41--54  |    \$2.60        \er{|}
+\-
+\br{\:|}     ~~~2 | 41--54  |     ~2.70        \er{|}
+\-
+\br{\:|}     ~~~3 | 46--55  |     ~2.87        \er{|}
+\-
+\br{\:|}     ~~~4 | 40--53  |     ~3.24        \er{|}
+\-
+\br{\:|}     ~~~5 | 45--52  |     ~3.40        \er{|}
+\-
+\br{\:|}     ~~~6 | 51--59  |     ~~.95\rlap*  \er{|}
+\-
+\br{\:}\use{3} \left{* (first quarter only)} 
+\endtable 
+}
+$$
+
+
+
+\mbr
+\ext\@|\tcs|
+\nbr
+This dimension is the spacing inserted to the left and right of every data
+column by \intex\ through the use of the |\left|, |\center| and |\right|
+commands. It may be modified by |\tcs = <new dimen>|.
+
+\mbr
+\ext\@|\thrule{<height>}|
+\nbr
+This command is used to insert a  horizontal rule of thickness |<height>| 
+across an entire data column. The command |\use{3}\thrule{2.5\tr}| will
+insert a horizontal line across three data columns, and omit the intervening
+vertical rules, if any. 
+
+\mbr
+\ext\@|\tr|
+\nbr
+This dimension is the basic table line dimension, being the width of vertical
+lines and the height of horizontal lines (rules). It  defaults to the
+natural width and height of \tex\ vrules and hrules, namely .4pt. It may be
+modified by |\tr = <new dimen>|.
+
+\mbr
+\ext\@|\tvrule{<width>}|
+\nbr
+This is a vertical line or rule with width |<width>|. The default value of
+|<width>|, which is a dimen, is |\tr|.
+
+\mbr
+\ext\@|\use{<number of data columns>}|
+\nbr
+This command effectively merges the next 
+|<number of data columns>| into one and uses the format or template of the
+{\bf last} one. Thus if the last template is |\center|, then 
+|\use{4} Table| will put |Table| in the center of these four columns. If the
+last column had a |\left| format but it was still desired to center |Table|
+then |\use{4} \center{Table}| will do the job. This is \intex's version of
+|\multispan| especially tailored to the idea of rule and data columns.
+
+\mbr
+\ext\@|\zerocenteredbox{<text>}
+ \zb = \zerocenteredbox|
+\nbr
+|\zerocenteredbox| and its abbreviation |\zb| will take the |<text>| and put
+it in a box, centered, and of zero height and depth. It automatically checks
+modes so that it will work correctly even with display math templates. It is
+used to place rows of data so that they are visually between data entries in
+other columns. For instance, the following table had its last two rows done
+this way.
+
+\bigbreak
+\centerline{
+\begintable
+\begintableformat 
+ \left"&\center
+\endtableformat
+\fulltablerule{2.5\tr}
+\br{\:\|}        \| \use{5}                SERVICE                      \er{\|}
+\br{\|}          \| \use{5}\-                                           \er{\|}
+\br{\:\|}CANONICAL\| Fully  | Dynamic  | Complete | Switched | Switched \er{\|}
+\br{\:\|}NETWORK \|Connected|Allocation|Broadcast | Complete |Broadcast \er{\|}
+\br{\:\|}        \|         |          |          | Broadcast|          \er{\|}
+\fulltablerule{3\tr}%---------------------------------------------------------
+\br{\:\|} Fully  \|         |          |          |          |          \er{\|}
+\br{\|}          \|\zb{$v$} |\zb{$v$}  | \zb{$v$} |\zb{$(N-1)v$}|\zb{$(N-1)v$}\er{\|}
+\br{\:\|}Connected\|        |          |          |          |          \er{\|}
+\- %--------------------------------------------------------------------------
+\br{\:\|}Simplex Tree\|     |          |          |          |          \er{\|}
+\br{\|}       \|\zb{$v/(N-1)$}|\zb{$v$}|\zb{$v/(N-1)$}|\zb{$v$}|\zb{$v$}\er{\|}
+\br{\:\|}Collection\|       |          |          |          |          \er{\|}
+\fulltablerule{2.5\tr} %------------------------------------------------------
+\endtable
+}
+
+
+
+and is given by
+\begingroup \eightpoint
+\beginttverbatim
+\1centerline{
+\1begintable
+\1begintableformat 
+ \1left"&\1center
+\1endtableformat
+\1fulltablerule{2.5\1tr}
+\1br{\1:\1|}        \1| \1use{5}                SERVICE                      \1er{\1|}
+\1br{\1|}          \1| \1use{5}\1-                                           \1er{\1|}
+\1br{\1:\1|}CANONICAL\1| Fully  | Dynamic  | Complete | Switched | Switched \1er{\1|}
+\1br{\1:\1|}NETWORK \1|Connected|Allocation|Broadcast | Complete |Broadcast \1er{\1|}
+\1br{\1:\1|}        \1|         |          |          | Broadcast|          \1er{\1|}
+\1fulltablerule{3\1tr}%---------------------------------------------------------
+\1br{\1:\1|} Fully  \1|         |          |          |          |          \1er{\1|}
+\1br{\1|}          \1|\1zb{$v$} |\1zb{$v$}|\1zb{$v$}|\1zb{$(N-1)v$}|\1zb{$(N-1)v$}\1er{\1|}
+\1br{\1:\1|}Connected\1|        |          |          |          |          \1er{\1|}
+\1- %--------------------------------------------------------------------------
+\1br{\1:\1|}Simplex Tree\1|     |          |          |          |          \1er{\1|}
+\1br{\1|}       \1|\1zb{$v/(N-1)$}|\1zb{$v$}|\1zb{$v/(N-1)$}|\1zb{$v$}|\1zb{$v$}\1er{\1|}
+\1br{\1:\1|}Collection\1|       |          |          |          |          \1er{\1|}
+\1fulltablerule{2.5\1tr} %------------------------------------------------------
+\1endtable
+}
+\endttverbatim
+\endgroup
+\ejectpage
+
+\endblockmode
+\done

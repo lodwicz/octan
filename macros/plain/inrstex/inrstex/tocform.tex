@@ -1,0 +1,108 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+% ======== Table of Contents, Figures, and Tables -- Examples ======
+% The "list" file is written using \writelistfile and the \shtoc ...
+% are used to create the actual table of contents, figures, tables. 
+% Extensions to other forms should be obvious. 
+
+
+
+%====== general structure for making table of contents, tables, etc.
+% ------ table of contents is slightly different because it refers to itself
+
+% file names (defaults) \jobname.toc  --- table of contents
+%                       \jobname.fig  --- list of figures
+%                       \jobname.tbl  --- list of tables
+
+% to initiate a build of any of these it is only necessary to 
+% \openlistfile{<...>} --- This should be only done once 
+% when this is done a <..>list flag or switch is also created 
+
+% To print any of these lists it is only necessary to
+% use the following format 
+%    \begingroup
+%     \def\sshtoc#1#2#3{} % omits or specially defines . and any other
+%     \preludehead{<name list>} % .... or what you wish
+%     \maketoclist % This is for toc files only ... self referential
+%     \input \jobname.<extension>
+%    \ejectpage % if desired
+%    \endgroup
+
+%  a few special macros are defined for toc/list file management (VAX/VMS)
+
+\newif\ifnotdefined % \ifundefined is sensitive if it fails 
+\def\checklistopen#1{\notdefinedfalse\ifundefined{if#1list}\notdefinedtrue\relax
+                    \fi}
+\def\c@k#1{\csname if#1list\endcsname \jobname.#1;-1 \else \jobname.#1 \fi}
+\def\newlistfilename#1{\ifnotdefined \jobname.#1 \else \c@k{#1} \fi}
+                      % \c@k is necessary because of the way TeX expands 
+
+\newtoks\inputtocfiles
+\inputtocfiles = {\checklistopen{toc}\inputwithcheck{\newlistfilename{toc}}}
+\def\maketoclist{\begingroup\captionbodyoff\the\inputtocfiles\endgroup}
+
+\newtoks\inputfigfiles
+\inputfigfiles = {\checklistopen{fig}\inputwithcheck{\newlistfilename{fig}}}
+\def\makefiglist{\begingroup\captionbodyoff\the\inputfigfiles\endgroup}
+
+\newtoks\inputtblfiles
+\inputtblfiles = {\checklistopen{tbl}\inputwithcheck{\newlistfilename{tbl}}}
+\def\maketbllist{\begingroup\captionbodyoff\the\inputtblfiles\endgroup}
+
+
+% ======== macro forms for toc, fig, tbl =========
+%   Some of these are defined as null to suppress printing of the
+%   corresponding entries.
+%   #1  Number
+%   #2  Text
+%   #3  Page number
+% ========== toc macro forms ==========
+% special forms that allow for multiple line titles ... auto line breaking
+% only
+%#1--indent  #2 --section number #3--title 
+% #4-- pagenumber 
+\newdimen\t@ocsize
+\newdimen\righttocindent %\righttocindent = 5em
+
+\def\tocfill{\leaders\hbox to .5em{\hss.\hss}\hfill\hskip .5em}
+
+% default font is \rm ... may be changed in the actual \figtoc ...etc
+% macros as given below. 
+
+\def\tocbox#1#2#3#4{\line{\rm \t@ocsize=\hsize
+                      \setbox2=\hbox {\hskip#1\relax#2\quad}
+                      \advance\t@ocsize by -\righttocindent
+                      \vbox{\hsize \t@ocsize \normalbaselines
+                              \setstrut
+                              \hangindent 1\wd2 
+                               \hangafter 1 \def\cr{\linebreak}\frenchspacing
+                               \veryraggedright \parindent=0pt\leavevmode
+                      \box2\relax#3\strut\null\nobreak\rm\tocfill 
+                              #4\hskip -\righttocindent\strut}\hss}}
+    
+% ---------- figure forms -------
+\def\figtoc#1#2#3{   \vskip 1ex plus 1pt minus 1pt
+                    \tocbox{2em}{#1}{#2}{#3}}
+% ---------- table forms -------
+\let\tbltoc=\figtoc
+
+\def\prtoc#1#2#3{   \vskip 1ex plus 1pt minus 1pt
+                    \tocbox{0em}{\it#1}{\it#2}{\it#3}}
+
+\def\chtoc#1#2#3{   \goodbreak\vskip 2ex plus 1pt minus 1pt
+                    \tocbox{0em}{\sheadfont#1}{\sheadfont\def\cr{ }#2}{#3}}
+\def\shtoc#1#2#3{   \vskip 1ex plus 1pt minus 1pt
+                    \tocbox{2em}{#1}{#2}{#3}}
+\def\sshtoc#1#2#3{  \vskip .5ex plus 1pt minus 1pt
+                    \tocbox{4em}{#1}{#2}{#3}}
+\def\intssshtoc#1#2#3{  \vskip .3ex plus 1pt minus 1pt
+                    \tocbox{6em}{#1}{#2}{#3}}
+\def\intdssshtoc#1#2#3{  \vskip 1pt plus 1pt minus 1pt
+                    \tocbox{8em}{#1}{#2}{#3}}
+\def\ssshtoc#1#2#3{}
+\def\dssshtoc#1#2#3{}
+
+% the upper two forms are defaulted to be omitted. They are easily included
+% with a \let\ssshtoc = \intssshtoc  ... etc . 

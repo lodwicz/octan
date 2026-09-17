@@ -1,0 +1,169 @@
+\catcode`@=11 
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+% Fix on \firstcolumnoffset 11 May 87 ... MJF 
+
+
+% Compensate for 1 inch standard print offsets Sept. 1991 ... ugh!
+\newdimen \hprintoffset
+\newdimen \vprintoffset
+\hprintoffset=1in
+\vprintoffset=1in
+
+
+% Postscript version with arbitrary page scaling/rotation
+
+% ======== INRSTeX Single/Multi Column Output Routine ========
+% This is the entire output routine for INRSTeX. It does both single and
+% Multicolumn since there is a rather large repetition to do otherwise. 
+
+
+
+%====== Debugging rules =======
+% These can be turned on to outline the page 
+%\def\testhrule{\hrule}
+\let\testhrule = \relax
+%\def\testvrule{\vrule}
+\let\testvrule =\relax
+
+
+% ====== single/multicolumn output routine
+
+
+
+
+\def\tmessage#1{}
+\output{\m@ultipleoutput}
+\def\m@ultipleoutput{\tmessage{Multiout - ms:\the\m@ultistate- cc:\the\c@urrentcolumn - nc:\the\numcolumns}
+                     \ifcase\m@ultistate   % 0 - only state where shipout allowed
+                             \addcolumn{\pagecontents}\relax
+                             \global\advance\c@urrentcolumn by 1 \relax
+                             \ifnum\c@urrentcolumn > \numcolumns
+                                 \finaloutput  % in normal state
+                              \fi
+                          \or \s@etuprempage % 1 - into - always go this way
+                          \or 
+                            \addcolumn{\pagecontents}\relax
+                            \s@etuprempage  % 2 - outof - clean up the current col and store
+                       \fi
+                    }
+
+
+\def\s@etuprempage{  \global\setbox\t@opmultibox = 
+                      \vbox{\boxmaxdepth 0pt \offinterlineskip
+                            \ifvoid\t@opmultibox \else \unvbox\t@opmultibox \fi
+                            \ifvoid\topmulticolumnbox \else \unvbox\topmulticolumnbox\fi
+                            \ifvoid\topins \else \unvbox\topins \fi
+                            \ifcase\m@ultistate 
+                                     \tmessage{TeX System Error - misplaced multistate -- \the\pageno}
+                                 \or \ifvoid255 \else \unvbox255 \fi % top of pag
+                                 \or \ifvoid\m@ulticolumnbox 
+                                         \else \box\m@ulticolumnbox
+                                       \fi    % multicol part page
+                               \fi}
+                   \global\setbox\b@otmultibox = 
+                      \vbox{ \boxmaxdepth \maxdepth \offinterlineskip
+                             \ifvoid\footins 
+                                \else \vskip\skip\footins
+                                      \footnoterule
+                                      \unvbox\footins
+                               \fi
+                             \ifvoid\botmulticolumnbox 
+                                \else \unvbox\botmulticolumnbox 
+                               \fi}
+                   \ifb@alance \advance\parskip by 0pt plus 0pt minus 0pt \fi
+                   \ifnum\m@ultistate=2 
+                           \global\b@alancevsize=\vinnerpagesize 
+                           \global\numcolumns = 1
+                           \global\b@alancefalse 
+                      \fi
+                   \c@omputevsize
+   \tmessage{Rempage: ms:\the\m@ultistate- ip:\the\vinnerpagesize- hc:\the\vcolumnsize-
+                          cc:\the\c@urrentcolumn- nc:\the\numcolumns}
+                   \global\c@urrentcolumn= 1\global\m@ultistate=0 
+                   \ifnum\vcolumnsize<\multicolpageshortfall \finaloutput \fi
+                    }
+
+
+\def\twoperpage{\xdef\l@page{0}\def\topPS{\ifnum\l@page=0 
+                    \special{ps:: /EOP {} bdf gsave 576 0 translate 90
+                     rotate .7 .7 scale }\else 
+                    \special{ps:: /EOP {} bdf gsave 576 396 translate 90
+                     rotate .7 .7 scale }\fi }
+\def\botPS{\ifnum\l@page=0 
+                 \special{ps:: grestore }\xdef\l@page{1}
+                     \else 
+                         \special{ps:: grestore showpage }\xdef\l@page{0}\fi } 
+\let\d@one=\done \def\done{\ejectpage\ifnum\l@page=1 \finalversion
+                           \fullpagestyle \line{} \fi  
+                             \d@one}}
+
+
+\newif\ifpageps \pagepsfalse
+
+\def\topPS{\ifpageps \t@opsc \fi}
+\def\botPS{\ifpageps \b@otsc \fi}
+
+\def\showpage{showpage }
+\def\pagescale htr:#1 vtr:#2 d:#3 hsc:#4 vsc:#5  { 
+    \xdef\t@opsc{\special{ps:: /EOP {} bdf 
+ gsave #1 #2 translate #3 rotate #4 #5 scale }}
+    \xdef\b@otsc{\special{ps:: grestore \showpage }}\global\pagepstrue }
+\def\finaloutput{\shipout 
+                   \hbox{\topPS\leftmarginskip \hskip -\hprintoffset 
+                 \vbox to \vpapersize{\offinterlineskip % but boxes together
+                  \vskip -\vprintoffset
+                  \topmarginskip\testhrule
+                  \m@akeheadertext\testhrule
+                  \hbox{\hskip \firstcolumnoffset \relax \pagebody}\testhrule
+                  \m@akefootertext\testhrule
+                  \vfill
+                  \ifproofmode \vbox to 0pt{\boxmaxdepth 0pt \vss 
+                           \hbox{\qquad \versionform}} \fi
+                  \vfill
+                  \vss}\botPS}
+     \tmessage{Final Out: ms:\the\m@ultistate- cc:\the\c@urrentcolumn- nc:\the\numcolumns}
+             \ifp@agenoadv \advancepageno \fi
+             \global\p@agenoadvtrue 
+             \global\h@eadertype=\d@ocumentheader % default header style 
+             \global\f@ootertype=\d@ocumentfooter % default footer style 
+             \c@omputevsize
+             \ifb@alance \advance\parskip by 0pt plus 0pt minus 0pt \fi
+             \ifnum\outputpenalty>-\@MM \else\dosupereject\fi
+              \global\c@urrentcolumn = 1 \global\m@ultistate=0}
+
+\def\addcolumn#1{\tmessage{addcol: ms:\the\m@ultistate- cc:\the\c@urrentcolumn-
+                       nc:\the\numcolumns}
+                 \global\setbox\m@ulticolumnbox = 
+                \hbox{\ifvoid\m@ulticolumnbox
+                           \else\unhbox\m@ulticolumnbox\the\intercolumnsep \fi
+                      \testvrule\hbox to \hcolumnsize{\vbox to 
+                         \vcolumnsize{\boxmaxdepth\maxdepth #1}\hss}\testvrule}
+               }
+
+\newbox\i@nnerpagebox
+\def\pagebody{\setbox\i@nnerpagebox = \vbox to\vinnerpagesize{\boxmaxdepth\maxdepth\offinterlineskip
+                         \ifvoid\t@opmultibox \else\unvbox\t@opmultibox \fi
+                         \ifvoid\m@ulticolumnbox \else\box\m@ulticolumnbox \fi
+              \ifvoid\b@otmultibox\else\unvbox\b@otmultibox \fi}\relax
+              \setbox2= \vbox to
+                   \vinnerpagesize{\hsize\h@marginboxsize
+                                   \vskip 1cm
+                                   \unvbox\m@arginbox
+                                   \vss}\relax
+              \hbox{\box\i@nnerpagebox\box2}}
+
+
+\def\pagecontents{\ifvoid\topins\else\unvbox\topins\fi
+  \unvbox\@cclv % open up \box255
+  \ifvoid\footins\else % footnote info is present
+    \vfill
+    \vskip\skip\footins
+    \footnoterule
+    \unvbox\footins\fi
+  \ifr@ggedbottom\vfil\fi}
+
+\def\footnoterule{\kern-3\p@
+  \hrule width .2\hcolumnsize \kern 2.6\p@} % the \hrule is .4pt high

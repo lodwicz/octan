@@ -1,0 +1,33 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+% =========== Appendices  ==============
+% Appendices are defined by using \shead invocations.
+% Appendices are assumed to be associated with chapters, if 
+% they exist  hence the first appendix in Chapter 2 is Appendix A.
+% These macros modify the numberforms of \shead to produce Apendices. 
+
+
+
+% Appendix numbering (A, B, C, ...) is incremented
+% at each appendix. The \beginappendices...\endappendices
+% macros should bracket all of the appendices.
+% Equations, figures and tables are numbered for each
+% appendix separately.
+\newif\ifa@ppendix
+% \def\Appendix{Appendix } see English/French titles
+\newtoks\everyappendices
+\newtoks\e@veryappendices
+\def\beginappendices{\begingroup \a@ppendixtrue
+    \numberbysection
+    \global\shnum=0
+    \global\sshnum=0
+    \global\ssshnum=0
+    \def\shnumform{\Alphabetic{\the\shnum}}
+    \the\s@presetlist %resets all the special numbers
+    \def\shtagreplaceformat{\Appendix \shtagrefformat.}
+    \the\e@veryappendices
+    \the\everyappendices}
+
+\def\endappendices{\endgroup}

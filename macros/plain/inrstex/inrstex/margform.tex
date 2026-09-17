@@ -1,0 +1,35 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+% ========= Margin Box =========
+% A margin insert (box) is used to collect  reference/citation values 
+% If a non INRSTeX output routine is used, it is necessary to remove
+% the \newinsert\m@arginbox, \dimen\m@arginbox and \count\m@arginbox. 
+% In addition a \def\proofmargin#1{} should be inserted. 
+% This information could be written out to a file rather than 
+% printing it on the page. 
+
+
+% ----- margin notes ------
+
+\newinsert\m@arginbox 
+\dimen\m@arginbox = 8in
+\count\m@arginbox = 0
+
+\newdimen\h@marginboxsize \h@marginboxsize = 1.5in
+\def\margin#1{\gdef\m@ext{\insert\m@arginbox{\vskip 
+             1ex\hbox{\notefont\quad#1}}}\ifinner 
+              \aftergroup\m@ext \else \m@ext \fi}
+% --- margin notes will completely disappear if \marginnotesfalse,
+% \proofmargin is redefined or \finalversion is in force.
+
+\newif\ifmarginnotes
+\def\proofmargin#1{\xdef\p@ff{#1}\ifmarginnotes\margin{\p@ff}\fi}
+
+%------ General Style switches --------
+
+\newif\ifproofmode \proofmodetrue % defaults to proofmode
+\def\draftversion{\proofmodetrue \marginnotestrue \overfullrule = 5pt}
+\def\finalversion{\proofmodefalse \marginnotesfalse \overfullrule = 0pt}
+

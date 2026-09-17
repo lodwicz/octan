@@ -1,0 +1,383 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{basbox}
+
+\def\cqu{}
+
+\chapterhead{basbox}{BASIC\cr BOX\cr COMMANDS}
+\TeX 's major preoccupation is to make
+boxes. This chapter discusses the basic commands that create and use boxes.
+Boxes can be acquired, measured, split, copied, and squashed. \tex\ allows
+almost anything that can be done on a page to be done inside a box.
+
+\shead{boxcom}{Command List}
+\beginthreecolumn
+\pri|\box|
+\ext|\boxit|
+\pri|\boxmaxdepth|
+\pri|\copy|
+\pla|\centerline|
+\pri|\dp|
+\pri|\everyhbox|
+\pri|\everyvbox|
+\pri|\hbox|
+\pri|\ht|
+\pri|\hrule|
+\pla|\leftline|
+\pla|\line|
+\pla|\llap|
+\pri|\lower|
+\pla|\newbox|
+\pri|\raise|
+\pla|\rightline|
+\pla|\rlap|
+\pri|\setbox|
+\ext|\strut|
+\pri|\unhbox|
+\pri|\unhcopy|
+\pri|\unvbox|
+\pri|\unvcopy|
+\pri|\vbox|
+\pri|\vcenter|
+\pri|\vrule|
+\pri|\vsplit|
+\pri|\vtop|
+\pri|\wd|
+\ext|\zerocenteredbox|
+\endthreecolumn
+
+\shead{boxtype}{Vertical and Horizontal Boxes}
+There are two kinds of boxes, horizontal and vertical. This 
+differentiation is only one of {\it use}, not of quality. All boxes have a
+height |\ht|, width |\wd|, and depth |\dp|, and reference point. 
+The reference point is at the left hand end of the {\it baseline} of the box.
+
+\boxexample
+\noindent
+Horizontal lists of boxes are lined up along their baselines. Vertical lists
+of boxes are lined up along their reference points.
+
+
+
+The major difference is that
+an |\hbox| contains a {\it horizontal} list of commands and boxes and
+assembles  these on a horizontal line while a 
+|\vbox| contains vertical list of commands and boxes and assembles them on
+top of each other in a vertical list.
+
+While inside a horizontal box, \tex\ is said to be in {\it internal}
+horizontal mode. This is the mode that is wanted when there is some centering
+or other coercive placement of text on a line required. 
+The inside of a vertical box is known as {\it internal vertical mode}. Almost
+anything that can be done on a page can also be done inside a vertical box.
+The {\bf width} of a |\vbox| is determined in the following way: if the mode
+inside the box is never changed from
+vertical, the box width is the {\it natural} width of the material inside; if
+the mode in the box changes to either horizontal or mathematics, the width of
+the box is the current value of |\hsize|. If it has not been changed,
+|\hsize| will probably be the width of a page. The mode in the box will be
+changed to horizontal if there is either mathematics or ordinary text placed
+in the box without first being enclosed in an |\hbox| such as a
+|\centerline|. 
+
+One box is very special, namely box 255. This box is the page building box
+and only material in this box is acted upon by the page builder and breaker.
+When \tex\ is in this box, it is said to be in (non-internal) {\it vertical}
+mode.  
+Although only box 255 can be worked upon by the page builder, other boxes can
+be split, using rules similar to the page builder by the |\vsplit| command.
+It is possible then to accumulate text in a long vertical box for future
+splitting when the length of the box is known. A newbox is  acquired by
+|\newbox|.
+Text is placed in a box using
+the |\setbox| command and removed using any one of a number of |\box|,
+|\copy| or |\unvbox| commands, with various effects on the box contents.
+Boxes may be superimposed by forcing their height, depth, and width to be
+zero, making sure there is appropriate internal glue to allow the contents to
+spill out and prevent overfull boxes. The commands |\rlap| and |\llap| allow
+for horizontal superposition of |\hboxes|. As might be expected, the effects
+can be interesting.
+
+Box registers are numbered from 0 to 255. 
+|\newbox\<box name>| allocates an unused box number
+and assigns it the symbolic name |\<box name>| which now
+can be used  wherever there is a need for a box number.
+
+The following example does not result in an overfull
+box and illustrates a number of the commands in this section. The intent is
+to acquire a box, put a character into it, coerce its size down to a point,
+and then to move it around so that the result is an overlapping pattern of
+the character. The result is 
+   \newbox\testbox 
+   \setbox\testbox = \vbox{\hbox{$\bigodot$\hss}\vss}
+      \dp\testbox=0pt \ht\testbox=0pt \wd\testbox=0pt
+   \centerline{.\copy\testbox \lower1ex\copy\testbox
+         \hskip .5em \lower1ex\copy\testbox}
+\vskip .25in
+It is obtained, with accompanying explanation, by
+\begintt
+
+   \newbox\testbox    %allocates a newbox called \testbox
+   \setbox\testbox = \vbox{\hbox{$\bigodot$\hss}\vss} 
+           % sets the box \testbox to be a \vbox -- the \vss 
+           % and \hss prevent the overfull box
+      \dp\testbox=0pt \ht\testbox=0pt \wd\testbox=0pt
+           % the size of \testbox is now 0 -- the \vss and
+           % \hss above leave the reference point in the upper
+           % lefthand corner
+   \centerline{.\copy\testbox \lower1ex\copy\testbox
+         \hskip .5em \lower1ex\copy\testbox}
+           % the . is for reference --- the centerline puts it
+           % in the middle of the page
+\endtt
+
+
+
+  
+\shead{boxcomforms}{Command Forms}
+\beginblockmode
+\pri\@|\box{<named box>}|
+\nbr
+This command takes the |<named box>|, whether a |\vbox| or
+|\hbox|, and places it at that point in the present list. The resulting
+|<named box>| is now empty.
+
+\mbr
+\ext\@|\boxit{<line thickness>}{<border separation>}{<box, vlist>}|
+\nbr
+|\boxit| takes the box, or vertical list and puts a box around it with a
+border separated from the |<box>| by |<border separation>| and a having a
+thickness of |<line thickness>|. For example
+
+\centerline{\boxit{2pt}{3pt}{\hbox{Center}}}
+is given by
+\begintt
+\centerline{\boxit{2pt}{3pt}{\hbox{Center}}}
+\endtt
+
+\mbr
+\pri\@|\boxmaxdepth [=] <dimen>|
+\nbr
+This sets the maximum box depth to |<dimen>|. If the natural depth of the box
+is greater than |<dimen>|, the box is raised (increasing its natural height)
+until the depth does equal |<dimen>|. 
+
+\mbr
+\pri\@|\copy{<named box>}|
+\nbr
+This takes the |<named box>| and puts it in the present list. The box
+contents are {\bf not} destroyed.
+
+
+\mbr
+\pla\@|\line{<horizontal list>}|
+\nbr
+\pla\@|\centerline{<horizontal list>}|
+\nbr
+\pla\@|\leftline{<horizontal list>}|
+\nbr
+\pla\@|\rightline{<horizontal list>}|
+\nbr
+|\line| is an |\hbox| the same size as |\hsize|, the natural size of the
+enclosing box such as a page. |\leftline|, |\centerline|, |\rightline|
+respectively take the |<horizontal list>| and force it to the left, middle,
+and right parts of the box. 
+|\line| is identical to |\hbox to \hsize{<horizontal list>}|. |\leftline| is 
+|\line{<horizontal list>\hss}|, |\centerline| is |\line{\hss<horizontal
+list>\hss}|, and |\rightline| is |\line{\hss<horizontal list>}|.
+
+\mbr
+\pri\@|\box dimensions ... \dp \ht \wd|
+\nbr
+\pri\@|\dp<named box> [=] <dimen> 
+     \ht<named box> [=] <dimen> 
+     \wd<named box> [=] <dimen>|
+\nbr
+The commands |\dp \ht \wd| refer to the depth, height, and depth of the
+|<named box>|. The form above sets the |<named box>| to these dimensions.
+
+
+\mbr
+\pri\@|<scale factor>\dp<named box>
+     <scale factor>\ht<named box>
+     <scale factor>\wd<named box>|
+\nbr
+These forms are all valid |<dimen>| and can be used when ever a |<dimen>| is
+valid. For instance |\hsize = .378\wd\testbox| is a valid assignment for
+|\hsize| as long as |\testbox| is a valid box number. These forms are useful
+for some types of arithmetic.
+
+
+\mbr
+\pri\@|\everyhbox = {<token list>}|
+\nbr
+\pri\@|\everyvbox = {<token list>}|
+\nbr
+This command inserts the |<token list>| as the first set of commands whenever
+an |\hbox| or |\vbox|, respectively is entered by \tex. 
+
+\mbr
+\pri\@|\hbox <box spec>{<horizontal list>}|
+\nbr
+\pri\@|\vbox <box spec>{<vertical list>}|
+\nbr
+These insert |\hbox| and |\vbox| respectively, according to the |<box spec>|
+and containing the |<... list>|. The |<box spec>| is a specification sequence
+for the box. 
+
+\mbr
+\pri\@|<box spec>|
+\nbr
+The |<box spec>| is one of the following: 
+\nbr
+\bshortcomlist
+\noalign{\vskip -\lastskip}
+| to <dimen>|&this sets a
+|\hbox| to width |<dimen>| or a |\vbox| to height |<dimen>| ; if |<dimen>| is
+|\hsize|, the box is the natural width of the surrounding box or page \cr
+|<nothing>|&this lets the box take on its natural width or height\cr
+\eshortcomlist
+
+\pri\@|\vbox{\hsize [=] <dimen> <text>}|
+\nbr
+This creates a |\vbox| with a specified horizontal dimension. {\bf This box
+will accept almost anything that can be put on a page including display
+mathematics, |\centerline|, and ordinary text.} It is the basic mechanism for
+creating boxes that look like pages for future pasting up into a 
+page.\footnote{\dagger}{This replaces the |\hbox par <dimen>{<...>}| in
+\tex78.}
+
+\mbr
+\pri\@|\hrule [height <dimen>] [width <dimen>] [depth <dimen>]|
+\nbr
+\pri\@|\vrule [height <dimen>] [width <dimen>] [depth <dimen>]|
+\nbr
+These commands create lines of the specified height, width, and depth. Any or
+all of the parameters may be omitted. The |\vrule| is used in {\it horizontal}
+mode and the |\hrule| is used in {\it vertical} mode. If there is no
+dimension given the {\it rule} is the natural size of the enclosing box. For
+instance, on a page the enclosing box is the page itself. Thus
+\begintt
+\par
+\hrule
+\endtt
+gives
+\par
+\hrule
+a line across the entire page. Rules are used to make the lines in the
+|\boxit| macro earlier in this section.
+
+\mbr
+\pla\@|\llap{<text>}|
+\nbr
+\pla\@|\rlap{<text>}|
+\nbr
+These commands allow  |<text>| to be superimposed on the text around it.
+The |\rlap| creates a box of width 0pt and forces the |<text>| out to the
+right. |\llap| does the same thing but to the left. Thus |\rlap{A}$\odot$| and 
+|A\llap{$\odot$}| give the same result namely \rlap{A}$\odot$, and
+A\llap{$\odot$} respectively. This is a way to put text into either margin.
+
+
+\mbr
+\pri\@|\lower<dimen><box>|
+\nbr
+\pri\@|\raise<dimen><box>|
+\nbr
+These commands work only in {\it (internal) horizontal} mode. They lower or
+raise the |<box>| by the |<dimen>|. An example of their use was illustrated
+in the previous section.
+
+\mbr
+\pri\@|\setbox<named box> [=] <box>{<list>}|
+\nbr
+This is the basic command for putting contents in a |<named box>|. The
+|<box>| is any valid |\hbox| or |\vbox| including a |<box spec>| if desired.
+The |<list>| is either vertical or horizontal depending upon the box type.
+
+\mbr
+\ext\@|\strut|
+\nbr
+|\strut| is a |\vrule| of zero width,
+with height and depth for normal baseline spacing in the current font point
+size family. It is  useful
+in |\vbox{\hsize <dimen> \strut <text> \strut}|. The two |\strut|s will
+ensure correct spacing when boxes of this sort are stacked upon each other.
+
+
+\mbr
+\pri\@|\unhbox{<named hbox>}|
+\nbr
+\pri\@|\unhcopy{<named hbox>}|
+\nbr
+\pri\@|\unvbox{<named vbox>}|
+\nbr
+\pri\@|\unvcopy{<named vbox>}|
+\nbr
+These commands take the contents of the |<named box>|, remove the outer box,
+unset the internal glue, and put it in the list at this point. The |..box|
+forms destroy the contents of the box and leave it |void|, while the |..copy|
+forms do not.
+
+\mbr
+\pri\@|\vcenter{<vertical list>}|
+\nbr
+This command works in {\it math} or {\it display math} mode only. It creates
+a |vbox| out of the |<vertical list>| and sets the reference baseline in the
+center of the resultant box. It is used for centering expressions in display
+mathematics.
+
+\mbr
+\pri\@|\vsplit<named box> to <dimen>|
+\nbr
+A new |vbox| with height |<dimen>| and maximum depth
+\@|\splitmaxdepth| is created from the contents of |<named box>|. Any remains are left in
+the |<named box>|. This is useful for some simple multicolumn forms.
+
+
+\mbr
+\pri|\vtop <box spec>{<vertical list>}|
+\nbr
+This command creates a |vbox| with the baseline reference of that box
+being the baseline of the {\bf first box} in the |<vertical list>|. This is
+useful in the following way. This quotation
+
+\centerline{\veryraggedright
+  \vtop{\hsize 1.8in The plans of the diligent lead 
+                   surely to abundance, but every 
+                   one that is hasty comes only to
+                   want.}
+  \hss
+  \vtop{\hsize 1.8in This quotation comes from {\it Proverbs
+                   21, Verse 5}. It suggests care.}
+       }
+is given by
+\begintt
+\centerline{\veryraggedright
+  \vtop{\hsize 1.8in The plans of the diligent lead 
+                   surely to abundance, but every 
+                   one that is hasty comes only to
+                   want.}
+  \hss
+  \vtop{\hsize 1.8in This quotation comes from {\it Proverbs
+                   21, Verse 5}. It suggests care.}
+       }
+\endtt
+Note that these are lined up on the first rows.
+
+\mbr
+\ext|\zerocenteredbox {<text>}|
+\nbr
+This creates an |hbox| of zero height and depth with the width of the
+|<text>|.  Thus a
+|\zerocenteredbox{\bf point}| gives \zerocenteredbox{\bf point}\  with the
+placement as shown. The reference point of the box is at the center of the
+text which effectively lowers it to the baseline. 
+This command is intended for use in making tables. See 
+Chapter~{\ref{align}} for more details.
+
+\endblockmode
+
+\ejectpage
+\done
+  

@@ -1,0 +1,295 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{shead}
+\def\cqu{\cquote{The chief virtue that language can have is clearness, and
+nothing detracts from it so much as the use of unfamiliar
+words.}{On the Natural Faculties, Galen }
+}
+
+\chapterhead{shead}{CHAPTER\cr and SECTION\cr HEADS}
+\intex\ supplies commands for creating chapter and section heads. The default
+style of the  heads are those given in this book. They form the basis
+of the style that naturally results from the use of \intex. Some changes in
+style such as the fonts used are quite easy; others require more care. 
+
+This chapter introduces the commands for creating section heads, whether they
+occur during the initial part of the document or within appendices. All of
+the commands have the same format with or without autonumbering or automatic
+generation of table of contents in force. 
+
+\intex\ considers that a document consists of a {\it prelude} part that will
+include the preface, table of contents, and other special summaries, an {\it
+interlude}
+consisting of chapters and sections, appendices, which may appear at the
+end of a document or at the end of a chapter, and a {\it postlude} which
+would include, perhaps, an index, references, and even appendices. The {\it
+prelude}, appendices, and {\it postlude} are
+enclosed by a |\begin...\end...| pair that form a
+group and set up the styles appropriate for that section. 
+
+The forms that introduce sections, tables of contents, or chapters all have
+commands of the form |\...head|, such as |\shead|, 
+where the |head| is supposed invoke images
+of starting a unit. In \intex, all commands that have a |\begin...| have an
+accompanying |\end...| and all create a group. The |\...head| commands are
+key elements in controlling the setting and incrementing of the various
+numbers used in the document. In addition, they have a relatively complex,
+but accessible format part that can be modified if required. 
+
+The section head commands  |\chead|, 
+|\shead|, |\sshead|, |\ssshead|, and
+|\dssshead| stand for chapterhead, 
+sectionhead, subsectionhead, subsubsectionhead,
+and diminished subsubsectionhead. This is the only example of commands in
+\intex\ for which the abbreviations exist without the full forms. This is
+primarily for typing and visual convenience in the original file. The fonts
+used have the same abbreviated form. 
+
+If an |\shead| is immediately followed by an |\sshead| or any other
+sectionhead form, there is a chance that they may be split apart if they
+occur at the bottom of the page. {\bf To prevent this, and to
+make the spacing reasonable,  the command
+|\nosheadbreak| must be placed in between the two commands.}
+The general spacing parameters are given in Section \ref{sheadspac}.
+
+If the |.toc| file is open for making a table of contents list, each section
+head form writes information to this file. The actual form sent is determined
+by the definition of a |\...tocout| form. For instance the |\shtocout| is
+defined as |\def\shtocout{\string\shtoc}|. The |\shtoc| is an \intex\ form
+that produces a section head line in the table of contents. 
+
+
+\shead{sheadcomlist}{Command List}
+\beginthreecolumn
+\hfuzz=10pt
+\ext|\Alphabetic|
+\ext|\alphabetic|
+\ext|\Appendix|
+\ext|\beginappendices|
+\ext|\beginprelude|
+\ext|\Chapter|
+\ext|\chapterstartform|
+\ext|\chead|
+\ext|\cheadfont|
+\ext|\chnum|
+\ext|\chtagreplaceformat|
+\ext|\chnumform|
+\ext|\chtocout|
+\ext|\endappendices|
+\ext|\endprelude|
+\ext|\dssshead|
+\ext|\dsssheadfont|
+\ext|\dssshtocout|
+\ext|\innerchead|
+\ext|\innerdssshead|
+\ext|\innershead|
+\ext|\innersshead|
+\ext|\innerssshead|
+\ext|\nosheadbreak|
+\ext|\preludehead|
+\ext|\prtocout|
+\ext|\shead|
+\ext|\sheadfont|
+\ext|\shnum|
+\ext|\shnumform|
+\ext|\shtagreplaceformat|
+\ext|\shtocout|
+\ext|\sshead|
+\ext|\ssheadfont|
+\ext|\sshnum|
+\ext|\sshnumform|
+\ext|\sshtocout|
+\ext|\ssshead|
+\ext|\sssheadfont|
+\ext|\ssshnum|
+\ext|\ssshnumform|
+\ext|\ssshtocout|
+\ext|\UpperRoman|
+\endthreecolumn
+
+\shead{sheadcomforms}{Command Forms --- Making Head Forms}
+The commands in this section are very similar in form  and will be described
+in together. There are six predefined |<head types>|: |prelude|, |c| 
+(chapter),
+|s|, |ss|, |sss|, and |dsss|. All but |prelude| and |dsss| take two arguments
+in their |\<head type>head| form. 
+
+Number format and font commands  are discussed in Section \ref{numforms}.
+
+\beginblockmode
+\mbr
+\ext\@|\chead{<number or tag>}{<title>}|
+\nbr
+\ext\@|\preludehead{<title>}|
+\nbr
+\ext\@|\shead{<number or tag>}{<title>}|
+\nbr
+\ext\@|\sshead{<number or tag>}{<title>}|
+\nbr
+\ext\@|\ssshead{<number or tag>}{<title>}|
+\nbr
+\ext\@|\dssshead{<title>}|
+\nbr
+All of these commands create the various forms of section or chapter heads
+indicated by the command name. The |<number or tag>| field is interpreted as a
+tag if |autonumbering| is on or inserted as is into the appropriate place if
+is not. The lack of this field in |\dssshead| and |\preludehead| implies that
+it is impossible to tag or refer to these document parts except through
+their, presumably known, titles. The tag replacement format  and associated 
+|\<head type>hnumform| are 
+discussed separately in
+Section \ref{numforms}. 
+
+There are some restrictions in the use of the |<title>| field. This should
+{\bf not} include |\footnote|, |\cite|, or |\ref| commands. If it is
+absolutely necessary to use these, see Chapter~{\ref{footnot}} to see how to
+get around the |\footnote| restriction, and use |\quietref{<tag>}| 
+for the other
+two. {\it Quiet} is not quite {\it silent}.
+
+\mbr
+\ext\@|\Appendix|
+\nbr
+This command defines the actual form that will be seen in an |\shead| used for
+appendices. It is defined as ``Appendix'' in |\englishversion| and
+``Appendice'' in |\versionfrancaise|.
+
+\mbr
+\ext\@|\beginappendices  \endappendices|
+\nbr
+These commands are intended to enclose the appendices that occur at the end
+of a chapter or book. They reset the {\it special} auto numbers, and change
+the format of the numbers when an |\shead| or its relatives are called.
+|\chead| should not be called in an appendix. 
+Since the |\begin...\end...| pair form a group, 
+changes that only affect the appendices are
+easily made.
+
+\mbr
+\ext\@|\beginprelude  \endprelude|
+\nbr
+These commands are intended to enclose the prelude that occurs at the 
+the start of a document. Preludes usually include such entities as prefaces,
+tables of contents, figures, and tables, acknowledgments, distribution lists
+or perhaps executive summaries. 
+Since the |\begin...\end...| pair form a group, changes that only affect the
+prelude parts are 
+easily made.
+\mbr
+\ext\@|\Chapter|
+\nbr
+This command defines  the actual form used in a |\chead|.
+It is defined as ``Chapter'' in |\englishversion| and
+``Chapitre'' in |\versionfrancaise|.
+
+\mbr
+\ext\@|\chapterstartform = {<special pre chapter tests>}|
+\nbr
+The token list for this command is executed inside |\chead| before the
+first page of the chapter is produced. For this book it was used to check
+whether the chapter starting page was odd. If it was not, a ``quote'' page
+was produced. 
+
+\endblockmode
+
+\shead{numforms}{Command Forms --- Number Formats}
+The number formats when autonumbering is in force are defined using a few
+commands. First the fonts in the various head forms are called
+\@|\<head type>headfont|. These are defined when a document font size (see
+Chapter \ref{fonts}) is defined. For example
+|\documentfont{\tenpoint}| determined the document font family for this book.
+The individual fonts may be changed, although it is not recommended, by
+changing the |\<head type>headfont|. For example, 
+|\let\sheadfont = \twelvedu| will change the section head font for the rest
+of the document, or until the end of the group if it is called within a
+group. A change of this sort will not modify the other fonts.
+
+The number formats are modified by changing the |\<head type>hnumform| such as 
+|\chnumform|, |\shnumform|, |\sshnumform|, |\ssshnumform|,
+respectively for the chapter  and the various section heads.
+\@|\Alphabetic{<integer>}|, \@|\alphabetic{<integer>}|,  and
+\@|\UpperRoman{<integer>}| are used to change the format of an integer
+(counter) to either the equivalent uppercase letter, lowercase letter
+or uppercase roman numeral.  
+The \intex\ forms for |\<head type>hnumform| are
+\begintt
+\def\<head type>hnumform{\the\<head type>hnum}
+\endtt
+for all |<head type>| except that in appendices |\shnumform| is defined to be
+\begintt
+\def\shnumform{\Alphabetic{\the\shnum}}
+\endtt
+This effectively changes the appendix numbering to be roman capitals.
+
+The command \@|\chtagreplaceformat| is the actual command that is used to
+place the ``Chapter \ref{shead}'' at the beginning of this chapter. The
+two definitions involved in this replacement are
+\begintt
+\def\chtagreplaceformat {Chapter \chtagrefformat}
+\def\chtagrefformat {\chnumform}
+\endtt
+The \@|\shtagreplaceformat| is
+defined similarly and is used in |\sheads|. 
+
+A change in the form of the command written to the table of contents file may
+be obtained simply by redefining the appropriate |\...tocout|. 
+
+
+\shead{sheadspac}{Command Forms --- Section Head Spacing}
+The spacing both before and after the various |\...head|s are determined by
+the following parameters. Stretch and shrink glue should be specified to give
+\tex\ some freedom to break pages. 
+\bshortcomlist
+\ext\@|\prsheadskip [=] <glue>|& pre shead skip \cr 
+\ext\@|\posheadskip [=] <glue>|& post shead skip \cr
+\ext\@|\prssheadskip [=] <glue>|& pre sshead skip \cr
+\ext\@|\possheadskip [=] <glue>|& post sshead skip \cr
+\ext\@|\prsssheadskip [=] <glue>|& pre ssshead skip \cr
+\ext\@|\posssheadskip [=] <glue>|& post ssshead skip \cr
+\ext\@|\prdsssheadskip [=] <glue>|& pre dssshead skip \cr
+\ext\@|\podsssheadskip [=] <glue>|& post dssshead skip \cr
+\eshortcomlist
+
+
+\shead{genform}{Major Modifications of the Section Head Formats}
+\intex\ has separate |\cheadformat|, \@|\preludeheadformat|, and a very
+general section head format. These are easily modifiable without upsetting
+any of the houskeeping. Any format that satisfies the input parameter
+constraints will work. 
+
+\beginblockmode
+\mbr
+\ext\@|\cheadformat{<chapter>}{<text>}|
+\nbr
+The |<chapter>| is the chapter identifier. In this chapter it was 
+{\bf Chapter~\ref{shead}}. The |<text>| is title of the chapter. The
+particular form was built using |\vcenter| and |\halign|. 
+
+\mbr
+\ext\@|\gensheadformat{<font>}{<number>}{<text>}{<separator>}|
+\nbr
+This command uses four parameters. The first is the font, the second the
+number, the third is the title of the section and the fourth is the separator
+between the number and the text. The form that is used checks the number to
+see if it is empty. If it is, the |<text>| is placed flush left. The |<text>|
+is actually placed in a |\vbox| with |\veryraggedright| spacing so that there
+will be no hyphenation and long titles will automatically split. Details are
+in {\tt secthead.tex}. 
+
+\mbr
+\ext\@|\preludheadformat{<title>}|
+\nbr
+This command is defined with one parameter that is assumed to be the title of
+the particular section. Since this one is quite simple the default definition
+is given as 
+\begintt
+\def\preludeheadformat#1{\centerline{\sheadfont #1}\vskip 1cm}
+\endtt
+\endblockmode
+\ejectpage
+\done
+
+
+
+
+

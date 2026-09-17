@@ -1,0 +1,59 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+% ======== Master Multilingual Pattern Inputs ======
+
+% This file defines the changes in the \lccodes needed for Multilingual TeX
+% and then inputs the patterns for English and French. 
+
+% =========== Special lccodes and hyphenation for Bilingual Version ====
+
+
+\gdef\accenthyphcodes{
+\def\oe{^^[} % \oe 
+\def\i{^^P}
+\def\'##1{\csname @ac@##1\endcsname}
+\def\`##1{\csname @gr@##1\endcsname}
+\def\v##1{\csname @v@##1\endcsname}
+\let\^^_=\v
+\def\u##1{\csname  @u@##1\endcsname}
+\let\^^S=\u
+\def\=##1{\csname @eq@##1\endcsname}
+\def\^##1{\csname @hat@##1\endcsname}
+\let\^^D=\^
+\def\.##1{\csname @dot@##1\endcsname}
+\def\H##1{\csname @H@##1\endcsname}
+\def\~##1{\csname @til@##1\endcsname}
+\def\"##1{\csname @um@##1\endcsname}
+\let\c@@=\c
+\def\c##1{\csname c@##1\endcsname}
+}
+
+\gdef\spechyphcodes{}
+
+
+
+% ======== Pattern Input / English and French ======
+
+% english hyphenation patterns
+\begingroup  
+\language=0
+\input enhyph \relax
+\endgroup
+
+% french hyphenation patterns
+\begingroup
+\language=1
+\input frhyph \relax
+\endgroup
+
+% english hyphenation exceptions
+\begingroup
+\language=0
+\input enhyphex \relax
+\endgroup
+
+% ======= definitions for fast eng/fr hyphenation =====
+\def\ehyph{\language=0 \lccode`\'=0 \nonfrenchspacing}
+\def\fhyph{\language=1 \lccode`\'=`\'\frenchspacing}

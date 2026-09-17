@@ -1,0 +1,228 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+
+% ========== Section, Chapter Headings  ===========
+% These macros have several parts,
+%       -- The format of the heading. 
+%       -- The automatic numbering.
+%       -- The writing of a list file for automatic table of contents.
+%       -- The referencing in the text ... ie reference number styles.
+
+
+% ======== Counter allocation and Number styles =========
+%========= Autonumbering allocations and styles for sections ... ====
+% Allocate the counters for the chapters, sections, figures, etc.
+% These counters are updated globally.
+\newcount\chnum  %\chnum=0   \def\chnumform{\the\chnum}
+\newcount\shnum  %\shnum=0   \def\shnumform{\the\shnum}
+\newcount\sshnum %\sshnum=0   \def\sshnumform{\the\sshnum}
+\newcount\ssshnum  %\ssshnum=0 \def\ssshnumform{\the\ssshnum}
+
+% ======== autonumbering options and styles ==========
+% The following stay unchanged for different numbering options
+\def\chtagrefformat{\chnumform}
+\def\chtagreplaceformat{\Chapter \chtagrefformat}
+
+\def\numberbychapter{\s@pecialnumberresetlevel=2
+  \def\shtagreplaceformat{\shtagrefformat}
+  \def\sshtagreplaceformat{\sshtagrefformat}
+  \def\ssshtagreplaceformat{\ssshtagrefformat}
+  \def\shtagrefformat{\chnumform.\shnumform}               %section
+  \def\sshtagrefformat{\chnumform.\shnumform.\sshnumform}  %subsection
+  \def\ssshtagrefformat{\chnumform.\shnumform.\sshnumform  %subsubsection
+                     .\ssshnumform}
+  \def\Prerefform{\chnumform.} 
+  \def\Postrefform{}}
+
+\def\numberbysection{\s@pecialnumberresetlevel=3
+  \def\shtagreplaceformat{\shtagrefformat.}
+  \def\sshtagreplaceformat{\sshtagrefformat}
+  \def\ssshtagreplaceformat{\ssshtagrefformat}
+  \def\shtagrefformat{\shnumform}                          %section
+  \def\sshtagrefformat{\shnumform.\sshnumform}             %subsection
+  \def\ssshtagrefformat{\shnumform.\sshnumform             %subsubsection
+                     .\ssshnumform}
+  \def\Prerefform{\shnumform.}
+  \def\Postrefform{}}
+
+\def\specialnumberscontinuous{\def\Prerefform{}
+                              \def\Postrefform{}
+                              \s@pecialnumberresetlevel=1}
+
+
+% This macro resets the counters for equations, figures, etc.
+% depending on the header level.
+%  #1 - header level 1=chapter
+%                    2=section
+%                    3=subsection
+%                    4=subsubsection
+%       \a@utonumberresetlevel = 1 sequential numbering
+%                               2 chapter numbering
+%                               3 section numbering
+%                               4 subsection numbering, etc.
+\newcount\s@pecialnumberresetlevel \s@pecialnumberresetlevel=1
+\def\updatespecialnumbers#1{
+    \ifnum #1 < \s@pecialnumberresetlevel
+        \the\s@presetlist
+    \fi}
+
+
+% ============ Section head format styles and List generation =======
+%
+% The calling format is
+% \s<ss>head{<number>}{<Title>}
+%   Subsequent lines are indented one quad more than the size of the <number>
+% There is an autonumbering/autoreferencing feature in these macros. 
+% If the autonumber switch
+% is true, then the first argument represents a tag instead of a number.
+
+% \nosheadbreak is used when multiple heads start a section
+\newif\ifs@headbreak \s@headbreaktrue
+\def\nosheadbreak{\s@headbreakfalse}
+
+
+% ========= Section heading command forms ========
+%   #1 top skip
+%   #2 bottom skip
+%   #3 font
+%   #4 <number>
+%   #5 <text>
+%   #6 table of contents command form
+%   #7 <item>, placed between <number> and <text>
+
+\newskip\prsheadskip %\prsheadskip= 6ex plus 2ex minus 2ex
+\newskip\posheadskip %\posheadskip= 2ex 
+\newskip\prssheadskip % \prssheadskip= 5ex plus 1.8ex minus 1.8ex
+\newskip\possheadskip  %\possheadskip= 2ex
+\newskip\prsssheadskip %\prsssheadskip= 3ex  plus 1ex minus 1ex
+\newskip\posssheadskip %\posssheadskip= 2ex
+\newskip\prdsssheadskip %\prdsssheadskip= 3ex  plus 1ex minus 1ex
+\newskip\podsssheadskip %\podsssheadskip= 2ex
+
+%this is the format form for those that want to perform radical surgery
+%the parameters must be as shown and will have that meaning
+% #1 font (=#3); #2 number (=#4) ; #3 <text> (=#5); #4 number/text sep (=#7)
+% check on \t@agtext suppresses space when there is no number 
+\def\gensheadformat#1#2#3#4{\ifx\t@agtext\empty\setbox0=\hbox{}\else
+                                \setbox0=\hbox{#1#2#4}\fi
+                \vbox{\veryraggedright \normalbaselines
+                      \hangindent 1\wd0 \hangafter 1\noindent #1\unhbox0 #3}}
+
+
+\def\g@head#1#2#3#4#5#6#7{\ifs@headbreak \goodbreak \vskip #1\else
+                                \removelastskip\fi
+                \s@headbreaktrue
+                \toks0={#5}%prevents expansion inside title
+                \writeterm{<#4}{ }{\the\toks0>}
+                \gensheadformat{#3}{#4}{#5}{#7}
+                \nobreak
+                \w@ritetag\nobreak
+                \writelistfile{toc}{#6}{#4}{#5}
+                \vskip #2 \vskip -\parskip}
+
+\newtoks\sectionname \newtoks\sectionnumtag
+\def\sheadmark{\mark{\the\sectionname}} % defaults to title
+\def\innershead #1#2{\sectionnumtag = {#1} \sectionname = {#2}
+                       \ifautonumber 
+                         \global\advance \shnum by 1 
+                         \global\sshnum=0
+                         \global\ssshnum=0
+                         \updatespecialnumbers{2}
+                         \xdef\w@ritetag{\noexpand\newtag{#1}{\shtagrefformat}}
+                         \edef\t@agtext{\shtagreplaceformat}
+                       \else
+                         \edef\t@agtext{#1}
+                         \xdef\w@ritetag{\relax}
+                       \fi
+                       \sheadmark        %sections are marked for header titles
+                       \g@head{\prsheadskip}{\posheadskip
+                                }{\sheadfont}{\t@agtext}{#2}{\shtocout
+                                }{\quad}}
+\def\innersshead #1#2{\ifautonumber
+                         \global\advance \sshnum by 1
+                         \global\ssshnum=0
+                         \updatespecialnumbers{3}
+                         \xdef\w@ritetag{\noexpand\newtag{#1}{\sshtagrefformat}}
+                         \edef\t@agtext{\sshtagreplaceformat}
+                       \else
+                         \edef\t@agtext{#1}
+                         \xdef\w@ritetag{\relax}
+                       \fi
+                       \g@head{\prssheadskip}{\possheadskip
+                                }{\ssheadfont}{\t@agtext}{#2}{\sshtocout
+                                }{\quad}}
+\def\innerssshead #1#2{\ifautonumber 
+                         \global\advance \ssshnum by 1
+                         \updatespecialnumbers{4}
+                         \xdef\w@ritetag{\noexpand\newtag{#1}{\ssshtagrefformat}}
+                         \edef\t@agtext{\ssshtagreplaceformat}
+                       \else
+                         \edef\t@agtext{#1}
+                         \xdef\w@ritetag{\relax}
+                       \fi
+                       \g@head{\prsssheadskip}{\posssheadskip
+                                }{\sssheadfont}{\t@agtext}{#2}{\ssshtocout
+                                }{\quad}}
+\def\innerdssshead #1{\xdef\w@ritetag{\relax}\g@head{\prdsssheadskip}{\podsssheadskip
+                       }{\dsssheadfont}{}{#1}{\dssshtocout}{}}
+\outer\def\shead#1#2{\innershead{#1}{#2}}
+\outer\def\sshead#1#2{\innersshead{#1}{#2}}
+\outer\def\ssshead#1#2{\innerssshead{#1}{#2}}
+\outer\def\dssshead#1{\innerdssshead{#1}}
+
+%  ======== chead ==========
+% The chapter head has a different format entirely 
+\newtoks\chaptername
+
+%this is the form of the present chapter head 
+%parameters are #1 is the title text \cheadfont, \chtagreplaceformat
+
+%\def\Chapter{Chapter } see English/french titles
+
+% indicates if chapters exist ... default is that they do not
+% the first call to a \chead sets it true ... or it may be done in the style.
+\newif\ifnochapter %\nochaptertrue
+
+
+\def\cheadformat#1#2{\vglue 2.5cm
+                     \line{$\vcenter{\hbox{\cheadfont
+                                          #1
+                                          \vrule height 3ex depth 1ex width 0pt
+                                          }}\hss
+                            \vcenter{\halign{&\cheadfont\hss
+                                     ##\vrule height 3ex depth 1ex width 0pt\cr
+                                     #2\crcr}}$}
+                     \vskip 2.5cm}
+\def\chapterstartform{}
+\def\chead#1#2{\numberbychapter\nochapterfalse
+                      \ifautonumber 
+                        \global\advance\chnum by 1
+                        \global\shnum=0
+                        \global\sshnum=0
+                        \global\ssshnum=0
+                        \xdef\w@ritetag{\noexpand\newtag{#1}{\chtagrefformat}}
+                        \updatespecialnumbers{1}
+                        \edef\t@agtext{\chtagreplaceformat}
+                     \else
+                        \edef\t@agtext{#1}
+                        \xdef\w@ritetag{\relax}
+                     \fi
+                     \chaptername={#2} % for term write only ... includes \cr
+                     \writeterm{<\t@agtext}{ }{\the\chaptername>}
+                     \chaptername={\def\cr{ }#2}
+                     \chapterstartform % here so both the number and title set
+                     \cheadformat{\t@agtext}{#2} % format of chead
+                     \w@ritetag
+                     \writelistfile{toc}{\chtocout}{\t@agtext}{#2}
+                      }
+
+% ========== Toc Out Forms ===========
+% actually set in inrsdef.tex
+
+%\def\shtocout{\string\shtoc}
+%\def\sshtocout{\string\sshtoc}
+%\def\ssshtocout{\string\ssshtoc}
+%\def\dssshtocout{\string\dssshtoc}
+%\def\chtocout{\string\chtoc}

@@ -1,0 +1,45 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+% ========== Equation Tags ===========
+% Since equation numbering plays a big part in scientific documentation
+% a special set of tag generation forms were produced for this case. 
+
+
+% Special versions of autoeqnum to insert automatically insert
+% parentheses around the equation number.
+%  \aneq            no argument, no tag generated. This version
+%                   does nothing if autonumbering is off.
+%  \aneqtag{<tag>}  tag generated. This version inserts the argument
+%                   inside parentheses if autoreferencing is off.
+
+% These special forms have a \eqnumfont ... as there is no other way 
+% to get the information inside. These are defined in the documentfonts.
+
+%\let\eqnumfont=\tenrm ... for tenpoint family 
+
+\def\aneq{\a@utotag{}{\eqnum}{\eqtagrefformat
+        }{\e@qno \eqnumfont (\eqtagrefformat)}{}}
+\def\aneqtag#1{\a@utotag{#1}{\eqnum}{\eqtagrefformat
+        }{\e@qno\eqnumfont (\eqtagrefformat)}{\e@qno\eqnumfont (#1)}}
+
+%===== for full left or right equation numbering and to allow ====
+% \aneq and \aneqtag to work
+
+\let\e@qql = \eqalignno
+\let\l@eqql= \leqalignno
+\def\e@qalignno{\let\e@qno=\relax \e@qql}
+\def\l@eqalignno{\let\e@qno=\relax  \l@eqql}
+%redefines \eqalignno and \leqalignno  --- normal unset mode
+\let\eqalignno = \e@qalignno
+\let\leqalignno = \l@eqalignno
+
+\let\e@qno = \eqno
+%---- left/right equation numbering ----
+\def\leftequationnumbering{\let\eqalignno = \l@eqalignno
+                         \let\leqalignno = \l@eqalignno
+                         \let\e@qno = \leqno}
+\def\rightequationnumbering{\let\leqalignno = \e@qalignno
+                          \let\eqalignno = \e@qalignno
+                         \let\e@qno = \eqno}

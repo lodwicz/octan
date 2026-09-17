@@ -1,0 +1,137 @@
+% extdef.tex (MAR 1991) 
+%  \uccodes added 
+\input compat3 % defines csubinverse only
+% exlplicit accents should not be converted when using "cm" fonts. 
+% ... without charsubdef definitions 
+% Michael J. Ferguson 
+% The codes used here convert the TeX \' ... accent sequences
+% into the equivalent ISO - Latin 1 values and also  provide
+% their inverses. 
+% The ISO -Latin 1 code set is almost identical to the
+% Digital (DEC) Multinational Character set. 
+
+\catcode`\^^f6=11 \lccode`\^^f6= `\^^f6 
+\csubinverse ^^f6{@um@}o \uccode`\^^f6= `\^^d6 
+\catcode`\^^d6=11 \lccode`\^^d6= `\^^f6 
+\csubinverse ^^d6{@um@}O \uccode`\^^d6= `\^^d6 
+\catcode`\^^e1=11 \lccode`\^^e1= `\^^e1 
+\csubinverse ^^e1{@ac@}a  \uccode`\^^e1= `\^^c1 
+\catcode`\^^c1=11 \lccode`\^^c1= `\^^e1 
+\csubinverse ^^c1{@ac@}A  \uccode`\^^c1= `\^^c1 
+\catcode`\^^e0=11 \lccode`\^^e0= `\^^e0 
+\csubinverse ^^e0{@gr@}a  \uccode`\^^e0= `\^^c0 
+\catcode`\^^c0=11 \lccode`\^^c0= `\^^e0 
+\csubinverse ^^c0{@gr@}A  \uccode`\^^c0= `\^^c0 
+\catcode`\^^e2=11 \lccode`\^^e2= `\^^e2 
+\csubinverse ^^e2{@hat@}a  \uccode`\^^e2= `\^^c2 
+\catcode`\^^c2=11 \lccode`\^^c2= `\^^e2 
+\csubinverse ^^c2{@hat@}A  \uccode`\^^c2= `\^^c2
+\catcode`\^^e3=11 \lccode`\^^e3= `\^^e3 
+\csubinverse ^^e3{@til@}a  \uccode`\^^e3= `\^^c3
+\catcode`\^^c3=11 \lccode`\^^c3= `\^^e3 
+\csubinverse ^^c3{@til@}A  \uccode`\^^c3= `\^^c3
+\catcode`\^^e4=11 \lccode`\^^e4= `\^^e4 
+\csubinverse ^^e4{@um@}a  \uccode`\^^e4= `\^^c4
+\catcode`\^^c4=11 \lccode`\^^c4= `\^^e4 
+\csubinverse ^^c4{@um@}A  \uccode`\^^c4= `\^^c4
+\catcode`\^^e7=11 \lccode`\^^e7= `\^^e7 
+\csubinverse ^^e7{c@}c  \uccode`\^^e7= `\^^c7
+\catcode`\^^c7=11 \lccode`\^^c7= `\^^e7 
+\csubinverse ^^c7{c@}C  \uccode`\^^c7= `\^^c7
+\catcode`\^^e8=11 \lccode`\^^e8= `\^^e8 
+\csubinverse ^^e8{@gr@}e  \uccode`\^^e8= `\^^c8
+\catcode`\^^c8=11 \lccode`\^^c8= `\^^e8 
+\csubinverse ^^c8{@gr@}E  \uccode`\^^c8= `\^^c8
+\catcode`\^^e9=11 \lccode`\^^e9= `\^^e9 
+\csubinverse ^^e9{@ac@}e  \uccode`\^^e9= `\^^c9
+\catcode`\^^c9=11 \lccode`\^^c9= `\^^e9 
+\csubinverse ^^c9{@ac@}E  \uccode`\^^c9= `\^^c9
+\catcode`\^^ea=11 \lccode`\^^ea= `\^^ea 
+\csubinverse ^^ea{@hat@}e  \uccode`\^^ea= `\^^ca
+\catcode`\^^ca=11 \lccode`\^^ca= `\^^ea 
+\csubinverse ^^ca{@hat@}E  \uccode`\^^ca= `\^^ca
+\catcode`\^^eb=11 \lccode`\^^eb= `\^^eb 
+\csubinverse ^^eb{@um@}e  \uccode`\^^eb= `\^^cb
+\catcode`\^^cb=11 \lccode`\^^cb= `\^^eb 
+\csubinverse ^^cb{@um@}E  \uccode`\^^cb= `\^^cb
+\catcode`\^^ec=11 \lccode`\^^ec= `\^^ec 
+\csubinverse ^^ec{@gr@}{^^P}  \uccode`\^^ec= `\^^cc
+\catcode`\^^cc=11 \lccode`\^^cc= `\^^ec 
+\csubinverse ^^cc{@gr@}I  \uccode`\^^cc= `\^^cc
+\catcode`\^^ed=11 \lccode`\^^ed= `\^^ed 
+\csubinverse ^^ed{@ac@}{^^P}  \uccode`\^^ed= `\^^cd
+\catcode`\^^cd=11 \lccode`\^^cd= `\^^ed 
+\csubinverse ^^cd{@ac@}I  \uccode`\^^cd= `\^^cd
+\catcode`\^^ee=11 \lccode`\^^ee= `\^^ee 
+\csubinverse ^^ee{@hat@}{^^P}  \uccode`\^^ee= `\^^ce
+\catcode`\^^ce=11 \lccode`\^^ce= `\^^ee 
+\csubinverse ^^ce{@hat@}I  \uccode`\^^ce= `\^^ce
+\catcode`\^^ef=11 \lccode`\^^ef= `\^^ef 
+\csubinverse ^^ef{@um@}{^^P}  \uccode`\^^ef= `\^^cf
+\catcode`\^^cf=11 \lccode`\^^cf= `\^^ef 
+\csubinverse ^^cf{@um@}I  \uccode`\^^cf= `\^^cf
+\catcode`\^^f1=11 \lccode`\^^f1= `\^^f1 
+\csubinverse ^^f1{@til@}n   \uccode`\^^f1= `\^^d1
+\catcode`\^^d1=11 \lccode`\^^d1= `\^^f1 
+\csubinverse ^^d1{@til@}N   \uccode`\^^d1= `\^^d1
+\catcode`\^^f2=11 \lccode`\^^f2= `\^^f2 
+\csubinverse ^^f2{@gr@}o   \uccode`\^^f2= `\^^d2
+\catcode`\^^d2=11 \lccode`\^^d2= `\^^f2 
+\csubinverse ^^d2{@gr@}O   \uccode`\^^d2= `\^^d2
+\catcode`\^^f3=11 \lccode`\^^f3= `\^^f3 
+\csubinverse ^^f3{@ac@}o   \uccode`\^^f3= `\^^d3
+\catcode`\^^d3=11 \lccode`\^^d3= `\^^f3 
+\csubinverse ^^d3{@ac@}O   \uccode`\^^d3= `\^^d3
+\catcode`\^^f4=11 \lccode`\^^f4= `\^^f4 
+\csubinverse ^^f4{@hat@}o   \uccode`\^^f4= `\^^d4
+\catcode`\^^d4=11 \lccode`\^^d4= `\^^f4 
+\csubinverse ^^d4{@hat@}O   \uccode`\^^d4= `\^^d4
+\catcode`\^^f5=11 \lccode`\^^f5= `\^^f5 
+\csubinverse ^^f5{@til@}o   \uccode`\^^f5= `\^^d5
+\catcode`\^^d5=11 \lccode`\^^d5= `\^^f5 
+\csubinverse ^^d5{@til@}O   \uccode`\^^d5= `\^^d5
+\catcode`\^^f9=11 \lccode`\^^f9= `\^^f9 
+\csubinverse ^^f9{@gr@}u   \uccode`\^^f9= `\^^d9
+\catcode`\^^d9=11 \lccode`\^^d9= `\^^d9 
+\csubinverse ^^d9{@gr@}U   \uccode`\^^d9= `\^^d9
+\catcode`\^^fb=11 \lccode`\^^fb= `\^^fb 
+\csubinverse ^^fb{@hat@}u   \uccode`\^^fb= `\^^db
+\catcode`\^^db=11 \lccode`\^^db= `\^^fb 
+\csubinverse ^^db{@hat@}U   \uccode`\^^db= `\^^db
+\catcode`\^^fc=11 \lccode`\^^fc= `\^^fc 
+\csubinverse ^^fc{@um@}u   \uccode`\^^fc= `\^^dc
+\catcode`\^^dc=11 \lccode`\^^dc= `\^^fc 
+\csubinverse ^^dc{@um@}U   \uccode`\^^dc= `\^^dc
+% iso latin 1 -- next two codes -- y acute accent 
+\catcode`\^^fd=11 \lccode`\^^fd= `\^^fd 
+\csubinverse ^^fd{@ac@}y   \uccode`\^^fd= `\^^dd
+\catcode`\^^dd=11 \lccode`\^^dd= `\^^fd 
+\csubinverse ^^dd{@ac@}Y   \uccode`\^^dd= `\^^dd
+\catcode`\^^e5=\active 
+\catcode`\^^c5=\active 
+\catcode`\^^e6=\active 
+\catcode`\^^c6=\active 
+\catcode`\^^f7=\active 
+\catcode`\^^d7=\active 
+\catcode`\^^f8=\active 
+\catcode`\^^d8=\active 
+\catcode`\^^df=\active 
+\catcode`\^^a7=\active 
+\catcode`\^^a9=\active 
+\catcode`\^^a3=\active 
+
+ \def ^^e5{\aa }
+ \def ^^c5{\AA }
+ \def ^^e6{\ae }
+ \def ^^c6{\AE }
+ \def ^^f7{^^[ }
+ \def ^^d7{\OE }
+ \def ^^f8{\o }
+ \def ^^d8{\O }
+ \def ^^df{\ss }
+ \def ^^a7{\S }
+ \def ^^a9{\copyright }
+ \def ^^a3{\it\$} 
+ 
+\def\oe{^^[ }
+

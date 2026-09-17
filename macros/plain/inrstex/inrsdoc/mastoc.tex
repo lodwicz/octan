@@ -1,0 +1,19 @@
+%-*-tex-*-
+\subdocumentmacros{
+             \input helphdr
+}
+\tenpoint
+\romanpagenumber = 2
+\inputtocfiles = {\inputwithcheck{masth.toc}}
+\righttocindent = 5em
+\beginprelude
+\begingroup
+\def\ftn{}%footnote problem
+\def\cr{ }%\cr print problem
+\let\twelvett=\tentt % ugh!
+\preludehead{Table of Contents}
+\maketoclist
+\endgroup
+\ejectpage
+\endprelude
+\done

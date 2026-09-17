@@ -1,0 +1,29 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{index}
+
+\def\cqu{\cquote{LEXICOGRAPHER: A writer of dictionaries, a harmless
+drudge.}{Dictionary [1755], Samuel~Johnson (1709-1784)}
+}
+
+\mark{}
+\chnum=0
+\def\chnumform{\Alphabetic{\the\chnum}}
+\def\Chapter{APPENDIX }
+\def\rightheadertext{\line{\hss
+               APPENDIX A: \botmark\rlap{\ssheadfont\qquad\folio}}}
+\def\leftheadertext{\line{\llap{\ssheadfont\folio
+                                 \qquad}APPENDIX A: \firstmark\hss}}
+\chead{index}{COMMAND INDEX}
+This Appendix  contains an alphabetical list of the commands of \intex, with
+some information about their syntax and parameters, and the page in the book
+where they are more fully explained.
+\long\def\indpg #1.{\mark{{\tt \text}}\quad {\it #1}\par\filbreak}
+{\obeyspaces \long\global\def\2#1 {\xdef\text{#1}#1 }}
+\vskip 4.8ex
+\eightpoint
+\beginttverbatim
+\input masth.sor
+\endttverbatim
+
+\done

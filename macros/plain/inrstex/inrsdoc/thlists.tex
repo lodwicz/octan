@@ -1,0 +1,281 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{lists}
+\def\cqu{}
+
+
+
+\chapterhead{lists}{LISTS}
+{\it Plain} \tex\ supplies two commands for lists, |\item|, and |\itemitem|,
+that create list items with indentations of one and two times the paragraph
+indentation respectively. \intex\ supplies a complete set of commands for
+three levels of lists. In addition, spacing of list items may be controlled
+by either tightening or loosening the list item spacing. The basic set of
+commands specify the beginning and end of a |list|, |sublist|, and
+|subsublist|. All items in a list are introduced by |\listitem| or its
+abbreviation |\li|. 
+
+The commands for making lists are given first and the list of the various
+glues for spacing is given in Section \ref{listparms}.
+
+\shead{listcomlist}{Command List -- Making Lists}
+\begintwocolumn
+\ext|\beginlist \bl|
+\ext|\beginsublist \bsl|
+\ext|\beginsubsublist \bssl|
+\ext|\everylist|
+\ext|\everysublist|
+\ext|\everysubsublist|
+\ext|\endlist \el|
+\ext|\endsublist \esl|
+\ext|\endsubsublist \essl|
+\pla|\item|
+\pla|\itemitem|
+\ext|\listitem \li|
+\ext|\loosenlist|
+\ext|\samplemark|
+\ext|\tightenlist|
+\endthreecolumn
+
+\shead{maklist}{Making Lists}
+Lists and their associated items can appear in either vertical or internal
+vertical mode. They also work in multicolumn format and in conjunction with
+|\narrowtext|. In \intex\ the type of list is specified and not the actual
+list item. All list items, whether they appear in a list or a subsublist are
+called the same way. As elsewhere in \intex, every |\begin..list| must have
+an accompanying |\end..list|. Each |\begin..list ... \end..list| matching
+pair form a {\it group}; thus it is possible to change the fonts or any other
+parameter and that change affects only the present group and all of its
+internal groups. This is an important benefit of designating lists instead of
+list items. The main text of a list is indented a fixed amount and the list
+item herald, if it exists, is placed one quad to the left of the main text.
+
+\intex\ also supplies three token lists |\everylist|, |\everysublist|, and 
+|\everysubsublist|. These are token lists the contents of which are emptied
+inside the list group every time the corresponding |\begin...list| is called.
+These may be used for changing the list indentations, fonts, or individual
+item skips. Anything done in an outer list is of course valid in the sub
+lists. For instance if the list indent was required to be one inch and the
+list spacing to be 1 then 
+\begintt
+\everylist = {\listindentsize = 1in \spacing{1}}
+\endtt
+would do the job.
+
+The list commands can be used as the basis of specialized lists such as
+citation references. 
+
+Things to note about lists are
+\beginlist
+\li $\bullet$ There are three levels of lists, {\it lists},
+      {\it sublists}, and {\it subsublists}.
+\beginsublist
+\eightpoint
+\li $\circ$ A list, sublist, subsublist starts a group. 
+        The group localizes the effect of changes.
+\li $\clubsuit$ List items are indicated in the same way at 
+        all levels. 
+\li $\diamond$ Display mathematics is acceptable within lists.
+        This is an example.
+    $$ 
+     \oint_{\vert z\vert < 1} {e^{-kz} \over (1-z)} dz
+    $$
+It can also have a second paragraph that is a part of this
+item. This paragraph could even have a narrowed portion
+\beginnarrowtext .5in
+\tenpoint \it \noindent
+Wise men lay up knowledge but the babbling
+of a fool brings ruin near. 
+\bf Proverbs Ch.~10, Vs.~14
+\endnarrowtext
+\li $\bullet$ It is possible to tighten the list here 
+    but it would not do much good as this is the last 
+    subitem.
+\endsublist
+\li NOTE: The {\it Note:} herald is so large that it sticks {\bf into}
+          the actual list item. This can be seen on this line.
+\li $\star$ This is a more normal size herald.
+\endlist
+\ejectpage
+
+The previous list is actually produced by
+\begintt
+\beginlist
+\li $\bullet$ There are three levels of lists, {\it lists},
+      {\it sublists}, and {\it subsublists}.
+\beginsublist
+\eightpoint
+\li $\circ$ A list, sublist, subsublist starts a group. 
+        The group localizes the effect of changes.
+\li $\clubsuit$ List items are indicated in the same way at 
+        all levels. 
+\li $\diamond$ Display mathematics is acceptable within lists.
+        This is an example.
+    $$ 
+     \oint_{\vert z\vert < 1} {e^{-kz} \over (1-z)} dz
+    $$
+It can also have a second paragraph that is a part of this
+item. This paragraph could even have a narrowed portion
+\beginnarrowtext .5in
+\tenpoint \it \noindent
+Wise men lay up knowledge but the babbling
+of a fool brings ruin near. 
+\bf Proverbs Ch.~10, Vs.~14
+\endnarrowtext
+\li $\bullet$ It is possible to tighten the list here 
+    but it would not do much good as this is the last 
+    subitem.
+\endsublist
+\li NOTE: The {\it Note:} herald is so large that it sticks 
+          {\bf into} the actual list item. This can be seen 
+          on this line.
+\li $\star$ This is a more normal size herald.
+\endlist
+\endtt
+The command |\samplemark{<list item mark>}| can be used to
+create a list where the |\listitemmarksize| is one |\enspace| larger than the
+sample mark and the |\listindent|, |\sublistindent|, and 
+|\subsublistindent|
+{\bf inside} the same group are modified accordingly. 
+
+
+\shead{makcomforms}{Command Forms -- Making Lists}
+\beginblockmode
+\ext\@|\beginlist \bl|
+\nbr
+This begins a list, starts a group, 
+and should always have a matching |\endlist|. 
+|\bl| is an approved abbreviation of |\beginlist|.
+
+
+\mbr\ext\@|\beginsublist \bsl|
+\nbr
+This begins a sublist, starts a group, 
+and should always have a matching |\endsublist|.
+A sublist may exist without a surrounding list. 
+|\bsl| is an approved abbreviation of |\beginsublist|.
+ 
+
+\mbr\ext\@|\beginsubsublist \bssl|
+\nbr
+This begins a subsublist, starts a group, 
+and should always have a matching |\endsubsublist|.
+A subsublist may exist without a surrounding list or sublist.
+|\bssl| is an approved abbreviation of |\beginsubsublist|.
+
+
+\mbr\ext\@|\endlist \el|
+\nbr
+These commands terminate a list and its associated group.
+|\el| is an approved abbreviation for |\endlist| 
+
+\mbr\ext\@|\endsublist \esl|
+\nbr
+These commands terminate a sublist and its associated group.
+|\esl| is an approved abbreviation for |\endsublist| 
+
+\mbr\ext\@|\endsubsublist \essl|
+\nbr
+These commands terminate a subsublist and its associated group.
+|\essl| is an approved abbreviation for |\endsubsublist| 
+
+
+\mbr
+\ext\@|\everylist [=] {<token list>}|
+\nbr
+The |<token list>| is inserted in the front of the list by the |\beginlist|.
+It is inserted soon enough to affect the list item parameters, and all
+parameters of the sublists and subsublists but too late to affect the prelist
+spacing. 
+
+\mbr
+\ext\@|\everysublist [=] {<token list>}|
+\nbr
+The |<token list>| is inserted in the front of the sublist by the 
+|\beginsublist|.
+It is inserted soon enough to affect the list item parameters, and all
+parameters of the subsublists but too late to affect the presublist
+spacing. 
+
+\mbr
+\ext\@|\everysubsublist [=] {<token list>}|
+\nbr
+The |<token list>| is inserted before the subsublist by the 
+|\beginsubsublist|.
+It is inserted soon enough to affect the list item parameters 
+but too late to affect the presubsublist
+spacing. 
+
+
+\mbr\pla\@|\item|
+\nbr
+This is similar to |\listitem| but does not need to be surrounded by a list.
+It always indents by the |\parindent|.
+
+\mbr\pla\@|\itemitem|
+\nbr
+This is similar to |\listitem| but does not need to be surrounded by a list.
+It always indents by twice the |\parindent|.
+
+
+\mbr\ext\@|\listitem <listitem mark>|\]| \li|
+\nbr
+This is the normal way to designate a list item. The |<listitem mark>| is the first
+string of characters after the |\listitem| and is terminated by blank, \].
+The |<listitem mark>| is placed to the left of the first character in the
+list item with a total width of |\listitemmarksize|. At least one |\enspace|
+exists between the end of the |<listitem mark>| and the first character in
+the list item. If the |<listitem mark>| is larger than the space allotted, It
+will stick {\bf into} the list item. 
+A list item continues until the list ends or a new list item begins.
+
+\mbr\ext\@|\loosenlist|
+\nbr
+This command {\bf loosens} the spacing between list items in the present and
+all enclosed lists by a factor of 4 = 1/.25. It will undo a single
+|\tightenlist| at the same level.
+\mbr
+\ext\@|\samplemark{<listitem mark>}|
+\nbr
+This command is used to create lists with marks that may be of quite different
+size than that assumed by the defaults. All marks and indents contained in
+the same list and sublists will be changed. This command {\bf must} be used
+before the first list item to affect the present list.
+The |\listitemmarksize| is one |\enspace| larger than the
+sample mark and the |\listindent|, |\sublistindent|, and |\subsublistindent|
+{\bf inside} the same group are modified accordingly. 
+
+\mbr\ext\@|\tightenlist|
+\nbr
+This command {\bf tightens} the spacing between list items in the present and
+all enclosed lists by a factor of .25 = 1/4. It will undo a single
+|\loosenlist| at the same level.
+\endblockmode
+
+\shead{listparms}{Command Forms -- List Spacing Parameters}
+All of the parameters are set via assignments such as
+|\...skip [=] <glue, dimen>|. 
+Their use should be obvious from their names. Note that |\pr...| is the skip
+that {\it precedes} and |\po...| is  {\it post} the |list| in question.
+For example, |\prsublistskip| is the skip that occurs before the start of a 
+|sublist| and |\posublistskip| that which follows. Where a |list|, |sublist|,
+and/or |subsublist| start or finish at the same place, the maximum skip is
+chosen. 
+\medbreak
+\begintwocolumn
+\ext\@|\listindent [=] <dimen>|
+\ext\@|\listitemmarksize [=] <dimen>| 
+\ext\@|\listitemskip [=] <glue>| 
+\ext\@|\polistskip [=] <glue>|
+\ext\@|\posublistskip [=] <glue>|
+\ext\@|\posubsublistskip [=] <glue>|
+\ext\@|\prlistskip [=] <glue>|
+\ext\@|\prsublistskip [=] <glue>|
+\ext\@|\prsubsublistskip [=] <glue>|
+\ext\@|\sublistindent [=] <dimen>| 
+\ext\@|\subsublistindent [=] <dimen>|
+\ext\@|\sublistitemskip [=] <glue>|
+\ext\@|\subsublistitemskip [=] <glue>|
+\endthreecolumn
+\ejectpage
+\done

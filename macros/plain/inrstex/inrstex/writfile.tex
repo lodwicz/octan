@@ -1,0 +1,62 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+% ==========  List Files =========
+% General macros for making, open and closing "list' files. These are files
+% where the form output includes a page reference. They are named with a 
+% three letter extension ... eg ".fig"  ... to the \jobname form. 
+
+
+% \writelistfile
+%  #1  file type to write
+%  #2  command form (\string\cs)
+%  #3  number ..... expanded
+%  #4  text .... not expanded 
+% Write to the appropriate list file if #1list is true and defined
+% This means that the arguments must be
+% expanded to reflect the state of affairs at the time of invocation.
+% However, the page number must not be expanded until the
+% output routine has had a chance to decide which page it will go on.
+
+
+% this uses the upper toks registers for scratch writing.
+% when the number of token registers used is within 10 of the 
+% newtoks count, it is reset ... there is no checking ... however
+% there should be no problems ... except for token space (ugh!!!)
+% This is necessary (at least in TeX 1.1) in order to prevent spurious
+% expansion. 
+
+
+\newcount\sptoks \sptoks=255 % start at top with this counter
+\xdef\maxlistmess{224} % 10 less than the min toks number allowed ... 20
+\def\nextsptoks{\advance\sptoks by -10 \relax \ifnum\sptoks < \count15
+               \global\sptoks=255 \else 
+                  {\ifnum\sptoks<\maxlistmess 
+              \global\sptoks=255\else \global\advance\sptoks by 9\relax\fi}\fi}
+\def\settoks#1{\xdef\sptoksnum{\the\sptoks}\global\expandafter\toks\sptoksnum = {#1}}
+
+\def\writelistfile#1#2#3#4{\ifundefined{if#1list}\n@ewswitch{#1list}\fi
+                           \csname if#1list\endcsname
+                          {\let\folio=\relax  %do not expand \folio
+            \nextsptoks\settoks{#4}\edef\next{\write\csname #1@file\endcsname
+        {#2{#3}{\noexpand\the\noexpand\toks\sptoksnum}{\folio}}}\next}\fi\nobreak}
+
+%checks to see if open 
+\def\openlistfile#1{\ifundefined{if#1list}\n@ewswitch{#1list}\fi 
+         \def\n@extwrite{\relax}\ifundefined{#1@file}\def\n@extwrite
+                    {\expandafter\n@ewwrite\csname #1@file\endcsname}\fi
+                \csname if#1list\endcsname
+                  \else     
+                    \n@extwrite
+                    \edef\n@ext{\immediate\openout\csname #1@file\endcsname
+                            = \jobname.#1}\n@ext 
+                     \expandafter\global\csname #1listtrue\endcsname
+                    \fi }  %opens the list file
+
+
+\def\closelistfile#1{\expandafter\global\csname #1listfalse\endcsname
+                     \edef\n@ext{
+                    \closeout\csname #1@file\endcsname}
+                    \n@ext} %closes the list file
+

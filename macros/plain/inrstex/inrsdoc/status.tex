@@ -1,0 +1,28 @@
+%-*-tex-*- 
+% Status commands for each chapter. 
+% these write out the chapter code, page number, and previous chapter number.
+
+\marginnotesfalse
+\hfuzz=5pt
+
+
+\newwrite\docstatus 
+\def\openstatusfile{\immediate\openout\docstatus=\jobname.sta}
+\def\closestatusfile{\closeout\docstatus}
+\def\writestatus#1{\immediate\write
+          \docstatus{\string\chstatus//#1//\the\chnum//\the\pageno//}}
+\def\chstatus//#1//#2//#3//{\expandafter\def\csname#1:\endcsname{\chnum=#2
+                             \pagenumber=#3}}
+\def\getstatus#1{\csname#1:\endcsname}
+
+\def\chcode#1{\subdocumentmacros{\input helphdr \bookstyle 
+                                    \input masth.sta
+                                    \autonumberingon
+                                    \input masth.tag
+                                    \getstatus{#1}
+                                    \def\chcode##1{}
+                                    \def\writestatus##1{}
+                                    \indexingon
+                                      }
+              \writestatus{#1}}
+

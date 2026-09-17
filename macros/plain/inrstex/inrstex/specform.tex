@@ -1,0 +1,37 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+% added PostScript forms of BNR Reports 
+
+%========== Special styles ===============
+
+%----- Special Document Styles -------
+% INRSTeX learns of the existence of special document styles 
+% from spformats.tex 
+% and the actual code is in the particular name given
+% The general form of a call for a specific style is \<...>style
+% This call should translate into \input <filename> which should then
+% redefine \<...>style and finally call it. 
+% Two special styles available through INRSTeX are a \bookstyle and a
+% \bnrreportstyle. The latter is an example of a rather complex report
+% style. Care should be taken that the appropriate messages are generated in
+% the two languages. This means that the messages must be put in the 
+% english.tex and francais.tex files. These should be placed in inputs. They
+% are read when \englishversion or \versionfrancaise are executed. 
+
+% This is list of the special formats in INRSTeX. It is assumed that
+% there is an actual format file for each of them. Paperstyle is the default
+% for INRSTeX and this is actually embedded in the inrs.fmt file
+% extra \relax forces the input before it expands the next token
+
+\def\paperstyle{\input papersty \relax}
+\def\bookstyle {\input booksty \relax}
+\def\bnrreportstyle{\input bnrsty \relax} % special local form 
+\def\bnrreportstyleps{\input bnrsty_ps \relax} % special local form 
+\def\inrsreportstyle{\input inrssty \relax}
+\let\formatjournal=\paperstyle
+\let\formatlivre=\bookstyle
+\let\formatbnr = \bnrreportstyle  % special local form 
+\let\formatbnrps = \bnrreportstyleps  % special local form 
+\let\formatinrs =\inrsreportstyle

@@ -1,0 +1,27 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+% ============ TeXGraphics Support =============
+% TeXGraphics uses \specials and needs a QMS (QUIC) Laser printer.
+% A Second version produces POSTSCRIPT and assumes TEXTSET'S DVILASER. 
+% It should be easily modifiable to other POSTSCRIPT drivers.  
+% both \beginTeXGraphics and \btg are redefined in texgraph.tex
+% TeXgraphics is not normally in the format file 
+% These commands are necessary to support TeXGraph. They are
+% NOT the commands themselves but rather set up commands 
+% to bring them in if needed. 
+
+\def\beginTeXGraphics{\silent{\input texgraph\relax}\btg} %postscript form
+\def\begintexgraph{\silent{\input texgraph\relax}\btg} %postscript form
+\let\btg=\beginTeXGraphics
+
+
+% Since a \centergraph or \centerplotfile may be met before 
+% TeXgraph is loaded, they must be in the format file. 
+% \centergraph needs to be very \long 
+\long\def\centergraph#1{\hbox to 
+                \hsize{\hss\vbox{#1\vgraphskip}\hgraphskip\hss}}
+\def\centerplotfile#1{\centergraph{\btg\includefile {#1} \etg}}
+
+% ========= end TeXGraphics =========

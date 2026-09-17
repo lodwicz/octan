@@ -1,0 +1,43 @@
+
+\catcode`\|=\active %defines | as an active character in the entire document
+{\obeylines \gdef|{\ttverbatim\spaceskip\ttglue\let|=\endgroup}}
+%\def\ttspace{{\tt\hskip\ttglue}}
+
+
+% indexing macros mods of texbook
+
+
+
+% ^ in non math mode are eaten up
+
+\def\specialhat{\ifmmode\def\next{^}\else\let\next=\xref\fi\next}
+\def\xref{\relax}
+\catcode`\^=\active \let ^=\specialhat
+
+\newswitch{silent}
+\chardef\bslash=`\\
+\def\xrefswitch{\ifx\next|\let\next=\vxref % case 1 or 2, |arg| or |\arg|
+  \else\ifx\next\<\let\next=\anglexref % case 3, "\<arg>" means angle brackets
+    \else\let\next=\normalxref \fi\fi \next} % case 0, "{arg}"
+\def\vxref|{\catcode`\\=\active \futurelet\next\vxrefswitch}
+\def\vxrefswitch#1|{\catcode`\\=0
+  \ifx\next\empty\def\xreftype{2}%
+    \def\next{{\tt\bslash\text}}% type 2, |\arg|
+  \else\def\xreftype{1}\def\next{{\tt\text}}\fi % type 1, |arg|
+  \edef\text{#1}\makexref}
+
+{\catcode`\|=0  \catcode`\\=\active |gdef\{@}}
+\def\anglexref\<#1>{\def\xreftype{3}\def\text{#1}%
+  \def\next{\<\text>}\makexref}
+\def\normalxref#1{\def\xreftype{0}\def\text{#1}\let\next=\text\makexref}
+\def\makexref{{\def\space{ }
+  \xdef\writeit{\write\ind@file{!\text!\space\string\indpg\xreftype\space
+    \noexpand\number\pageno.}}\writeit}
+  \ifsilent\ignorespaces\else\next\fi}
+
+
+\outer\def\indexingon{\openlistfile{ind}% file for index reminders
+                      \def\xref{\futurelet\next\xrefswitch}}
+
+      
+\def\indexingoff{\closelistfile{ind} \def\xref{\relax}}

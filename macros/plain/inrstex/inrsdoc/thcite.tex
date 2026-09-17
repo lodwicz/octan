@@ -1,0 +1,251 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{cite}
+
+\def\cqu{\cquote{Always verify your references.}{Martin~Joseph~Routh
+(1755-1854)}
+}
+
+\chapterhead{cite}{CITATIONS\cr or REFERENCE\cr LISTS}
+\intex\ provides facilities for automatic numbering and creation of {\it
+citation } or {\it reference} lists. The listing format supported 
+is that of the IEEE, which numbers citations sequentially in the
+order that they are called out in the document. For short lists (about 40-60
+citations), the actual citation forms may be in random order. For very long
+lists, the citation form file must be ordered in the same manner as the
+citations should appear in the document. Page referencing for citations is
+not supported. 
+
+\shead{citcomlist}{Command List}
+\begintwocolumn
+\ext|\citenum|
+\ext|\cite|
+\ext|\citeform|
+\ext|\citetagvalue|
+\ext|\closecitationtagfile|
+\ext|\initcitetag{<integer>}|
+\ext|\inputciteformfiles|
+\ext|\inputcitetagfiles|
+\ext|\lastcitetag{<integer>}|
+\ext|\makecitationlist|
+\ext|\makelongcitationlist|
+\endthreecolumn
+
+\shead{makecite}{Making Citations}
+A citation is made in a document using a
+format such as |[\cite{<citation tag>}]| where the |<citation tag>| may be of
+any valid tag form (see Section~{\ref{validtag}}, page \pref{validtag}). 
+If a |\cite| is used in internal vertical mode, for example in a section or
+chapter head title, then the margin notes will disappear. If it used in any
+field that may become a tag, then disaster will occur. This latter should
+never happen. 
+When the first |\cite| is called, the citation tag file is opened
+automatically and tag generated for this citation, and the 
+numerical value is placed in the text. Subsequently, a |\cite|
+will 
+define a new tag if it is the first time it has been called and place the
+numerical value in the text. The command |\citeref{<tag>}| will place the
+numerical value of the citation in the text but will neither open the
+citation tag file if it is closed nor define a new tag if it is undefined. 
+If a citation is to be defined but the value should not be put in the text,
+then 
+|{\silenttrue \cite{<citation tag>}}| should be used.
+
+
+The actual citation forms are maintained  in a separate file whose
+default name is |\jobname.cfm|. The command |\makecitationlist| 
+does not require that the citation forms in the |.cfm| file be in the same
+order and may include citation forms that are not even used. However,
+because of limitations on \tex's internal memory, the maximum number of
+citations in a  |.cfm| file used by |\makecitationlist| 
+is limited to approximately 40 to 60. If \tex\ runs out of memory it is
+necessary to use |\makelongcitationlist| instead. When using this command,
+the |.cfm| file may be of any length but the citation forms must be in the
+correct order, and include only those actually cited in the document. 
+This must be done by some program external to \intex.
+
+
+The citation form command in the |.cfm| file is 
+|\citeform{<citation tag>}{<TeX citation form macro>}|. The 
+|<TeX citation form macro>| is of any form but will usually be a special
+|\listitem|. The actual number of the particular citation being written is
+held in the command |\citetagvalue|. This command should be placed at that
+place in the |<TeX citation form macro>| where the citation number should
+appear. 
+
+The first call to the |\cite| command will open the |\jobname.ctg| file where
+the tags for the citations are stored. 
+Then
+|\initcitetag{<integer>}| where |<integer>| is one less than the lowest
+number in the citation list is written. This number allows for several
+independent citation lists to exist in a single document, for instance at the
+end of each chapter. When the file is closed, either with a
+|\makecitationlist| or a |\closecitationtagfile|, an
+|\lastcitenum{<integer>}| is written. The |<integer>| is the current value of
+the |\citenum|. 
+
+To make a citation list the following is required:
+\beginttverbatim
+\1beginlist % citations are usually listitems ... should be group
+\1frenchspacing % suppresses extra space after periods 
+<initial macros \1ejectpage, make Reference header
+       and set up list>
+\1makecitationlist % or \1makelongcitationlist
+\1endlist
+\endttverbatim
+The actual list of macros is inserted, in order by |\makecitationlist| or
+by |\makelongcitationlist|. The latter must be used if there are too many
+citations for \tex's memory. In that case the |\jobname.cfm| file must be
+sorted and contain only those citations actually used. 
+These commands automatically close the |\jobname.ctg| file, if it is open.
+
+\shead{prelcite}{Prelude Citations}
+Occasionally citations appear in the prelude of a document, sometimes 
+through a 
+section head and hence in the table of contents. 
+Usually the citation numbers should be those that occur later in the text
+rather than the ones that would occur naturally.
+The |\cite| in the prelude causes the citation tag file to open prematurely
+and the |\citenum| to be incremented incorrectly. To get around this problem,
+use the following procedure:
+\begintt
+\begingroup % limits effect to initial section 
+\inputwithcheck{<filename>.ctg} %inputs the .ctg file if it exists
+\let\cite=\citeref % cites only refer now
+<text with \cites>
+\endgroup % where you want citations to behave normally
+\endtt 
+
+
+\shead{citecomforms}{Command Forms}
+\beginblockmode
+\ext\@|\citenum|
+\nbr
+|\citenum| is the counter that holds the current largest citation number
+used. This number is equal to or larger than that set by
+|\initcitetag{<integer>}|. 
+
+\mbr
+\ext\@|\cite{<citation tag>}|
+\nbr
+This command places the citation number, corresponding to the 
+|<citation tag>| in the text, without any surrounding brackets or braces.
+If the |<citation tag>| has not been defined, or if it was defined for a
+previous citation list, the |\citenum| is increased by one, and a tag is
+created with that new value. Multiple citations may be called in a single
+place by  |[\cite{<citetag1>}, \cite{<citetag2>}, ...]|. However, there is
+{\it no} sorting capability so that the numbers may appear out of sequential
+order. The first |\cite| opens the citation tag file. 
+|{\silenttrue \cite{<citetag>}}| will define and increment the citation
+counter but will not insert the citation value in the text. 
+
+\mbr
+\ext\@|\citeform{<citation tag>}{<TeX macro form>}|
+\nbr
+This is the form that must be used in the file |\jobname.cfm| 
+file that actually contains the list of citations. The |<citation tag>| is
+the same on used in the text when the citation is called out. The 
+|<TeX macro form>| is the \tex\ macro that will actually be inserted into the
+reference list. This must contain all the information needed to produce the
+final form of the citation. Since the actual citation number is being
+supplied by \intex, it is necessary to include the \tex\ command
+|\citetagvalue| in the place required in the text. For instance, if the
+|\listitem| command was being used as the basic form, and if the citation tag
+were |[Knut84]|, then an appropriate |\citeform| for the \texbook\ would be
+\begintt
+\citeform{[Knut84]}{\listitem \citetagvalue D.E. Knuth, 
+        {\bf \TeX book}, {\it Addison Wesley Pub. Co.}, 1984}
+\endtt
+
+
+\mbr
+\ext\@|\citetagvalue|
+\nbr
+This command contains, at the time of a |\citeform| execution, the number of
+that particular citation.
+
+
+\mbr
+\ext\@|\closecitationtagfile|
+\nbr
+This closes the |\jobname.ctg| file, if it is open. Since the |.ctg|
+file is closed
+automatically whenever |\makecitationlist| is called, this command is seldom
+used. 
+
+\mbr
+\ext\@|\initcitetag{<integer>}|
+\nbr
+This command is written into the |.ctg| file when it is opened. It
+establishes the minimum value of |\citenum| for this list. The actual
+reference value is determined by subtracting this value from the
+|<tagvalue>|.
+
+
+
+\mbr
+\ext\@|\inputciteformfiles 
+          [=] { \inputwithcheck{<first form file>}
+                  ...
+                \inputwithcheck{<last form  file>} }|
+\nbr
+This is a token list of files, each prefaced by 
+|\inputwithcheck|,  that contain the citations for a particular citation
+list. The command |\inputwitcheck| determines whether the file exists
+before trying to open it. The default is |\inputwithcheck{\jobname.cfm}|.
+
+
+
+\ext\@|\inputcitetagfiles 
+          [=] { \inputwithcheck{<first tag file>}
+                  ...
+                \inputwithcheck{<last tag file>} }|
+\nbr
+This is a token list of files, each prefaced by 
+|\inputwithcheck|,  that contain the citation tags for a particular citation
+list. The command |\inputwitcheck| determines whether the file exists
+before trying to open it. The default is |\inputwithcheck{\jobname.ctg}|.
+The |\jobname.ctg| file contains the tags for the citation list.
+These tags are in order of call out and numbered
+sequentially. It also includes the |\initcitetag| command. 
+
+\mbr
+\ext\@|\lastcitetag{<integer>}|
+\nbr
+This command is written into the |.ctg| file when it is 
+closed either by a |\closecitationtagfile| or a 
+|\makecitationlist|. It is used to reset |\citenum| when using successive 
+independent 
+citation lists.
+
+
+
+\mbr
+\ext\@|\makecitationlist|
+\nbr
+This command reads in the |\jobname.cfm| file. It then reads the
+|\jobname.ctg| file and converts the list of citation tags into 
+a correctly ordered list of citations. The citation forms  in the 
+|\jobname.cfm| file may be in any order and may include ones that are not
+used. 
+Any  formatting control commands such as 
+|\beginlist ... \endlist| must be placed around it.
+
+
+\mbr
+\ext\@|\makelongcitationlist|
+\nbr
+This command reads in the |\jobname.cfm| file and assigns citation numbers 
+to the citation forms in the order that they appear. Errors from those
+indicated by the |\citetagvalue| are reported. 
+ The citation forms  in the 
+|\jobname.cfm| file {\bf must be in the same order as called out in the
+document and include only those that are actually used.}
+Any  formatting control commands such as 
+|\beginlist ... \endlist| must be placed around it.
+
+
+\endblockmode
+\ejectpage
+
+\done

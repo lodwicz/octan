@@ -1,0 +1,79 @@
+\catcode`\@=11
+% --------- This is the "cm" version --------
+% a family is produced by redefining the special font forms in 
+
+% \genpoint ... the names reflect the base fonts 
+
+
+\def\rescale #1#2{\count255=#1\multiply\count255 by #2\relax
+                              \divide\count255 by 100 
+                              \advance\count 255 by 5 % rounding
+                              \divide\count 255 by 10 }
+
+\def\fontset scaled #1 {
+\font\tensprm =cmr10 scaled #1
+\font\sevensprm  = cmr7  scaled #1
+\font\fivesprm = cmr5 scaled #1 
+\font\tenspi =  cmmi10 scaled #1 
+\font\sevenspi = cmmi7 scaled #1 
+\font\fivespi = cmmi5 scaled #1 
+\font\tenspsy  = cmsy10 scaled #1 
+\font\sevenspsy  = cmsy7 scaled #1
+\font\fivespsy =  cmsy5 scaled #1 
+\font\tenspit =  cmti10 scaled #1 
+\font\tenspsl =  cmsl10 scaled #1
+\font\tenspbfx =  cmbx10 scaled #1
+\font\sevenspbfx =  cmbx7 scaled #1
+\font\fivespbfx =  cmbx5 scaled #1
+\font\tensptt =  cmtt10 scaled #1 
+\font\tenspex = cmex10 scaled #1
+\def\tenspscsm{\rescale {800}{#1}
+               \font\t@enspscsm =  cmcc10 scaled \the\count255\relax
+               \let\tenspscsm=\t@enspscsm\tenspscsm}               
+\def\tensprmbig{\rescale {1200}{#1}
+                \font\t@ensprmbig =  cmr10 scaled \the\count255\relax 
+               \let\tensprmbig=\t@ensprmbig\tensprmbig}
+\def\tenspbfxbig{\rescale {1200}{#1}
+                 \font\t@enspbfxbig =  cmbx10 scaled \the\count255\relax 
+               \let\tenspbfxbig=\t@enspbfxbig\tenspbfxbig}
+\def\tenspbfxbigg{\rescale {1440}{#1}
+                 \font\t@enspbfxbigg =  cmbx10 scaled \the\count255\relax 
+               \let\tenspbfxbigg=\t@enspbfxbigg\tenspbfxbigg}
+\def\tensprmbigg{\rescale {1440}{#1}
+                 \font\t@ensprmbigg =  cmr10 scaled \the\count255\relax 
+                 \let\tensprmbigg=\t@ensprmbigg\tensprmbigg}
+ \let\tensprmbiggg = \tensprmbigg }
+
+\def\genpoint{\def\rm{\fam0\tensprm}%
+  \textfont0=\tensprm \scriptfont0=\sevensprm \scriptscriptfont0=\fivesprm
+  \textfont1=\tenspi \scriptfont1=\sevenspi \scriptscriptfont1=\fivespi
+  \textfont2=\tenspsy \scriptfont2=\sevenspsy \scriptscriptfont2=\fivespsy
+  \textfont3=\tenspex \scriptfont3=\tenspex \scriptscriptfont3=\tenspex
+\def\it{\fam\itfam\tenspit}%
+\textfont\itfam=\tenspit
+\def\sl{\fam\slfam\tenspsl}%
+\textfont\slfam=\tenspsl
+\def\bf{\fam\bffam\tenspbfx}%
+  \textfont\bffam=\tenspbfx \scriptfont\bffam=\sevenspbfx
+\scriptscriptfont\bffam=\fivespbfx
+\def\tt{\fam\ttfam\tensptt}%
+\textfont\ttfam=\tensptt
+\tt \ttglue=.5em plus .25em minus .15em
+\def\normalbaselines{\baselineskip 2.8ex \lineskip 1pt \lineskiplimit \z@}%
+\setbox\strutbox=\hbox{\vrule height 2.32ex  depth .48ex width\z@}%
+\normalbaselines\rm 
+  \ifd@ocsty \let\footerfont =\tenspit 
+              \let\headerfont=\tenspit 
+%              \let\footnotefont = \smallpoint
+%              \let\smallerfont = \smallpoint
+              \def\cheadfont{\tensprmbigg}\relax
+              \def\sheadfont{\tenspbfxbig}\relax
+              \def\ssheadfont{\tenspbfx}\relax
+              \def\sssheadfont{\tenspbfx}\relax
+              \def\dsssheadfont{\tenspbfx}\relax
+              \setspacings \fi
+\def\bigfont{\tenspbfxbig}\def\biggfont{\tenspbfxbigg}\relax
+\def\bigggfont{\tenspbfxbiggg}\let\titlefont = \biggfont
+  \let\sc=\tenspccsm }
+
+\catcode`\@=12

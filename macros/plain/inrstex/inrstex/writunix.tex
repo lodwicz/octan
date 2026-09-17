@@ -1,0 +1,41 @@
+% This is a file that modifies the file naming conventions in INRSTeX
+% for Berkeley Unix ... It works in conjunction with a command file that
+% renames old versions of files produced by INRSTeX. The convention is 
+% to add "~" to the end of the filename. This is the same indication that
+% EMACS uses for old versions.  Note that there is no concern with file
+% name length in Berkeley Unix.  The "~" is not sacrosanct. 
+
+% if a job is aborted, the old files may be made current (in csh) with 
+%  foreach i (<jobname>.*~)
+%    mv $i `basename $i \~`
+%  end
+
+% There are several places in INRSTeX that require changes. 
+
+\catcode`\~=11
+
+%  ------ auto.tex -----
+
+% \inputtagfiles={\inputwithcheck {\jobname.tag}}
+\inputtagfiles={\inputwithcheck {\jobname.tag~}} % will have been renamed
+
+
+% -------- tocform.tex ------
+
+%\def\c@k#1{\csname if#1list\endcsname \jobname.#1;-1 \else \jobname.#1 \fi}
+%\def\newlistfilename#1{\ifnotdefined \jobname.#1 \else \c@k{#1} \fi}
+             % VAX/VMS \c@k is necessary because of the way TeX expands 
+
+\def\c@k#1{\csname if#1list\endcsname \jobname.#1~ \else \jobname.#1 \fi}
+\def\newlistfilename#1{\ifnotdefined \jobname.#1 \else \c@k{#1} \fi}
+                      % \c@k is necessary because of the way TeX expands 
+
+% ----------- cite.tex ---------
+
+% This does not need changing as long as the citation list ALWAYS follows
+% the citations. If this is not the case, then an old version will have to
+% used. This might lead to other problems later. 
+
+% \citetagfilename = {\jobname.ctg} %compatible Ugh!
+
+\catcode `\~=\active

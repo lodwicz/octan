@@ -1,0 +1,147 @@
+%  PostScript slide form 
+%  \genform Aug 1991
+%  Toulson/Beebe PS driver
+% ====== simple viewgraph box =======
+\catcode`\@=11
+\def\hviewbox{\beginsegment
+                \unitscale {\f@ormscale} 
+                \slidelogo 
+                \topform 
+                \botform
+                 \move h:0 v:.4
+                 \penwidth .05
+                 \lvec h:8.9 v:.4
+                 \lvec h:8.9 v:6.9
+                 \move h:0 v:.4
+                 \lvec h:0 v:6.9
+                 \move h:.15 v:6.9
+                 \larc r:.15 sd:90 ed:180
+                 \move h:.15 v:7.05
+                 \lvec h:8.75 v:7.05
+                 \move h:8.75 v:6.9
+                 \larc r:.15 sd:0 ed:90
+                \endsegment}
+% ======= Slide Utilities ======
+% Horizontal form 
+\newtoks\slidetitle 
+\newdimen\slhsize \newdimen\slvsize 
+\long\def\sltitle#1{\vglue .03\slvsize \global\slidetitle={#1}
+                    \vbox to 0pt{\hsize=\slhsize  \rightskip=.1\hsize plus 1fill
+                         \def\cr{\endgraf}\leftskip= .1\hsize plus 1fill\gbfont\gbbaselines
+                         \parskip=1ex \parindent=0pt#1\vss}}
+\def\shk{\showthe\leftskip\showthe\rightskip}
+\let\shk=\relax
+\long\def\slidebox #1#2{\vbox to \slvsize{\hsize \slhsize 
+              \grfont\parindent=0pt
+              \grbaselines\parskip=2.8ex \advance\rightskip by 0pt plus 1fil
+              \sltitle{#1}\vfill\advance\rightskip by .05\hsize
+                        \advance\leftskip by .05\hsize
+                           #2\vfill}}
+
+\def\bl{\beginlist \samplemark{$\bullet$}} % modifies default
+\def\lb{\li {$\bullet$} }
+\def\lc{\li {$\circ$} }
+\def\last{\li {$\ast$} }
+\def\hd#1{\vskip 1ex\vbox{\veryraggedright\hangindent1em\hangafter1
+                          \noindent\bigfont#1}\vskip 1ex }
+
+
+% ===== slide building macros =======
+% A slide lives in either a textform or fullsize form. The defaault is
+% Fullsize. Text form reduces the size and gives a chance to add background 
+% Material with the slide. 
+
+\newif\iftextform
+\gdef\inrsform{\message{<< INRSFORM >>}\input inrslogo\relax \gdef\slidelogo{\i@nrsform}
+                \gdef\topform{}\gdef\botform{}}
+\gdef\i@nrsform{\inrslogo h:.2 v:0 sc:.25 
+                          \move h:8.9 v:.1 \textref h:R v:C 
+           \rstext d:0 sc:{\f@ormscale} t:{\bf INRS-T\'el\'ecommunications} }
+\newtoks\topdata 
+\newtoks\botdata
+\newtoks\slidedate  
+\gdef\genform{\message{<< General FORM >>}
+         \gdef\slidelogo{\topform}\gdef\topform{\move h:0 v:.15 \textref h:L v:C 
+              \rstext d:0 sc:{\f@ormscale} t:{\borderfont\the\topdata} }
+              \gdef\botform{\move h:4.45 v:7.25 
+                           \textref h:C v:C
+\rstext d:0 sc:{\f@ormscale} t:{\borderfont \the\botdata\ -- \the\slidedate} }}
+
+\newcount\textfontscale  % computed inside textform
+\gdef\textform{\message{<< Text Size >>}\long
+              \gdef\comment##1//{\rm ##1}\textformtrue\gdef\slidescale{.578}
+              \textfontscale=\the\fullfontscale \relax
+              \multiply\textfontscale by 1000
+              \divide\textfontscale by 1728 
+              \fontset scaled {\the\textfontscale}
+              \textformfonts
+              \let\borderfont=\txborderfont
+              \textpagestyle
+              \slvsize = 9.84cm \slhsize = 12.5cm 
+              \gdef\tfb{\bigskip\filbreak}}
+\newcount\fullfontscale % set in defaults 
+\gdef\fullform{\message{<< Full Size >>}
+              \long\gdef\comment##1//{}\textformfalse\gdef\slidescale{1}
+              \fontset scaled {\the\fullfontscale}
+              \fullformfonts
+              \let\borderfont = \fxborderfont
+              \finalversion
+              \documentstyle{
+                 \leftmargin=.6in
+                 \nofooterstyle
+                 \vfootersize=0pt }
+              \slvsize=17cm \slhsize=21.5cm
+              \let\tfb=\relax}
+
+\long\gdef\hhslide#1#2{\btg
+                   \segmentscale {\slidescale}
+                   \move h:0.2 v:.4 \textref h:L v:T 
+                   \rstext d:0 sc:{\f@ormscale} t:{\slidebox{#1}{#2}}
+                   \move h:0 v:0 \hviewbox
+                  \etg}
+\gdef\formscale #1 {\gdef\f@ormscale{#1 }}
+\gdef\smalldot{\setbox0=\hbox{\hskip .4in\fiverm.}\wd0=0pt\ht0=0pt\dp0=0pt\box0}
+\long\gdef\hslide #1//#2//{\advance\slidenum by 1 \relax
+            \begingroup\tfb\documentstyle{\genpoint}\bf \let\hslide=\slideerr
+             \iftextform\centergraph{\hhslide{#1}{#2}}\bigskip \else
+             \btg
+             \move h:0 v:8.9
+             \vtext {\hhslide{#1}{#2}}
+             \move h:7 v:8.8
+             \etg
+             \smalldot\ejectpage\fi\endgroup}
+% ====== Error forms ========
+% This attempts to find a misplaced // gracefully 
+\newcount\slidenum 
+\ifnum\language=0 \edef\s@lmiss{Probable Missing or Extra  //  in Slide Num. }
+                \else 
+                 \edef\s@lmiss{Probable Missing or Extra  //  in Slide Num. } 
+                      \fi
+\gdef\slideerr{\message{<<\s@lmiss\the\slidenum>>}}
+
+% ====== TexGraph Defaults ========
+\ifundefined{textref} 
+     \begingroup \catcode`\^=7 \input texgraph \endgroup \fi
+
+% ==== text form page style =====
+\gdef\textpagestyle{}
+
+% ====== Font Defaults =========
+\input spfont \relax
+\gdef\textformfonts{\font\gffont= cmcsc10 scaled 667 }
+\gdef\fullformfonts{\font\gffont = cmcsc10 scaled 1440 }
+\fullfontscale = 2074 
+\font\fxborderfont = cmbx10 scaled 1728
+\let\txborderfont = \tenbfx 
+
+% ==== slide default =====
+\slidenum=0 
+\gdef\gbfont{\bigfont}
+\gdef\gbbaselines{\baselineskip = 2.8ex\lineskip=1pt\lineskiplimit=0pt}
+\gdef\grfont{\bf}
+\gdef\grbaselines{\baselineskip=2.8ex\lineskip=1pt\lineskiplimit=0pt}
+\gdef\f@ormscale{1}
+%====== end defaults ===== 
+
+\catcode`\@=12 
+

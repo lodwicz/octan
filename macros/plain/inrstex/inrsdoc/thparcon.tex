@@ -1,0 +1,367 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{parcont}
+
+\def\cqu{\cquote{The Beautiful arises from the perceived harmony of an object, whether
+sight or sound, with inborn and constitutive rules of judgment and
+imagination: and it is always intuitive.}{On the Principles of General
+Criticism, Samuel~Taylor~Coleridge (1772-1834)}
+}
+
+\chapterhead{parcont}{PARAGRAPH\cr CONTROL}
+Contrary to intuition, \TeX\  indicates where paragraphs end rather than 
+where they begin. This chapter discusses some of the parameters used in
+controlling the justification, spacing, hyphenation,and indentation in
+paragraphs. A 
+paragraph can be built in either vertical or internal vertical mode, the
+latter is the same as being inside a vertical box. 
+When parameters are set inside a vertical box, they are undone when leaving
+the box. 
+When building a paragraph,
+\tex\ is in horizontal mode. All parameters are local to a box or group unless
+explicitly made |\global|. The parameters discussed here control interword
+spacing in a paragraph, with and without hyphenation, the indentation,
+interparagraph vertical skips, and the justification of the lines. Some
+advanced features can force a paragraph to be either a line shorter or longer
+than its best length. Some of these features are for fine tuning and will
+probably not 
+be used except on the  |final| pass of a book. Others, such as those
+involving paragraph indentation, justification of lines, or certain special
+effects will see more use. 
+
+\def\paragraphcenterline{\advance\rightskip by 0pt plus 1fill 
+                         \advance\leftskip  by 
+                            0pt plus 1fill \def\cr{\par}\parindent = 0pt}
+
+\beginnarrowtext 1.5in
+\paragraphcenterline
+For instance, this paragraph has had its margins pushed in by 1.5 inch on
+either side by the use of |\beginnarrowtext 1.5in| and has had each of the
+resulting lines centered on the page with the |\paragraphcenterline| command.
+This latter command is in fact used by \intex\ to center, and prevent
+hyphenation in titles. 
+
+\endnarrowtext
+
+\begingroup
+\veryraggedright
+A second example is illustrated in this paragraph with the |\veryraggedright|
+command. This prevents hyphenation and causes the paragraphs to have no
+right justification. Although it is probably not useful for ordinary text, it
+is used in section headings, table of contents, and figure captions, to
+automatically display verbose text. \par
+\endgroup
+
+Another useful command, |\obeylines|, is especially for such things as
+addresses.
+It changes the carriage return |<cr>| from a space to real line
+terminator. For instance the address
+\medskip
+\vbox{
+\begingroup
+\obeylines
+H.J. Common
+3479 Dreary Lane
+Lostville
+\endgroup
+}
+
+\noindent
+was produced by 
+\begintt
+\begingroup
+\obeylines
+H.J. Common
+3479 Dreary Lane
+Lostville
+\endgroup
+\endtt
+\noindent
+Note that the |\obeylines| is inside a group to limit its effect to just the
+one paragraph. This is really the only way to undo the effect of some
+commands and  has the advantage of returning to the state before entry into
+the group. {\bf Note also that the address is indented.} 
+The indentation is the
+value of the current |\parindent|. 
+
+\begingroup
+Finally there are two other parameters of general interest. These are
+|\rightskip| and |\leftskip|. Whenever \tex\ finds the {\bf end} of a
+paragraph, it  checks  the current values of |\rightskip| and
+|\leftskip| and appends this amount of glue on the end of each line while it
+is  making the paragraph. This paragraph was set with |\rightskip = 1cm|
+right here 
+\rightskip = 1cm
+and |\leftskip = 3cm| right here.
+\leftskip = 3cm
+Note that it affected the entire paragraph. The entire paragraph is inside a
+group. In fact a |\par \endgroup| was put at the end to make sure that 
+\tex\ knew that the paragraph ended {\bf before} leaving the group.
+\par
+\endgroup 
+
+
+\shead{parcontlist}{Command List}
+\beginthreecolumn
+\hfuzz = 20pt
+\ext|\beginnarrowtext|
+\pri|\discretionary|
+\ext|\endnarrowtext|
+\pri|\everyparagraph|
+\pri|\hangafter|
+\pri|\hangindent|
+\ext|\hyphenatecapitals|
+\pri|\indent|
+\pri|\leftskip|
+\pri|\looseness|
+\pri|\noindent|
+\pla|\obeylines|
+\pla|\obeyspaces|
+\pri|\par|
+\ext|\paragraphcenterline|
+\pri|\parindent|
+\pri|\parshape|
+\pri|\parskip|
+\pri|\pretolerance|
+\pla|\raggedright|
+\pri|\rightskip|
+\pri|\tolerance|
+\pla|\ttraggedright|
+\ext|\veryraggedright|
+\endthreecolumn
+
+
+\shead{parcontcoms}{Command Forms}
+\beginblockmode
+
+\mbr
+\ext|\beginnarrowtext <dimen>|\]
+\nbr
+This narrows the size of the margins on both the left and right hand side by
+|<dimen>|. It starts a group and is terminated by an |\endnarrowtext|. The
+raggedness of the outer level is preserved inside the narrowtext group.
+
+
+\mbr
+\pri\@|\discretionary{<prebreak text>}{<postbreak text>}{<nobreak text>}|
+\nbr
+This command allows a discretionary break, like a word hyphenation, but
+will produce different text if the break occurs than when it does not. One use
+is for hyphenating German. If
+there is a break, the |<prebreak text>| goes on the first line and the
+|<postbreak text>| goes on the second line. If there is nobreak, the
+|<nobreak text>| is used.
+
+\mbr
+\ext\@|\endnarrowtext|
+\nbr
+This terminates the group started by  the |\beginnarrowtext|
+and reverts back to the pre narrow text format.
+
+\mbr
+\pri\@|\everyparagraph [=] {<token string>}|
+\nbr
+This command allows for the insertion of the |<token string>| at the beginning
+of every paragraph, just after the paragraph indentation on the first line
+and just before any text.
+
+
+\mbr
+\pri\@|\hangafter [+ -] <integer>|
+\nbr
+This command controls the application of indentation to the next
+paragraph. If the sign is positive or does not exist, the indentation applies
+to all lines in the paragraph {\bf after} the first |<integer>| lines. If the
+sign is negative, it applies to the lines up to and including the |<integer>|
+line. This command lasts for only the present paragraph.
+
+\mbr
+\pri\@|\hangindent [=] [+ -] <dimen>|
+\nbr
+\hangindent = 2cm \hangafter = 3
+This command is used in conjunction with |\hangafter| and determines the
+amount and position of the indentation. If the sign is positive or does not
+exist the indentation will be at the left margin. If the sign is negative,
+the indentation is at the right margin. Indentation means that the width of
+the paragraph is reduced by the value of |<dimen>|. This command lasts 
+for only the present paragraph. For instance this
+paragraph was set with |\hangindent = 2cm \hangafter = 3|.
+
+
+
+\mbr
+\ext\@|\hyphenatecapitals [=] <integer>|
+\nbr
+When the integer is {\bf not} equal to 0, \tex\ will attempt
+to hyphenate words with uppercase letters.
+
+\mbr
+\pri\@|\indent|
+\nbr
+Changes to horizontal mode and causes the paragraph to be indented by the
+|\parindent|. If used in the middle of a paragraph, there will be a space
+inserted the size of the |\parindent|.
+
+\mbr
+\pri\@|\leftskip [=] <dimen> [plus <dimen>] [minus <dimen>]|
+\nbr
+\pri\@|\rightskip [=] <dimen> [plus <dimen>] [minus <dimen>]|
+\nbr
+\leftskip 0pt plus 1fil \rightskip 0pt plus 1fil
+These commands move the  edge of the column or page to the center by
+|<dimen>| to the center. The |\leftskip| works on the left hand edge and the
+|\rightskip| on the right hand edge.
+They  work on the page and also inside boxes. The
+optional glue specifications 
+determine the raggedness of the placement of the paragraph line on the
+page. For instance this paragraph was set with |\leftskip 0pt plus 1fil|. 
+and |\rightskip 0pt plus 1fil|. The |1fil| glue will 
+produce a very ragged column. The effect is to allow for any badness and to
+suppress all hyphenation. Note the odd spacing in the last line. It is due to
+the |1fil| added to the last line of every paragraph. 
+
+\leftskip=0pt \rightskip=0pt
+
+\mbr
+\pri\@|\looseness [=] [+ -] <integer>|
+\nbr
+This command will cause \tex\ to try and make the {\it current} paragraph
+an |<integer>| number of lines shorter if the sign is $-$ and longer if it is +
+or does not exist than the natural best number of lines. It is the way of
+fine tuning the size of a paragraph.
+
+\mbr
+\pri\@|\noindent|
+\nbr
+This command changes to horizontal mode and prevents the next paragraph from
+being indented. If it used in the middle of a paragraph, it produces a space
+equal to the current |\parindent|. 
+
+\mbr
+\pla\@|\obeylines|
+\nbr
+This causes \tex\ to end lines at the same place as they are ended in the
+input text. This command changes a line into a very short paragraph
+so that each line is  indented by the |\parindent|. 
+
+\mbr
+\pla\@|\obeyspaces|
+\nbr
+This makes a space active and causes \tex\ to obey them, {\bf except at the
+start of a new line}. It can be used in conjunction with |\obeylines| to
+obtain a very rough positioning of text on a page. Except with the
+|typewriter| fonts, where all characters have the same width, the two
+together will {\bf not} produce text that is positioned as it is seen on the
+screen editor. Precise placement of text and columns should always be done
+using the alignment capabilities of \tex, namely |\halign| and its relatives.
+\sbr
+{\obeylines \obeyspaces \parskip = 0pt
+This paragraph
+has     been produced  with |\obeylines|
+and |\obeyspaces| inside a group. The 
+group    is there to keep their effect local to this
+paragraph
+only. Note that all the lines 
+start at the left hand margin.}
+
+This was produced by
+
+\begintt
+{\obeylines \obeyspaces \parskip = 0pt
+This paragraph
+     has     been produced  with |\obeylines|
+ and |\obeyspaces| inside a group. The 
+group    is there to keep their effect local to this
+paragraph
+only. Note that all the lines 
+start at the left hand margin.}
+\endtt
+
+
+\mbr
+\pri\@|\par|
+\nbr
+This command indicates the end of the current paragraph. A completely blank
+line is equivalent to a |\par|.
+
+\mbr
+\ext\@|\paragraphcenterline|
+\nbr
+\begingroup \paragraphcenterline
+This command takes a line in a paragraph and centers it. It also prevents
+hyphenation. A forced break occurs if the command |\cr| \cr is placed
+|\cr| \cr as shown at the end of the line. This means that if you do not like
+the way \intex\ does the line splitting, you can do it yourself \dots\ or at
+least command it.
+\endgroup
+
+
+\mbr
+\pri\@|\parindent [=] <dimen>|
+\nbr
+This sets the indentation at the  beginning of each paragraph to
+|<dimen>|.
+
+\mbr
+\pri\@|\parshape <number of lines> <indent 1> <line length 1>
+       ... <indent n> <line length n>|
+\nbr
+This command is flexible way of controlling the shape of the current
+paragraph. The |<number of lines>| is the number of lines for which
+parameters are being given. In this case assumed to be |n|. The 
+|<indent i>| is the indentation of line |i| and |<line length i>| is the
+specified length of that line. All lines from  and including |n| will have
+the same indentation and length as line |n|. A |\parshape| lasts for only one
+paragraph. If there is a |\hangindent \hangafter| pair also in force for the
+current paragraph, the |\parshape| takes precedence. \tex\ does not get upset
+if the number of actual lines in the paragraph is less than |n|.
+
+
+\mbr
+\pri\@|\parskip [=] <dimen>|
+\nbr
+This sets the size of the vertical skip that is automatically inserted
+between paragraphs.
+ 
+
+\mbr
+\pri\@|\pretolerance [=] <integer>|
+\nbr
+\pri\@|\tolerance [=] <integer>|
+\nbr
+These two parameters set the amount of badness that \tex\ is willing to
+tolerate in a line before succumbing to an overfull box. If |<integer>| is
+10000 or more, horrendously bad lines will be allowed and there never will be any
+overfull boxes. \tex\ makes two passes through a paragraph. The first time it
+allows words to be hyphenated but tries to keep each line badness below the
+|<integer>| value of |\pretolerance|. The second time it tries the same
+thing, without hyphenation, but keeping the badness below the |<integer>|
+value of |\tolerance|. The optimal choice of these parameters depends on your
+aversion to hyphenation, and your acceptance of less than beautiful
+paragraphs without rewriting.
+
+\begingroup \raggedright \overfullrule=5pt
+\mbr
+\pla\@|\raggedright|
+\nbr
+This command allows the right hand margin to have a ragged edge. It is
+done by judiciously choosing the glue parameters for a |\rightskip|. The
+balancing allows for hyphenation, and does not produce lines that are too
+short. This paragraph was set with the present parameters for |\raggedright|.
+Note that it is possible to have overfull boxes.
+\endgroup
+
+\mbr
+\pla\@|\ttraggedright|
+\nbr
+This is similar to |\raggedright| but for use when using |\tt| font.
+
+\mbr
+\pla\@|\veryraggedright|
+\nbr
+This is similar to |\raggedright| but for use primarily in titles and
+captions where raggedness and {\bf no} hyphenation is wanted.
+
+\endblockmode
+\ejectpage
+\done

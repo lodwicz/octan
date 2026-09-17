@@ -1,0 +1,155 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{fonts}
+\def\cqu{}
+
+
+%========  Special fonts for this chapter ========
+
+\chapterhead{fonts}{FONTS}
+\intex\ has available to it a large number of fonts.\footnote{\dagger}{The
+ease of availability of different fonts is determined by the power of the
+local {\tt texprint} program. A ``font manager'' to find obscure fonts is a
+necessity if a wide range of fonts are needed \dots\ or desired.}
+Fonts are available as members of a ``family'' or individually. 
+Font families consist of various styles (normal) Roman, Boldface,
+Italic, Slanted, and Mathematics symbols at the different point sizes. 
+
+\shead{fontfamily}{Fonts in a Font Family}
+A font family consists of a number of fonts and mathematical symbols that
+have been chosen to satisfy the size requirements of sub and subsub scripts.
+The family sizes available are 
+{\twelvepoint |\twelvepoint|}, {\tenpoint |\tenpoint|}, 
+{\ninepoint |\ninepoint|}, 
+and 
+{\eightpoint |\eightpoint|}.\footnote{\ddagger}{In \tex\ there are 72.26666 points to the inch (about 28.45 points to the
+cm).}
+To call a specific style of font in a font
+family it is necessary to use the simple abbreviation of |\rm| for roman,
+|\it| for text italic, |\sl| for slanted, |\bf| for bold, and |\tt| for a
+fixed spacing typewriter like font. |\tt| is in the tenpoint typewriter font.
+In addition, a font family has three {\it big} fonts called respectively,
+|\bigfont|, |\biggfont|, and |\bigggfont|. These are all roman fonts and are
+approximately 1.2, 1.44, and 1.78 times the basic family point size. There is
+also a {\smallerfont smallerfont} that is  called through |\smallerfont|.
+These fonts are all changed when the point size family is changed.
+
+\shead{documentfonts}{Document Font}
+\intex\ has the important idea of a {\it document} and along with it a 
+{\it document font family}. 
+This is the
+default font for the document and the basis of the sizes of the fonts found
+in the headers, footers, section heads, or footnotes among others. For
+example the section head font is called |\sheadfont| and is only changed when
+the document font family is changed and not by merely calling a point size
+family. 
+The change in the document font is made naming a particular {\tt <point size
+font family>} {\bf as an argument} of a |\documentstyle| command. For
+instance
+|\documentstyle{\twelvepoint}| would create a document with the 
+text twelve point Roman.
+The fonts for
+chapter and section heads, footnotes, headers, and footers would
+also be appropriately modified. This
+feature means that you could run |\eightpoint| text through several sections
+without modifying the section head fonts. On the other hand, a change in
+document font will change the entire document and can be done at any time or
+even within a group. 
+
+|\documentstyle{\tenpoint}| set the document font set of this book to tenpoint.
+
+\font\fivermsca=cmr5 scaled 2074
+\shead{specialfonts}{Additional Fonts} 
+A new font, assuming that it exists, must first be defined and then called.
+For example, |\font\fivermsca = cmr5 scaled 2074| {\bf defines} a five point
+Roman font magnified by 2.074, or to about 10 points. The ``5 point'' is its
+design size. To call the font, use |\fivermsca|, usually inside a group to
+limit its effect. For instance ``{\fivermsca this was produced by}'' the
+following ``|{\fivermsca this was produced by}|''. Note that a scaled five
+point font is wider than a ten point form. The command is 
+
+\beginblockmode
+\mbr
+\ext\@|\font\<fontname> [scaled <number>]|
+\nbr
+This defines a new font with the name |\<fontname>|. The scaling is optional.
+The scale values are 4 digit integers, 1000 times greater than the nominal
+size. Thus |\font\fvx = ambx5 scaled 1000| is identical to 
+|\font\fvx = ambx5|. To actually use the font, the command |\<fontname>| is
+called. 
+\endblockmode
+Some examples are as follows:
+\font\tensc=cmcsc10
+\font\twelvess=cmss12
+\font\eighteenrm=cmr17
+\font\tendu=cmdunh10
+\font\tenu=cmu10
+\font\sixrm=cmr6
+\font\sixbf=cmbx6
+\begingroup
+\lineskip=3pt
+\bshortcomlist
+\ext\@|\fivei|&{\fivei Five point math italic}\cr
+\ext\@|\fiverm|&{\fiverm Five point Roman}\cr
+\ext\@|\fivebf|&{\fiverm Five point bold}\cr
+|\font\sixrm=cmr6|&{\sixrm Six point Roman}\cr
+|\font\sixbf=cmbx6|&{\sixbf Six point Bold}\cr
+|\font\eighteenrm=cmr17|&{\eighteenrm Eighteen (Seventeen?) point Roman}\cr
+|\font\tendu=cmdunh10|&{\tendu Ten point Dunhill}\cr
+|\font\twelvess=cmss12|&{\twelvess Twelve point special San Serif}\cr
+|\font\tenu=cmu10|&{\tenu Ten point unslanted italic}\cr
+\eshortcomlist
+\endgroup
+Note that |\fivei| is a mathematics italic font. In this font the space has
+been defined to have zero width and the character set is different than that
+found in a typical Roman type font. 
+
+\def\lb{\hfil\break}
+\shead{fontcomlist}{Command Forms}
+The four complete point size families are
+\bshortcomlist
+\ext\@|\twelvepoint|&{\twelverm Calls the twelvepoint font family}\cr
+\ext\@|\tenpoint|&{\tenrm Calls the tenpoint font family}\cr
+\ext\@|\ninepoint|&{\ninerm Calls the ninepoint font family}\cr
+\ext\@|\eightpoint|&{\eightrm Calls the eightpoint font family}\cr
+\eshortcomlist
+
+\dssshead{Point Size Relative Fonts}
+\begingroup
+\veryraggedright
+\bshortcomlist
+\ext\@|\bf|&{\bf Bold in current font family  (tenpoint)}\cr
+\ext\@|\it|&{\eightpoint \it Italic in current font family (eightpoint)}\cr
+\ext\@|\rm|&{\eightrm Roman in current font family (eightpoint)}\cr
+%\ext\@|\sl|&{\eightpoint \sl Slanted in current font family (eightpoint)}\cr
+\ext\@|\tt|&{\eightpoint\tt Typewriter in current font family  (eightpoint)} \cr
+\ext\@|\bigggfont|&{\eightpoint \bigggfont Biggg font in current  (eightpoint)}\cr
+\ext\@|\biggfont|&{\eightpoint \biggfont Bigg font in current (eightpoint)}\cr
+\ext\@|\bigfont|&{\eightpoint \bigfont Big font in current (eightpoint)}\cr
+\ext\@|\cheadfont|&{\cheadfont chapterhead in current (tenpoint)}\cr
+\ext\@|\documentstyle{<font family>}|& Sets document font family to {\tt <font family>}\cr
+\ext\@|\footerfont|&{footerfont of current document font}\cr
+\ext\@|\footnotefont|&{\footnotefont footnote font (family) of current document font} \cr
+\ext\@|\headerfont|&{header font of current document font}\cr
+\ext\@|\smallerfont|&{\smallerfont this is smaller relative to tenpoint}\cr
+\ext\@|\sheadfont|&{\sheadfont Section head font of current document font}\cr
+\ext\@|\ssheadfont|&{\ssheadfont Subsection head font of current document font}\cr
+\ext\@|\sssheadfont|&{\sssheadfont Subsubsection head font of current document font}\cr
+\ext\@|\dsssheadfont|&{\dsssheadfont Diminished section head font of current document font}\cr
+\ext\@|\captionnumfont|&{\captionnumfont Caption label and number font of 
+                                          current document font}\cr
+\ext\@|\captiontitlefont|&{\captiontitlefont Caption title font of 
+                                          current document font}\cr
+\ext\@|\captionbodyfont|&{\captionbodyfont Caption body font of 
+                                          current document font}\cr
+
+\eshortcomlist
+\endgroup
+
+\shead{newfontfam}{New Font Families}
+It is easy to produce a new font family that is compatible with \intex\---
+just modify the |\tenpoint| definition that is in the {\tt
+inrsfont.tex} file. 
+
+\ejectpage
+\done

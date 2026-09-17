@@ -1,0 +1,59 @@
+\documentstyle[texgraph]{article}
+
+\begin{document}
+
+\hrule
+\centergraph{ \begin{TeXgraph}
+               \lvec h:2 v:2 
+              \end{TeXgraph}
+            }
+\hrule 
+
+Now for some text. 
+\bigskip 
+\hrule 
+\centerplotfile{ieeelogo.ps}
+\hrule 
+\bigskip 
+\centergraph{ \begin{TeXgraph}
+              \incscfile f:{ieeelogo.ps} sc:.3 d:45 
+              \end{TeXgraph}}
+\hrule
+\vskip 1in
+Now for the INRS Logo to demonstrate some of the \TeX Graph language.
+
+\input inrslogo
+
+\font\eightrm = cmr8
+
+\inrslogoadd  h:-.5 v:0 
+
+
+
+\centergraph{ \begin{TeXgraph}
+              \move h:2 v:2 
+              \rtext d:45 t:{--- ---  Some text at 45 degrees}
+              \rtext d:90 t:{--- ---  Some text at 90 degrees}
+              \rtext d:180 t:{--- ---  Some text at 180 degrees}
+              \rtext d:270 t:{--- ---  Some text at 270 degrees}
+              \vtext {\begin{TeXgraph}
+                      \move h:-2 v:2 
+                      \rtext d:45 t:{*** ***  Some text at 45 degrees +90}
+                      \rtext d:90 t:{*** ***  Some text at 90 degrees +90}
+                      \rtext d:180 t:{*** ***  Some text at 180 degrees +90}
+                      \rtext d:270 t:{*** ***  Some text at 270 degrees +90}
+                      \end{TeXgraph}}
+             \move h:4 v:4 
+             \end{TeXgraph}
+     }
+
+\end{document}
+
+
+
+
+
+
+
+
+

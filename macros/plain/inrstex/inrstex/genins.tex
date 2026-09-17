@@ -1,0 +1,181 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+% Fixed page insert forms to work with pageinsert. ... 22 Sept 87 MJF
+
+% ========= Syntactic Forms ============
+% Each of these has a token list that is inserted before each
+% particular insert ... and in a group. 
+% in \begin... \end.. pairs
+\newtoks\everytopinsert
+\newtoks\everymidinsert
+\newtoks\everypageinsert
+\def\begintopinsert{\begingroup\the\everytopinsert\topinsert}
+\def\beginmidinsert{\begingroup\the\everymidinsert\midinsert}
+\def\beginpageinsert{\begingroup\def\g@box{\vbox to
+                         \vinnerpagesize}\def\g@ebox{\relax}\the
+                         \everypageinsert\pageinsert}
+
+\def\e@ndinsert{\endinsert\endgroup}
+
+\let\endtopinsert = \e@ndinsert
+\let\endmidinsert = \e@ndinsert
+\let\endpageinsert = \e@ndinsert
+
+% ============= Figure, Table, etc inserts ==========
+
+% Assumptions 
+%   The form is described by three letters, eg "fig" or "tbl"
+%   If the list file exists, the page info is written. 
+%   \writelistfile must be defined 
+%   \autonumber, \autoreference, \ref, \quietref, \veryraggedright
+%   If autonumbering is on, then 
+%      \silenttrue, \autofignum ..
+%   An "fig" form and "tbl" form are defined. These need 
+%        \figurelabel, and \tablelabel respectively. These are
+%        usually defined in the \englishversion and \versionfrancaise
+%   The insert forms use \beginmidinsert ... \endmidinsert. 
+
+
+%  Defaults  --- to be set. 
+%    \captiontextfraction  ... inrsdef.tex 
+%    \captionskip  ... inrsdef.tex 
+%    \topcaptiontrue or \topcaptionfalse  ... inrsdef.tex 
+%    \figurelabel  or \figlabel  ... english.tex or francais.tex 
+%    \tablelabel   or \tbllabel  ... english.tex or francais.tex 
+%    \captionnumfont ... inrsfont.tex
+%    \captiontitlefont ... inrsfont.tex
+%    \captionbodyfont ... inrsfont.tex
+%    \captionbodyon <off> ... inrsdef.tex
+
+
+% This is a general form for an  insert with a caption, under it 
+% if \topcaptionfalse and over it if \topcaptiontrue
+% The particular form is identified with a (usually) three letter sequence
+% such as "fig" or "tbl". There can be an associated list file for 
+% automatic generation of the page list for the items. 
+% The basic form is a non-floating type, enclosed in $$ ... $$ to give
+% correct spacing. This can be put in an insert to make it float. 
+% Full page forms require \vfill above and/or below for top, bottom, or center.
+
+% The caption box measures its size and centers the text if it is short 
+% or puts it in a \vbox which is \captiontextfraction of the \hsize 
+% if it is not. 
+% The \captionskip is the spacing between the caption and the actual 
+% item in the text. This may be a table or figure or ....
+
+% \let\captionnumfont = \bf
+% \let\captiontextfont = \relax % defaults to "outside font" 
+% \def\captiontextfraction{0.8} 
+
+\def\captionbox#1#2{\setbox0=\hbox{{\captionnumfont #1}\quad 
+                       \captiontitlefont #2}
+                \ifdim 1\wd0 < \captiontextfraction\hsize
+                    \centerline{\unhbox0}
+                \else
+                    \centerline{\vtop{\hsize=\captiontextfraction\hsize
+                                      \veryraggedright
+                                      \setbox0=\hbox{{\captionnumfont #1}\quad}
+                                      \hangindent=1\wd0 \hangafter=1
+                                      \noindent\unhbox0 
+                                        \captiontitlefont #2}}%
+                \fi}
+
+% A caption is assumed to have both a <title> that will appear in the 
+% list, if any and a <caption body> that will appear only when the caption is
+% printed. The default is to have \captionbody ... "active" and to turn it
+% off when making lists. 
+% This is done with two commands \captionbodyon and \captionbodyoff 
+% associated with a <caption body> is a <caption body font>
+
+\def\captionbodyon{\def\captionbody##1{{\captionbodyfont ##1}}}
+\def\captionbodyoff{\def\captionbody##1{}}
+
+
+%  \rect <hor dimen>  by <vert dimen>}  A centered rectangular box to act 
+% as a place holder if there is a figure to be pasted in later. 
+\def\r@ect{\centerline{\vbox{\hrule
+                          \hbox{\vrule height \the\dimen2
+                                \hskip \dimen0
+                                \vrule height \the\dimen2}
+                          \hrule
+                         }}}
+\def\rect #1by{\dimen0 #1\afterassignment\r@ect \dimen2}
+
+% ======= This is the general insert form =======
+% #1 is the name of the insert form, #2 is the tag or number, #3 is the title
+% #4 is the actual insert form value ... ie figure or table or ...
+
+% This is the glue specification between the caption and the body of the 
+% insert
+
+\newskip\captionskip  %\captionskip=2ex
+
+% This is a switch that controls whether the caption is above or below the
+% the body of the insert
+
+\newif\iftopcaption  %\topcaptionfalse % defaulted 
+
+% This is the general form of the insert --- it requires both \autonumber
+% and \autoreference to work. By selectively turning on/off these
+% switches, multipart figures are possible. 
+
+% \ifsilentfigure ... turns off the figure inserts so that tagging can 
+% occur with figures gracefully occuring at the end. This means that 
+% figure list file will refer to pages where the figures are sort of
+% called out 
+
+\def\multiinsert{\def\g@box{\vbox }\def\g@ebox{\relax}}
+
+\newif\ifsilentfigure  % default is \silenfigurefalse 
+
+\def\g@box{$$\vbox } \def\g@ebox{$$}
+
+\def\geninsertform #1#2#3#4{
+                    \ifautonumber 
+                  {\silenttrue\expandafter\csname auto#1num\endcsname{#2}}\relax
+                        \edef\i@nsnum{\csname:@#2\endcsname}\else
+                        \edef\i@nsnum{#2}\fi 
+                        \writelistfile{#1}{\csname #1tocout\endcsname}{\i@nsnum}{#3}
+                  \ifsilentfigure \relax \else
+                   \g@box{\normalbaselines
+                   \iftopcaption
+                         \captionbox{\csname #1label\endcsname\i@nsnum}{#3}
+                         \vskip \captionskip
+                         \centerline{\vbox{#4}}
+                     \else
+                         \centerline{\vbox{#4}}
+                         \vskip \captionskip
+                         \captionbox{\csname #1label\endcsname\i@nsnum}{#3}
+                     \fi
+                    \vss}\g@ebox\fi}
+
+
+%  ==========  Special Cases ============
+%  These define simple forms for standard midinserts. It uses 
+%  \beginmidinsert ... \endmidinsert for consistency
+
+% For Figures 
+\def\figureform #1#2#3{\geninsertform {fig}{#1}{#2}{#3}}
+\def\figlabel{\figurelabel }
+\def\figureinsert #1#2#3{\beginmidinsert 
+                         \figureform{#1}{#2}{#3} 
+                         \endmidinsert }
+
+%\def\figtocout{\string\figtoc} % actually set in inrsdef.tex 
+
+
+% For Tables 
+\def\tableform #1#2#3{\geninsertform {tbl}{#1}{#2}{#3}}
+\def\tbllabel{\tablelabel }
+\def\tableinsert #1#2#3{\beginmidinsert 
+                         \tableform{#1}{#2}{#3} 
+                         \endmidinsert }
+%\def\tbltocout{\string\tbltoc} % actually set in inrsdef.tex 
+
+
+% Comment ---- \endinsert in Plain has a pre and post \bigskip 
+% This should probably be removed and the spacing always controlled by 
+% the $$ ... $$. Instead, if the \everymidinsert form were used it 
+% would be possible to remove it with \everymidinsert = {\let\bigskip=\relax}

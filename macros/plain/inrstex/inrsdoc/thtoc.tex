@@ -1,0 +1,323 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{toc}
+
+\def\cqu{\line{}\vfill\vbox{\hsize 3.2in \rightskip=0pt \leftskip=0pt
+         \centerline{\sheadfont List of Figures}
+         \bigskip
+         \makefiglist\bigskip 
+         This is given by \par
+         \def\2{\char'173}\def\3{\char'175} % lazy 
+         \tt
+         \1centerline\2\1sheadfont List of Figures\3\par
+         \1bigskip\par
+         \1makefiglist\par
+              }
+}
+
+\chapterhead{toc}{TABLES\cr of CONTENTS\cr and FIGURES}
+\vskip -2.8ex 
+\intex\ is able to generate tables of contents, figures, and tables
+automatically. It also has general capabilities to create files that can be
+used to generate other lists that involve page numbers. 
+
+\shead{toccomlist}{Command List}
+\beginthreecolumn
+\ext|\chtoc|
+\ext|\chtocout|
+\ext|\dssshtoc|
+\ext|\dssshtocout|
+\ext|\figtoc|
+\ext|\figtocout|
+\ext|\inputfigfiles|
+\ext|\inputtblfiles|
+\ext|\inputtocfiles|
+\ext|\intdssshtoc|
+\ext|\intssshtoc|
+\ext|\makefiglist|
+\ext|\maketbllist|
+\ext|\maketoclist|
+\ext|\newtocfile|
+\ext|\openlistfile|
+\ext|\prtoc|
+\ext|\prtocout|
+\ext|\shtoc|
+\ext|\shtocout|
+\ext|\sshtoc|
+\ext|\ssshtoc|
+\ext|\ssshtocout|
+\ext|\tbltoc|
+\ext|\tbltocout|
+\ext|\tocbox|
+\ext|\tocfill|
+\ext|\writelistfile|
+\endthreecolumn
+
+\shead{toclists}{Making Lists of Contents, Figures, Tables}
+The distinguishing feature of  |list| files in \intex\ is that they contain
+a combination of commands, section or figure numbers, and page numbers.
+\intex\ creates these files by the command \@|\openlistfile{<file extension>}|
+and gives them the name |\jobname.<file extension>|. 
+This command effectively initializes the building process for the particular
+list.
+|<file extension>| must
+be one to three  characters.  The file extensions for tables of contents,
+figures, and tables are |.toc|, |.fig|, and |.tbl|. 
+
+The command |\writelistfile| is used to actually put information into the
+file and the |\make<file extension>list| is used to bring it back in.
+Currently |\maketoclist|, |\makefiglist|, and |\maketbllist| are defined. 
+
+These files will contain a list of commands, in the correct order for
+eventually making the actual list. A typical command, in this case generated
+by the |\chead| at the beginning of the chapter would be
+
+|\chtoc{<chapter number>}{<chapter title>}{<page number>}|
+
+Actually the |\chead| command does this in two steps. The actual form
+executed inside the |\chead| is the command |\chtocout|. This is defaulted in
+{\tt inrsdef.tex} to be |\def\chtocout{\string\chtoc}|. A modification of the
+definition of |\chtocout| will change the initial command string that is
+written to the |.toc| file. Theoretically, a different string could be
+written for each chapter if required. This same facility exists for all  the
+|.toc| output forms. 
+
+\intex\ has already defined all of the |\<type>toc| commands listed in
+Section \ref{toccomlist}. However, all of these commands may be redefined for
+different formats. For instance \intex\ has defined |\dssstoc| and |\ssstoc|
+to be effectively null. This means that subsubsections and diminished
+subsections will not be automatically listed in the table of contents
+although the |\ssstoc| and |\dssstoc| commands are in the |.toc| file. 
+
+If a |.toc| file is open, whether or not |autonumbering| is on, the |\chead|,
+|\shead|, |\sshead|, |\ssshead|, |\dssshead|, and |\preludehead| commands write to
+the |.toc| file. The |\figure| command writes a |\figtoc| command to the
+|.fig| file and the |\table| command writes a |\tbltoc| command to the |.tbl|
+file. 
+
+Creating, writing, and inputting a new list file is not terribly difficult
+but uses moderately advanced macro techniques. Most of the recipe is given 
+in the description of |\writelistfile| below. The rest can be determined by
+examination of |\makefiglist| and |\inputfigfiles|. 
+
+\shead{toccomforms}{Command Forms}
+\beginblockmode
+\ext\@|\chtoc{<number>}{<title>}{<page number>}|
+\nbr
+This creates a chapter entry in the table of contents as given in the table
+of contents for this book.
+
+\mbr
+\ext\@|\chtocout|
+\nbr
+Its default definition is
+|\def\chtocout{\string\chtoc}| and is 
+the command executed in a |\chead| while producing a |.toc| entry. 
+
+
+\mbr
+\ext\@|\dssshtoc{<number>}{<title>}{<page number>}|
+\nbr
+This would create table of contents entry for a diminished section heading.
+Although |\dssshtoc| commands are written to the |\jobname.toc| file, they
+are defined as null in \intex. If you want them to appear in a table of
+contents place the command |\let\dssshtoc = \intdssshtoc| in the file just
+before the |\maketoclist| is called. \@|\intdssshtoc| is |\dssshtoc| in
+disguise.
+
+\mbr
+\ext\@|\dssshtocout|
+\nbr
+Its default definition is
+|\def\dssshtocout{\string\dssshtoc}| and is 
+the command executed in a |\dssshead| while producing a |.toc| entry. 
+
+
+\mbr
+\ext\@|\figtoc{<number>}{<title>}{<page number>}|
+\nbr
+This would create table of figures  entry for a figure.
+\intex\ makes it identical to |\shtoc|
+
+\mbr
+\ext\@|\figtocout|
+\nbr
+Its default definition is
+|\def\figtocout{\string\figtoc}| and is 
+the command executed in a |\figureform| or 
+|\figureinsert| while producing a |.toc| entry. 
+
+
+\mbr
+\ext\@|\inputfigfiles| 
+\nbr
+This is a token list, including the |\inputwithcheck| of the files that are
+used to make the figure list. \intex\ default is 
+|\inputwithcheck{\jobname.fig}|. |\the\inputfigfiles| will actually cause the
+token list to be executed, {\it ie} in the default case the |\jobname.fig|
+will be read in.
+
+
+\mbr
+\ext\@|\inputtblfiles|
+\nbr
+This is a token list, including the |\inputwithcheck| of the files that are
+used to make the table list. \intex\ default is 
+|\inputwithcheck{\jobname.tbl}|. |\the\inputtblfiles| will actually cause the
+token list to be executed, {\it ie} in the default case the |\jobname.tbl|
+will be read in.
+
+\mbr
+\ext\@|\inputtocfiles|
+\nbr
+This is a token list, including the |\inputwithcheck| of the files that are
+used to make the figure list. \intex\ default is 
+|\inputwithcheck{\newtocfile}|. If a |\jobname.toc| file is open,
+|\newtocfile| becomes the {\bf previous} version. If it is not, it is the
+most recent version.
+
+
+\mbr
+\ext\@|\makefiglist|
+\nbr
+This executes |\the\inputfigfiles| which inserts 
+the list of |\figtoc| commands into the text.
+All required |\beginlist ... \endlist| commands should
+be put around it.
+
+\mbr
+\ext\@|\maketbllist|
+\nbr
+This executes |\the\inputtblfiles| which inserts 
+the list of |\tbltoc| commands into the text.
+All required |\beginlist ... \endlist| commands should
+be put around it.
+
+\mbr
+\ext\@|\maketoclist|
+\nbr
+This inserts the list of |\<type>toc| commands into the text by executing
+|\the\inputtocfiles|. All required |\beginlist ... \endlist| commands should
+be put around it.
+
+\mbr
+\ext\@|\newtocfile|
+\nbr
+If a |\jobname.toc| file is open,
+|\newtocfile| becomes the {\bf previous} version. If it is not, it is the
+most recent version. This allows for the table of contents to contain a
+reference to itself.
+
+\mbr
+\ext\@|\prtoc{<title>}{<page number>}|
+\nbr
+This is the command form written into the |.toc| file by |\preludeheader|.
+The output format may be seen by looking at the {\it Preface} listing in the
+Table of Contents for this book.
+
+\mbr
+\ext\@|\prtocout|
+\nbr
+Its default definition is
+|\def\prtocout{\string\prtoc}| and is 
+the command executed in a |\preludehead|
+while producing a |.toc| entry. 
+
+
+\mbr
+\ext\@|\shtoc{<number>}{<title>}{<page number>}|
+\nbr
+\ext\@|\sshtoc{<number>}{<title>}{<page number>}|
+\nbr
+\ext\@|\ssshtoc{<number>}{<title>}{<page number>}|
+\nbr
+These three commands are written by the |\shead|, |\sshead| and |\ssshead| to
+the |\jobname.toc| file.  Examples of the default \intex\ format
+for |\shtoc| may be seen in the Table of Contents.
+Although |\ssshtoc| commands are written to the |\jobname.toc| file, they
+are defined as null in \intex. If you want them to appear in a table of
+contents place the command |\let\ssshtoc = \intssshtoc| in the file just
+before the |\maketoclist| is called. \@|\intssshtoc| is |\ssshtoc| in
+disguise.
+
+\mbr
+\ext\@|\shtocout|
+\nbr
+\ext\@|\sshtocout|
+\nbr
+\ext\@|\ssshtocout|
+\nbr
+These three commands are executed by the |\shead|, |\sshead| and |\ssshead| 
+when writing to 
+the |\jobname.toc| file.  The defaults are defined in {\tt inrsdef.tex} as
+\begintt
+\def\shtocout{\string\shtoc}
+\def\sshtocout{\string\sshtoc}
+\def\ssshtocout{\string\ssshtoc}
+\endtt 
+
+\mbr
+\ext\@|\tbltoc<number>}{<title>}{<page number>}|
+\nbr
+This would create table of figures  entry for a figure.
+\intex\ makes it identical to |\shtoc|
+
+\mbr
+\ext\@|\tbltocout|
+\nbr
+Its default definition is
+|\def\tbltocout{\string\tbltoc}| and is 
+the command executed in a |\tableinsert| or |\tableform|
+while producing a |.toc| entry. 
+
+\mbr
+\ext\@|\tocbox{<indent>}{<number>}{<title>}{<pagenumber>}|
+\nbr
+This is the general form for producing an entry for a table of contents list.
+|<indent>| is a dimension and is the indentation from the left margin;
+|<number>|  is the number form; |<title>| is the title  of the
+item; and |<pagenumber>| is where it occurred. There is no interitem spacing
+as part of the definition. Thus 
+$$
+\tocbox{4em}{3.7.9}{This is an incredibly long title to show you
+        what happens when there is more than one line}{375}
+$$
+was produced by 
+\begintt
+\tocbox{4em}{3.7.9}{This is an incredibly long title to show you
+        what happens when there is more than one line}{375}
+\endtt 
+
+\mbr
+\ext\@|\tocfill|
+\nbr
+This creates the dots across the page in the |\..toc| macros. It is useful
+for designing stylistically consistent new ones.
+
+\mbr
+\ext\@|\writelistfile{<file extension}{\string\..toc}{<number>}{<arg>}|
+\nbr
+This is the basic command for writing to a |list| file. The |\string|
+allows the |\..toc| to be written into the file without ever being executed.
+|{<number>}| is expanded before it is written out while |{<arg>}| is not.
+|\writelistfile| adds one more argument, namely 
+|{<page number>}|,  to this command before actually writing it to the file.
+The complete command written is
+\begintt
+\..toc{<number>}{<arg>}{<page number>}
+\endtt
+An example for the first chapter of this book is 
+\begintt
+\chtoc {Chapter 1}{\tex \cr and\cr INRS\tex }{1}
+\endtt
+Note that |\tex| is not expanded. 
+An examination of any of the |list| files created by \intex\ will show some
+more examples.
+This command should be used whenever a write to a |list| file is required. It
+is used by \intex\ in all of the section and chapter heads, along with
+|\figure| and |\table|.
+
+\endblockmode
+\ejectpage
+
+\done

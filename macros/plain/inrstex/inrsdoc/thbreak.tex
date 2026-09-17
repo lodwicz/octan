@@ -1,0 +1,60 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{break}
+
+\def\cqu{}
+
+\chapterhead{break}{BREAKS\cr and\cr NOBREAKS}
+\tex\ controls the breaking of lines and pages by the judicious insertion of
+penalties, both positive and negative. A negative penalty will encourage
+a break
+and a positive penalty will inhibit it. The commands in this chapter either
+inhibit or cause breaks. In addition, most of them have some form of vertical
+skip. All but |\linebreak| are intended to be used in vertical mode. In all
+cases, the use of a |\...break| in horizontal mode will first cause a change
+to (internal) vertical mode where the penalty will be applied. A penalty of
+$\pm$10000 is the same as $\pm$ infinity. 
+
+\shead{breakcoms}{Command Forms}
+Since the commands generally do not take parameters, the command list is
+being dispensed with.
+\bshortcomlist
+\pla\@|\allowbreak|&no penalty for a break \dots\ |\penalty 0|\cr
+\pla\@|\break|&causes a break \dots\ |\penalty 10000|\cr
+\pla\@|\bigbreak|&encourages break and vskips the maximum of the
+|\bigskipamount| and the |\lastskip| \dots\ |\penalty -200| \dots\ skip is 
+\quad\hbox to .25in{\vbox{\hrule width .25in\bigbreak\hrule}} \cr
+\pla\@|\bye|&terminates a document and vertical |fill|s the page\cr
+\pri|\discretionary|&a discretionary break or hyphen. The form is
+\@|\discretionary{<pre  break  text>}{<post  break  text>}{<text>}|. If
+there is a break, the |<pre break text>| goes on the first line and the
+|<post break text>| goes on the second line. If there is nobreak, the
+|<text>| is used.\cr
+\ext\@|\done|&terminates a document and vertical |fill|s the page and does
+some tests on groups used in \intex. \cr
+\ext\@|\end|&terminates a document without doing any fill on the last page\cr
+\pla\@|\filbreak|&encourages a break with |\penalty -200| and vertical |fils|
+the page. It is useful for address lists where it is desirable not to split
+an individual address at a page boundary\cr
+\pla\@|\eject|&causes a column or page break but does not vertical |fill| the
+page. Its use usually causes underfull boxes.\cr
+\ext\@|\ejectcolumn|&causes a column break (equivalent to a page break in single
+column) and vertical |fills| the page\cr
+\ext\@|\ejectpage|&causes a page break and vertical |fills| the page \dots\ in
+multicolumn this will cause a new page, not just a new column\cr
+\pla\@|\goodbreak|&encourages a break \dots\ |\penalty -200|\cr
+\ext\@|\linebreak|&forces a line break in horizontal mode {\bf and} |fils| the
+    line forcing the words to the left side of the line\cr
+\pla\@|\medbreak|&encourages break and vskips the maximum of the
+         |\medskipamount| and the |\lastskip| \dots\ |\penalty -100| \dots\ skip is 
+         \hbox to .25in{\vbox{\hrule width.25in\medbreak\hrule}} \cr
+\pla\@|\nobreak|&does not allow a break \dots\ |\penalty 10000|\cr
+\ext|\penaltybreak|&form \@|\penaltybreak{<penalty>}{<skip size>}| \dots\ 
+          this is a generalization of |\medbreak| allowing arbitrary penalties and skip
+          sizes\cr
+\pla\@|\smallbreak|&encourages break and vskips the maximum of the
+|\smallskipamount| and the |\lastskip| \dots\ |\penalty -50| \dots\ skip is 
+\hbox to .25in{\vbox{\hrule width .25in\smallbreak\hrule}} \cr
+\eshortcomlist
+\ejectpage
+\done

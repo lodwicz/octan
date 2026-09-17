@@ -1,0 +1,106 @@
+%-*-tex-*-
+% some macros for english/french side by side
+
+\def\coltol{\pretolerance=5000 \tolerance=5000 \hbadness=5000 }
+
+\newbox\leftbox
+\newbox\leftrembox
+\newbox\rightbox 
+\newbox\rightrembox
+\newbox\tempbox
+\newif\ifboxsplit % if either box is split
+\newif\ifcolsplit % if this col is being split 
+\newdimen\remsplit
+\newdimen\rempage
+\newdimen\colsize \colsize=2.8in
+\let\dbmess=\message
+\def\dbmess#1{}
+\raggedbottom
+\def\splitparms #1{\remsplit=\pagegoal \advance\remsplit by -\pagetotal \relax
+                   \rempage=\remsplit
+                   \ifdim\pageshrink<10pt \advance\remsplit by -10pt\fi
+                   \advance\rempage by -\ht#1
+                   \advance\rempage by -\dp#1 \colsplitfalse
+                   \ifdim\rempage<0pt \ifdim\remsplit>0pt \colsplittrue \fi\fi
+         \dbmess{<<rs \the\remsplit* rp \the\rempage *ps \the\pageshrink>>}}
+               
+% general column form #1 \right(left)box #2 \right(\left)rembox #3 type
+% #4 input 
+
+\def\colform #1#2#3#4{\setbox#1=\vtop{\hsize \colsize \coltol #3#4}
+                  \splitparms{#1}\ifcolsplit\dbmess{<<col split \the\ppnum>>}
+                      \boxsplittrue\setbox\tempbox=\vsplit
+                          #1 to \remsplit \fi 
+                  \ifvoid\tempbox \else 
+                       \setbox#2=\vtop{\unvbox#1}\relax
+                       \setbox#1=\vtop{\unvbox\tempbox}\fi
+                        \dbmess{** tbx r ** rrh \the\ht#1
+                                            * rh \the\ht#2
+                                            * drh \the\dp#1
+                                            * dh \the\dp#2 }}
+
+% right and left forms
+
+\long\def\rightform #1{\colform{\rightbox}{\rightrembox}{\fhyph}{#1\endgraf}}
+\long\def\leftform #1{\colform{\leftbox}{\leftrembox}{\ehyph}{#1\endgraf}}
+
+
+\newcount\ppnum 
+
+\long\def\pp #1@@#2!!{\advance\ppnum by 1 \dbmess{<< pp num \the\ppnum>>}
+             {\def\pp{\dbmess{<<Possible @@ or !! error>>}}\vskip \parskip 
+                \boxsplitfalse\leftform{#1}\rightform{#2}\relax
+                \line{\box\leftbox\hss\box\rightbox}\relax
+                  \ifboxsplit 
+                  \line{\box\leftrembox\hss\box\rightrembox}
+                  \dbmess{<<End Splitbox \the\ppnum>>}\fi
+                  }} 
+
+\def\seh#1#2#3{\pp\innershead{#1}{#2}@@\autonumberingoff
+                   \innershead{\qref{#1}.}{#3}!!\nobreak\mark{#2/#3}\nobreak}
+\def\sseh#1#2#3{\pp\innersshead{#1}{#2}@@\autonumberingoff
+                   \innersshead{\qref{#1}}{#3}!!\nobreak\mark{#2/#3}\nobreak}
+\def\ssseh#1#2#3{\pp\innerssshead{#1}{#2}@@\autonumberingoff
+                   \innerssshead{\qref{#1}}{#3}!!\nobreak\mark{#2/#3}\nobreak}
+\def\dssseh#1#2{\pp\innerdssshead{#1}@@
+                   \innerdssshead{#2}!!\nobreak\mark{#1/#2}\nobreak}
+\let\dsh=\dssseh
+
+
+%\tracingpages=1
+
+% --- header stuff ----
+                  \headertext{\ifodd\pageno\rightheadertext
+                                         \else\leftheadertext\fi}
+                  \def\rightheadertext{\line{\hss
+                     \firstmark\rlap{\ssheadfont\qquad\folio}}}
+                  \def\leftheadertext{\line{\llap{\ssheadfont\folio
+                                 \qquad}\firstmark{ }\hss}}
+\documentstyle{\normalheaderstyle 
+               \vheadersize=.35in 
+               \normalfooterstyle
+               \vfootersize=.35in}
+
+
+
+% Autonumbering ... referencing sections paragraphs 
+\newautonum{art}
+
+\def\pn{{\bf \autoartnum{}} }
+\def\pntag#1{\autoartnum{#1}}
+\def\rpn{{\bf \the\artnum } }
+
+% Toc forms change 
+\let\idssshtoc=\shtoc
+\let\ishtoc=\shtoc 
+\def\shtoc #1#2#3 \shtoc #4#5#6{\pp \ishtoc{#1}{#2}{#3}@@\ishtoc{#4}{#5}{#6}!!}
+\let\isshtoc=\sshtoc 
+\def\sshtoc #1#2#3 \sshtoc #4#5#6{\pp \isshtoc{#1}{#2}{#3}@@\isshtoc{#4}{#5}{#6}!!}
+\let\issshtoc=\ssshtoc 
+\def\ssshtoc #1#2#3 \ssshtoc #4#5#6{\pp \issshtoc{#1}{#2}{#3}@@\issshtoc{#4}{#5}{#6}!!}
+  % like section heads .. minor indent
+\def\dssshtoc #1#2#3 \dssshtoc #4#5#6{\pp \idssshtoc{#1}{#2}{#3}@@\idssshtoc{#4}{#5}{#6}!!}
+
+
+
+\parindent=0pt \parskip=2.8ex % block mode 

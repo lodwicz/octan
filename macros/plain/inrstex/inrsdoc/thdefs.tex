@@ -1,0 +1,160 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{defs}
+
+\def\cqu{\cquote{If names are not correct, language will not be in accordance
+with the truth of things.}{Confucius}}
+
+\chapterhead{defs}{SIMPLE\cr DEFINITIONS\cr or MACROS}
+\tex\ makes it easy to invent definitions to make your typing job easier.
+This chapter describes the simplest form of definitions. More complex
+definitions and some of the subtleties are found in the \texbook. 
+
+This chapter also introduces the idea that definitions can be modified by
+such primitive commands as |\outer|, |\long|, and |\global|. 
+
+Simple definitions consist of those that have zero or more arguments and that
+do not use advanced commands such as |\futurelet|, |\aftergroup|,
+ |\edef|,  |\catcode|,  |\bgroup|, |\egroup|, |\afterassignment|.
+These 
+commands and their use may be found in the \texbook\ and the definition
+package that actually is used to develop {\it plain} or \intex.
+
+If you wish to write complex definitions, please see the warning at the end
+of this chapter.
+
+
+\shead{defcomlist}{Command List}
+\beginthreecolumn
+\pri|\def|
+\pla|\gdef|
+\pri|\global|
+\pri|\let|
+\pri|\long|
+\pri|\outer|
+\endthreecolumn
+
+\shead{defcomforms}{Command Forms}
+\beginblockmode
+\pri\@|\def\<def name> <parameter form>{<replacement text>}|
+\nbr
+This is the basic command for creating new definitions or, as they are
+sometimes called, {\it macros}. The |<def name>| is the name given to
+the definition and {\bf must} consist of letters, upper or lower case only.
+The |<parameter form>| is the form for which  \tex\ is looking after it sees
+the |\<def name>| in the text. Parameters in the |<parameter form>| are
+indicated by |#<integer>| where |<integer>| is from 1 to 9, in {\bf order}.
+\tex\ then puts the parameter values that it found into the 
+|<replacement text>| and then puts that text in the place of |\<def name>|
+and all of the parameters that it has eaten while filling in the 
+|<parameter form>|. Some examples follow:
+
+\dssshead{Simple Replacements --- No Parameters}
+These are the simplest form of definitions. In this case there are no
+parameters and the |<replacement text>| directly replaces the 
+|\<def name>|\]\dots\]. The \]\dots\] is there to emphasize that all the
+blanks after the |\<def name>| are eaten by \tex. 
+Suppose that the sequence $\alpha\beta\gamma$ kept occurring in the text. Then
+|\abg\|\]  defined by |\def\abg{$\alpha\beta\gamma$}| 
+\def\abg{$\alpha\beta\gamma$} will produce \abg\ in its place. 
+In this example the |<replacement text>| is 
+|$\alpha\beta\gamma$|. A second example is the problem of putting {\it italic
+correction\/}  in the text, keeping the italic inside the group defined by the
+|{...}|. The  |<replacement text>| then should be |{\it italic correction\/}|
+including the braces. Thus the correct definition, if |\itc| is to be the 
+|<def name>|, is 
+|\def\itc{{\it italic correction\/}}|.
+
+\dssshead{Simple Replacements --- Simple Parameter List}
+These definitions have the |<parameter form>| of |#1|, |#1#2|, \dots,
+|#1#2...#9|. An example is |\def\up#1{$^{#1}$}|. When |\up| is used, the next
+{\it token}, either a character, command, or entire group inside a |{...}| is
+absorbed as |#1| and put into the position of |#1| in the replacement text.
+Thus |\up{**}| becomes |$^{**}$| which is then put in the text in
+place of the entire |\up{**}|. 
+Note that |**| and not |{**}| is the parameter for |\up|.
+The |{...}| were used to delimit |**| so that \tex\
+knew that both of them together should be |#1|. ``Thus|\up{**}|''
+gives ``Thus\up{**}''. 
+
+Note that a definition made inside a group only lasts as long as the group
+lasts. At that point the definition becomes what it was previous to the
+group. 
+
+\mbr
+\pla\@|\gdef\<def name> <parameter form>{<replacement text>}|
+\nbr
+This is identical to |\global\def| and can be used in exactly the same way as
+|\def|. The major difference is that a |\<def name>| defined with a |\gdef|
+does {\bf not} disappear at the end of the group in which it is defined. 
+
+\mbr
+\pri\@|\global|
+\nbr
+The command |\global| will cause either the definition, assignment, or
+definition equivalence (|\let|) to be global, {\it ie} not disappear at the
+end of the group. This should be used with care and sparingly. 
+
+\mbr
+\pri\@|\let\<def a> [=] \<def b>|
+This command makes the command  |\<def a>| be equivalent to, both in
+|<parameter form>|  and |<replacement text>|,  
+as |\<def b>| at the time that the
+|\let| is called. This command is very useful for such things as 
+|\let\sheadfont = \twelvess|. It should be used with care or a circle of
+definitions may be produced. 
+
+\mbr
+\pri\@|\long|
+\nbr
+A |\def| may be preceded by a |\long| to give a |\long\def|. When this is
+done the parameters |#1| \dots\ may contain either |\par| or, equivalently,
+blank lines. Without the |\long|, a |\par| in a |#1| will cause an error.
+This is a safety feature to allow \tex\ to isolate errors before the origin
+is completely lost. |\long| should be used with extreme care. 
+
+\mbr
+\pri\@|\outer|
+\nbr
+A |\def| may be preceded by |\outer| to give an |\outer\def|. A definition
+so preceded may {\it not} be used in any other definition. Again this is a
+safety feature to catch errors before it is too late. For example, all of
+the section head definitions in \intex, |\shead| and its relatives, are
+declared |\outer|. 
+
+It is possible to have a |\outer\long\global\def|.
+\endblockmode
+
+\shead{defwarning}{WARNING --- Clever Definitions}
+It is possible tell \tex\ very complex things. The danger and difficulty for
+debugging increases dramatically as you start to exercise fine control over
+how \tex\ processes the text. 
+
+The simplest extension to the forms above is to use the fact that the
+|<parameter form>| can include tokens other than |#<integer>|. This
+additional freedom allows for the input of parameters without requiring that
+they be placed in |{...}|.
+
+The second level of extension is to use the various 
+|\if... \else ...  \fi| forms to control the actual text that will be placed
+in the text and even the placing of definitions inside definitions.
+
+The next level of complexity arises when the macro builder attempts to
+control when \tex\ expands the various definitions and macros that make up
+the |<parameter forms>| and the |<replacement text>|. For instance, this must
+be done when writing out both the page number and the section number while
+accumulating information for making a table of contents. This requires extreme
+care.
+
+The final level of complexity occurs when the macro writer attempts to
+control how, and when \tex\ tokenizes its input. 
+Doing this  correctly requires exquisite care. For instance, conditionally
+modifying the catcodes of input on the fly will prevent that input from
+being passed as a parameter to a macro. \tex\ tokenizes once and forever. 
+Although making a character active for an entire document is
+relatively simple, flipping it back and forth is error prone.
+
+
+
+\ejectpage
+\done

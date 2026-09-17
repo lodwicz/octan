@@ -1,0 +1,10 @@
+% ============ modified to center heads /subheads .... ======
+%the parameters must be as shown and will have that meaning
+% #1 font (=#3); #2 number (=#4) ; #3 <text> (=#5); #4 number/text sep (=#7)
+% check on \t@agtext suppresses space when there is no number 
+\catcode`\@=11
+\def\gensheadformat#1#2#3#4{\ifx\t@agtext\empty\setbox0=\hbox{}\else
+                                \setbox0=\hbox{#1#2#4}\fi
+                \vbox{\paragraphcenterline \normalbaselines
+                       #1\box0 #3}}
+\catcode`\@=12

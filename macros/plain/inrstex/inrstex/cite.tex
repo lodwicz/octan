@@ -1,0 +1,165 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+%   ===== Citation generation ==========
+% \cite is used with a journal/paper reference.
+% The forms allow both random input order of cite forms or
+% fixed order. At the moment it supports only IEEE form, ie 
+% a list in the order of their occurrence in a paper. 
+% A data base system using a mailbox would be much better. 
+
+
+% Invocation of \cite{Ferg84} will define a \tag{Ferg84}{<number>},
+% where the reference number is sequentially determined. At the site
+% of the invocation <number> is dropped into the text (without [ or ]).
+% If the reference has been previously invoked, the number is that of
+% the first invocation.
+% the \citenum is relative to an \i@nitcitenum. This allows for multiple
+% reference lists in the same document. A new number is defined if the old
+% one is undefined or less than or equal to the initcitenum
+
+% In addition, when the citation tag file is written out, the last \citenum 
+% is also written. This allows a citation tag file to be input for early 
+% reference and then to be effectively discarded by resetting the
+% \i@nitcitenum
+
+\def\opencitationtagfile{\openlistfile{ctg}\resetcitationnumbers\immediate
+             \write\ctg@file{\noexpand\initcitetag{\the\citenum}}}
+
+\def\closecitationtagfile{\immediate
+     \write\ctg@file{\noexpand\lastcitetag{\the\citenum}}\closelistfile{ctg}}
+
+%--- citenum allocation ------
+\def\initcitetag#1{\xdef\i@nitcitenum{#1}} 
+                       \initcitetag{0} % initializes to 0
+\def\lastcitetag#1{\xdef\l@astcitenum{#1}} 
+                       \lastcitetag{0} % initializes to 0}
+
+\newcount\citenum \citenum = 0  
+\def\resetcitationnumbers{\ifnum\citenum>\l@astcitenum 
+                            \lastcitetag{\the\citenum}\else
+                            \global\citenum = \l@astcitenum \fi
+                          \initcitetag{\l@astcitenum}}
+
+\def\w@ritecite#1{\ifctglist \immediate\write\ctg@file
+                         {\string\tag{#1}{\the\citenum}}\fi}
+\def\m@akecitetag#1{\global\advance\citenum by 1 \relax
+               \tag{#1}{\the\citenum}\w@ritecite{#1}}
+
+\def\cite#1{\ifctglist \else \opencitationtagfile \fi
+            \edef\c@itearrow{<--}\relax
+            \ifundefined{:@#1}\m@akecitetag{#1}\edef\c@itearrow
+                    {==>}\fi
+            \ifnum \i@nitcitenum < \csname :@#1\endcsname \else
+                   \m@akecitetag{#1}\edef\c@itearrow
+                    {==>}\fi
+             \count255= \csname :@#1\endcsname 
+             \advance\count255 by -\i@nitcitenum \relax
+             \proofmargin{#1 \c@itearrow\ \the\count255}\the\count255}
+
+% This will produce the correct value of a citation without 
+% causing it to be created if it does not exist
+
+\def\citeref#1{\ifundefined{:@#1}\count255=0\else
+                     \count255=\csname :@#1\endcsname\fi
+          \advance\count255by-\i@nitcitenum\relax\the\count255}
+
+
+% Citation/Reference list generation. An example setup using the list
+% macros to generate a reference list is shown below.
+%    \opencitationtagfile
+%      <main text>
+%    \beginlist
+%      \makecitationlist %or \makelongcitationlist
+%    \endlist
+% The reference list is generated from two files:
+%    <jobname>.ctg  contains citation tags of the form \tag{Ferg84}{4}
+%                   where the first argument is the tag, and the second
+%                   is the reference number associated with that tag.
+%    <jobname>.cfm  contains the text for the references. These can appear
+%                   in any order and contain text of the form
+%                   \citeform{<tag>}{\listitem{\citetagvalue} <reference text>}
+%                   This example shows a preamble to the text which invokes
+%                   a new list item with the appropriate reference number.
+%                   The reference text is the author, journal etc. for the
+%                   reference.
+% Each \citeform entry will generate a new macro definition of the form
+% \def\@Ferg84form{<reference text>}.
+% Each \tag entry will define \citetagvalue as the citation/reference number
+% and invoke \@Ferg84form 
+
+%\makecitationlist does not require the .cfm file to have citations in the 
+%same order as .ctg file. \makelongcitationlist enters the citations in the
+%in the document in the same order as in the file. It numbers with a counter
+%and indicates if there is a difference between citetag and counter.
+
+\newif\ifctglist  % so dont have to check if undefined
+\newtoks\citetagfilename  \citetagfilename = {\jobname.ctg} %compatible Ugh!
+\newtoks\inputciteformfiles 
+       \inputciteformfiles = {\inputwithcheck{\jobname.cfm}}
+\newtoks\inputcitetagfiles 
+   \inputcitetagfiles = {\inputwithcheck{\the\citetagfilename}}
+
+
+
+%\def\citetagfileclosedmessage{ << CITATION TAG FILE CLOSED >> }
+%\def\nocitetagformmessage{ NO CITATION FORM FOR THIS TAG}
+%            see english/french titles
+
+\def\c@losectg{
+             \ifctglist 
+               \immediate\write\ctg@file{\noexpand\lastcitetag{\the\citenum}}
+               \immediate\closeout\ctg@file
+               \global\ctglistfalse
+               \writeterm{\citetagfileclosedmessage}{}{}\relax
+             \fi}
+
+% outside so that the cfm list may be included in the document.
+\def\citeform#1#2{\expandafter
+                      \def\csname @#1form\endcsname{#2}}
+
+
+%cfm entries may be in any order
+\long\def\makecitationlist{\par
+           \begingroup 
+             \c@losectg
+             \def\citeform##1##2{\expandafter
+                      \def\csname @##1form\endcsname{##2}}
+             \def\tag##1##2{\count255 = ##2\relax
+                            \advance\count255 by -\i@nitcitenum
+                               \edef\citetagvalue{\the\count255}\relax  % locally redefine \tag
+                            \ifundefined{@##1form}\relax
+                              \writeterm{<<<\the\count255. \nocitetagformmessage: ##1}{}{}\relax
+                              \vskip 2ex
+                              \leftline{##2\  \nocitetagformmessage: ##1}
+                              \vskip 2ex
+                            \else
+                              \csname @##1form\endcsname
+                            \fi}
+             \the\inputciteformfiles
+             \the\inputcitetagfiles \par
+           \endgroup}
+
+%.cfm entries must be in the same order as the tags in the  .ctg file
+\newcount\c@fmcount %counter for citations
+\long\def\makelongcitationlist{\par
+            \begingroup
+               \c@losectg
+               \c@fmcount=0 \relax 
+               \def\citetagvalue{\the\c@fmcount}
+               \def\citeform##1##2{\advance\c@fmcount by 1 
+                                   \ifundefined{:@##1} 
+                                       \expandafter \xdef \csname :@##1\endcsname{-1} \fi
+                                   \count 255 = \csname :@##1\endcsname 
+                                   \advance\count 255 by -\i@nitcitenum 
+                                   \ifnum \the\count255 = \the\c@fmcount
+                                      \relax \else
+         \writeterm{<<< Cite tag error -- Tag ##1 -- Citation \the\c@fmcount >>>}{}{}
+                                     \fi
+                                   ##2}
+              \the\inputcitetagfiles 
+              \the\inputciteformfiles\par
+             \endgroup
+            }
+

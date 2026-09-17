@@ -1,0 +1,560 @@
+% POSTSCRIPT VERSION --- AFFECTS GRAPHICS AND OUTPUT ROUTINE 
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+% Version Aug. 1991
+% ---- TeX 3 version ----
+
+%   Those items that are modified for different styles are indicated in 
+%   each section. 
+
+
+\input plain_nh 
+
+% for TeX 3.+, hyphenation tables can be inserted in a format file only
+% once. This means that both plain.tex rather than an old plain.fmt file
+% must be used to create a new format file. plain_nh.tex is plain.tex with
+% No Hyphenation (NH). 
+
+% This is a cm font version ... now. 
+
+% COMMENT: INRSTeX has been designed to allow for considerable variation
+%   in the style of a document. This ranges from default spacing, fonts, 
+%   formats of section heads, and headers and footers. The changes for
+%   a style involves the changes of the defaults in "inrsdef.tex", document
+%   "am" fonts in "inrsfont.tex" or "cm" fonts in inrsfncm.tex. 
+%   The definitions of header and footer text is 
+%   generally found in the various "xxsty.tex" files. These are incomplete
+%   in the sense that only those changes to the defaults in "inrsdef.tex"
+%   are actually done. Two examples are given, \paperstyle in "papersty.tex"
+%   and \bookstyle in "booksty.tex". 
+%
+
+%   Those items that are modified for different styles are indicated in 
+%   each section. 
+
+\catcode`@= 11 % need to use some plain macros
+
+%======= Additional active Characters ===========
+% ALL ACTIVE CHARACTERS MUST BE DECLARED AND DEFINED AT THE VERY
+% BEGINNING OR THERE IS A DANGER OF INCORRECT TOKENIZATION 
+% ======== THESE ARE USED IN THE TABLE MACROS =========
+\message{<< Additional Active Characters >>}
+\catcode`\|= \active 
+\def|{\ifmmode \vert\else \char`\|\fi} % effectively undoes activeness
+\def\q@m{\string"}
+\catcode`\"=\active \def"{\writeterm{<<< use `` or '' instead of \q@m >>>}{
+                         }{}\char`\"}
+%=== these are redefined inside the table macros =====
+
+
+% ========= INRSTeX Utilities =========
+% These are generally needed for good health. They include 
+%    Houskeeping Macros 
+%    Single/Multicolumn Page Eject and Insert Control 
+%    Miscellaneous Paragraph Shape Macros 
+%    Year/Month/Day 
+%    New Boxit 
+%    Number Format Conversion Forms 
+
+
+%**************************
+\input inrsutil.tex
+%**************************
+
+
+% ======== Extended Character Set(s) for Special Terminals =======
+% The proper catcodes for the extended characters need to go in before the
+% patterns are loaded. 
+
+% *************************
+   \ifundefined{charsubdef} 
+           \message{ << Loading Extended Character Set -- TeX 3.+ >>}
+            \input extdef3
+          \else
+            \message{ << Loading Extended Character Set -- MLTeX 3.+ >>} 
+             \input extdef
+           \fi
+           \message { << Setting Parameters for TeX 3.+ >> }
+           \emergencystretch =10pt 
+           \lefthyphenmin=2
+           \righthyphenmin=3
+           \newcount\dischyph  % to effectively disable dischyph in mltex 
+% *************************
+
+
+
+
+% ======= Input Hyphenation patterns =======
+% hyphenation for all languages are in the same file or accessed from it
+% TeX 3 will not allow \patterns to be reopened once it has been closed.
+
+         \input masthyph 
+
+
+% ====== Multiple Language Support ========
+% This may be done without bilingual TeX but is better done with it. 
+% These macros define an \englishversion and a \versionfrancaise. 
+% INRSTeX messages come in either English or French depending 
+% upon the value of \language. If \language is not yet defined, a 
+% \newcount is used to define it. 
+% THIS MUST NOT BE CALLED BEFORE THE HYPHENATION PATTERNS ARE LOADED. 
+
+%**************************
+\input multlang.tex
+%**************************
+
+
+% ======  Basic Line Spacing =========
+% The basic line spacing in a font is assumed to be scaled according to the 
+% ex height of the font. This is perhaps not the aesthetically best but
+% does allow consistent line spacing commands. The four basic commands are
+% \normalbaselines (redefined from plain), 
+% \normalbaselineskipsize, \spacing,  and \setstrut.
+
+% ------- Defaults ... inrsdef.tex -----
+% \def\normalbaselineskipsize{2.8ex \normalbaselineskipglue}
+% \def\normalbaselineskipglue{plus .07ex minus .07ex}
+% \def\normallineskipform{\lineskip 1pt \lineskiplimit 0pt}
+
+
+%**************************
+\input linespac.tex
+%**************************
+
+
+
+% ===== additional FONTS ==========
+% The new fonts and font families are read in from the file "inrsfont.tex"
+% These are read in by initex.
+% This font list should define the font families. At the very least it must
+% define fonts for the logical font names used in INRSTEX. These are
+  %\notefont {usually \eighttt} ... foor version and margin notes.
+ %\footerfont 
+ %\headerfont
+ %\footnotefont {should be a font family}
+  %\smallerfont  {should be a font family}
+  %\cheadfont 
+  %\sheadfont
+  %\ssheadfont
+  %\sssheadfont
+  %\dsssheadfont
+  %\captionnumfont
+  %\captiontextfont
+  %\eqnumfont
+  %\bigfont 
+  %\biggfont 
+  %\bigggfont 
+  %\titlefont 
+
+% The various \..head.. fonts are used in the \shead etc 
+% The \footnotefont is used in footnotes and is a family 
+% \titlefont is used in \title
+% The other fonts are for convenience. 
+
+% INRSTeX has the notion of a Document font. This allows for local changes in
+% the font without messing up the sizes of the sectionheads, headers, footers
+% etc. A font change inside a \documentstyle will cause the document font 
+% to change.
+
+%**************************
+%\input inrsfont.tex %am fonts 
+\input inrsfncm.tex % cm fonts 
+%**************************
+
+
+
+% ====== Marginnotes, Final and Draft Version =======
+% INRSTeX's output routine supports two main versions of a document, a 
+% "final version" and a "draft version". The "draft version" collects \refs
+% and \cites in a margin box at the right of a page. In addition it puts on
+% black marks for overfull lines and "Draft Version: <date> " at the
+% bottom of the page.  
+
+% If plain.tex output is to be used, "margform.tex" by "margform.pla"
+% This will destroy all indications of \finalversion \draftversion
+
+%**************************
+\input margform.tex
+%**************************
+
+
+
+
+% =========== Document Styles, Page Numbering and Page Sizes ======
+% These are the macros for setting page sizes and the various flags 
+% the header/footer styles. This is only used with "inrsout.tex"
+
+% ---- Defaults  ... set in  xxxsty.tex or inrsdef.tex  -------
+%    Examples from "booksty.tex"
+%       \vheadersize 
+%       \vfootersize 
+%       \headertext
+%       \specialheadertext
+%       \footertext  
+%       \specialfootertext
+%       \hpapersize 
+%       \vpapersize 
+%       \vouterpagesize 
+%       \houterpagesize 
+%       \topmargin 
+%       \leftmargin
+
+
+
+%**************************
+\input pagsty.tex
+%**************************
+
+
+
+
+%======== Multicolumn format ===========
+% These macros invoke multicolumnformat including balancing columns. 
+
+% ---- Defaults ... set in inrsdef.tex 
+%    \numcolumns 
+%    \firstcolumnoffset 
+%    \intercolumnsep 
+
+
+%**************************
+\input multicol.tex
+%**************************
+
+
+
+% ======== INRSTeX Single/Multi Column Output Routine ========
+% This is the entire output routine for INRSTeX. It does both single and
+% Multicolumn since there is a rather large repetition to do otherwise. 
+
+%**************************
+\input out_ps.tex
+%**************************
+
+
+
+%========= Autonumbering, Tagging and Autoreferencing =========
+
+% These macros give the facility to symbolically refer to sections, equations,
+% tables, and references and to automatically number them.
+% Autonumber, automatically numbers sections, equations, ....
+% Autoreferencing, causes \ref{tag} to drop the tag-value in the text.
+% Autonumber and autoreference both true will cause tags to be generated. 
+% Although it is possible to have only autonumbering, referring to 
+% sections or other parts is quite difficult without referencing 
+
+% ---- Defaults ... set in inrsdef.tex -----
+%     \autoreferencetrue
+%     \autonumberfalse  ... default when created
+%     \def\Prerefform{}  \def\Postrefform  ... in auto 
+
+%**************************
+\input auto.tex
+%**************************
+
+
+% ============ Tag Generation ==========
+% These are the macros that generate the actual tags. They are used in 
+% automatic equation numbering, section heads and any \auto...num{tag} form. 
+
+% ------ Defaults .... set in inrsdef.tex or xxxsty.tex ---
+%       \undeftagmessage  ... set in "english.tex" or "francais.tex"
+
+
+%**************************
+\input tag.tex
+%**************************
+
+
+% ========== Equation Tags ===========
+% Since equation numbering plays a big part in scientific documentation
+% a special set of tag generation forms were produced for this case. 
+
+% ------ Defaults .... set in inrsfont.tex -----
+%    \eqnumfont 
+
+
+%**************************
+\input eqtag.tex
+%**************************
+
+
+
+
+%   ===== Citation generation ==========
+% \cite is used with a journal/paper reference.
+% The forms allow both random input order of cite forms or
+% fixed order. At the moment it supports only IEEE form, ie 
+% a list in the order of therir occurrence in a paper. 
+% A data base system using a mailbox would be much better. 
+
+
+
+%**************************
+\input cite.tex
+%**************************
+
+
+
+% ========== Section, Chapter Headings  ===========
+% These macros have several parts,
+%       -- Counter allocation and numbering styles for autonumber
+%       -- The format of the heading. 
+%       -- The writing of a list file for automatic table of contents.
+%       -- The referencing in the text ... ie reference number styles.
+
+% -------- Defaults ... inrsdef.tex, inrsfont.tex, xxxsty.tex ----
+%   
+%   \chnum=0   \def\chnumform{\the\chnum}  ... inrsdef.tex
+%   \shnum=0   \def\shnumform{\the\shnum}  ... inrsdef.tex
+%   \sshnum=0   \def\sshnumform{\the\sshnum}  ... inrsdef.tex
+%   \ssshnum=0 \def\ssshnumform{\the\ssshnum}  ... inrsdef.tex
+%   \def\chtagrefformat{\chnumform}  ... secthead.tex 
+%   \def\chtagreplaceformat{\Chapter \chtagrefformat}  .. secthead.tex
+%      \prsheadskip= 6ex plus 2ex minus 2ex  ... inrsdef.tex 
+%      \posheadskip= 2ex   ... inrsdef.tex 
+%      \prssheadskip= 5ex plus 1.8ex minus 1.8ex  ... inrsdef.tex 
+%      \possheadskip= 2ex  ... inrsdef.tex 
+%      \prsssheadskip= 3ex  plus 1ex minus 1ex  ... inrsdef.tex 
+%      \posssheadskip= 2ex  ... inrsdef.tex 
+%      \prdsssheadskip= 3ex  plus 1ex minus 1ex  ... inrsdef.tex 
+%      \podsssheadskip= 2ex  ... inrsdef.tex 
+%
+%      \gensheadformat#1#2#3#4 ... secthead.tex ... for major format
+%                                                      surgery.
+%
+%      \nochaptertrue  ... inrsdef.tex
+%      \def\Chapter ... english.tex or francais.tex 
+%      \cheadformat#1#2  ... secthead.tex 
+%      \def\chapterstartform{} ... secthead.tex and xxxsty.tex
+
+
+%**************************
+\input secthead.tex
+%**************************
+
+
+%============ Preface/Prelude macros ===========
+% this is the first of the environment macros. The problem, among others is
+% that the headers, footers, pagenumbering, etc are different in preface of
+% the document than elsewhere. 
+
+% ---- Defaults ... prelhead.tex or xxxsty.tex 
+%      \preludeheadformat#1  ... prelhead.tex 
+
+%**************************
+\input prelhead.tex
+%**************************
+
+
+
+% =========== Appendices  ==============
+% Appendices are defined by using \shead invocations.
+% Appendices are assumed to be associated with chapters, if 
+% they exist  hence the first appendix in Chapter 2 is Appendix A.
+% These macros modify the numberforms of \shead to produce Apendices. 
+% The "appendix head" is an \shead with a different numberform. 
+
+% ------- Defaults ------
+%     \def\Appendix  ... english.tex or francais.tex 
+
+%**************************
+\input appendix.tex
+%**************************
+
+
+
+% ==========  List Files =========
+% General macros for making, open and closing "list' files. These are files
+% where the form output includes a page reference. They are named with a 
+% three letter extension ... eg ".fig"  ... to the \jobname form. 
+
+%**************************
+\input writfile.tex
+%**************************
+
+
+
+% ======== Table of Contents, Figures, and Tables -- Examples ======
+% The "list" file is written using \writelistfile and the \shtoc ...
+% are used to create the actual table of contents, figures, tables. 
+% Extensions to other forms should be obvious. 
+
+% ----- Defaults ----
+%      \righttocindent  ... inrsdef.tex 
+%      \tocfill  ... tocform.tex  ... dot form for toc list.
+%      tocfonts ... tocform.tex ... in actual \figtoc etc
+
+%**************************
+\input tocform.tex
+%**************************
+
+
+
+
+
+%======== List macros ==========
+% there is only one kind of list in this system, namely on that is
+% right justified in the particular box that the list appears
+% extensions may be made to include a center
+
+% -----  Defaults  ... inrsdef.tex -----
+%    \prlistskip= 2ex plus 3pt minus 2pt 
+%    \prsublistskip = 1ex plus 2pt minus 1pt
+%    \prsubsublistskip = .5ex plus 1pt minus 1pt
+%    \polistskip= 2ex plus 1pt minus 1pt
+%    \posublistskip= 1ex plus 1pt minus 1pt
+%    \posubsublistskip= .5ex plus 1pt minus 1pt
+
+%    \listitemskip = 2ex plus 1pt minus 1pt
+%    \sublistitemskip =1ex plus .75pt minus .75pt
+%    \subsublistitemskip = .5ex plus .5pt minus .5pt
+
+%    \listindent = 3em
+%    \sublistindent = 6em
+%    \subsublistindent = 9em
+%    \listitemmarksize = 1.5em
+
+%**************************
+\input lists.tex
+%**************************
+
+
+
+%=========== Footnotes ---- similar to that in the  texbook ======
+
+% ------ Defaults --------
+%      \footnotefont  ... family in inrsfont.tex 
+%      \skip\footins  ... footnote.tex 
+%      \count\footins ... plain.tex 
+%      \dimen\footins ... footnote.tex 
+%      \footnoterule  ... inrsout.tex 
+
+
+%**************************
+\input footnote.tex
+%**************************
+
+
+
+%========= ABSTRACT/TITLE  =======
+% These generate a centered abstract in the \smallerfont of a family 
+% and define the \title macro 
+
+% ------ Defaults ------
+%     \absindent ... inrsdef.tex  abstract indentation
+%     \ABSTRACT  ... english.tex or francais.tex 
+%     \titlemessage ... english.tex of francais.tex 
+%     \titlefont ... inrsfont.tex 
+%     \titlefraction ... inrsdef.tex 
+%     \titlespacing  ... inrsdef.tex 
+
+%**************************
+\input abstract.tex
+%**************************
+
+
+% ========== Captioned Table/Figure Forms and Inserts =========
+% Insert Forms 
+
+%   ----- Defaults -----
+%    \captiontextfraction  ... inrsdef.tex 
+%    \captionskip  ... inrsdef.tex 
+%    \topcaptiontrue or \topcaptionfalse  ... inrsdef.tex 
+%    \figurelabel  or \figlabel  ... english.tex or francais.tex 
+%    \tablelabel   or \tbllabel  ... english.tex or francais.tex 
+%    \captionnumfont ... inrsfont.tex
+%    \captiontitlefont ... inrsfont.tex
+%    \captionbodyfont ... inrsfont.tex
+%    \captionbodyon <off> ... inrsdef.tex 
+%    \silentfigurefalse 
+
+%**************************
+\input genins.tex
+%**************************
+
+
+% ============  Table Making Forms ============
+
+%**************************
+\input tables.tex
+%**************************
+
+
+
+%========= Verbatim or NoFill Style ========
+% The verbatim form is not part of the INRSTeX format file. 
+% The  following brings in the verbatim macros and redefines \beginttverbatim
+
+\def\beginttverbatim{\input verbatim\relax}
+
+
+%========== Special styles ===============
+%----- Special Document Styles/Forms  -------
+% INRSTeX learns of the existence of special document styles or forms
+% from specform.tex
+
+%**************************
+\input specform.tex
+%**************************
+
+
+
+%======== Multiple part documents -- subdocuments =======
+% documents may be broken down to the chapter or section level 
+
+%**************************
+\input subdoc.tex
+%**************************
+
+
+
+
+
+% ============ TeXGraphics Support =============
+% TeXGraphics uses \specials, assumes POSTSCRIPT and assumes a driver
+% equivalent to the INRS modified version of Beebe's dvialw. 
+
+%**************************
+\input graph_ps.tex
+%**************************
+
+
+
+
+
+
+% ======== Bugs/Modifications to Plain =====
+
+%**************************
+\input plainmod.tex
+%**************************
+
+
+
+% ====== INRSTeX defaults .... in addition to Plain ....
+%**************************
+\input inrsdef.tex
+%**************************
+
+
+%  =========== modifications for MSDOS usage ============
+
+% for Unix systems replace the \input writdos by 
+
+ \message{Input Unix write.file form} 
+ \input writunix
+
+% invoke inrstex with the shell script 
+%  inrsunix.sh ... appropriately modified 
+
+
+%\message{Input DOS write/file form}
+
+%\input writdos
+
+
+\catcode`@=12 % puts at  back to a non letter
+
+\def\fmtname{INRSTeX-Bilingual-PostScript}\def\fmtversion{3.1} 
+

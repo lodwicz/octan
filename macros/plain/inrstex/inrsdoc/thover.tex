@@ -1,0 +1,66 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{over}
+\def\cqu{\cquote{There is no one on earth who does what is right
+all the time and never makes a mistake.}{Ecclesiastes Chap. 7, Verse 20}}
+
+\chapterhead{over}{OVERFULL BOXES\cr and\cr OTHER DISASTERS}
+Sometimes \tex\ and \intex\ have trouble making a {\it best} decision that is
+good enough. The result of this is a message that there is an {\it overfull}
+or {\it underfull} box. Chapter \ref{parcont} suggests increasing the
+value of |\tolerance| and |\pretolerance| so that \tex\ will accept worse
+looking lines. This is fine except that the result is less than beautiful. 
+
+\tex\ indicates an overfull box by putting a big ugly black  line at the end.
+This book has a few overfull boxes to demonstrate how they look. This chapter
+suggests ways of both avoiding and hiding overfull boxes.
+
+\shead{overcomform}{Command Forms}
+\bshortcomlist
+\pri\@|\hfuzz [=] <dimen>|&\tex\ tells of overfull horizontal boxes only if
+they are overfull by more than |<dimen>|. {\it Plain} default is 0.1pt. \cr
+\pri\@|\overfullrule [=] <dimen>|&\tex\ places a rule or line of width
+|<dimen>| at the end of an overfull box and of the same height as the box.\cr
+\pri\@|\vfuzz [=] <dimen>|&\tex\ tells of overfull vertical boxes only if
+they are overfull by more than |<dimen>|. {\it Plain} default is 0.1pt. \cr
+\eshortcomlist
+
+\shead{action}{Overfull Boxes --- Action}
+The recommended way to handle an overfull box is to rewrite the passage that
+is causing the offence. This will generally work quite well if the box is an
+isolated event. It has the feature of not destroying the beauty of the
+document.
+
+However, if you want to hear about overfull boxes but don't want the black
+marks let |\overfullrule = 0pt|. If you don't want to hear about them,
+increase the size of |\hfuzz| and |\vfuzz|.
+|\finalversion| increases |\hfuzz| and obliterates the black marks. 
+
+Overfull |vboxes| are quite rare, as are underfull |hboxes|. If there is an
+underfull |hbox|, check it very carefully. The most likely error is not
+putting in glue to fill in the box. An example would be using |\line|
+instead of |\centerline|. 
+
+Underfull |vboxes| are not as rare. They result when the |vboxes| 
+on the page are quite large and the glue between them is not very stretchy.
+Pages with figures, tables or multicolumn format are the most likely
+candidates. The only solution may be a rearrangement of material in the
+document, forced filling of the bottom of the page. \tex\ provides a
+\@|\raggedbottom| command that puts glue at the bottom of a short page to
+prevent it from being stretched out. Whether this is an adequate solution to
+the problem is a matter of aesthetic debate.
+In general, information about over and under full boxes is desirable. 
+
+\begingroup \bf
+When \tex\ indicates that there is an underfull box, it stretches, unless
+|\raggedbottom| is active,  all stretchable glue. This may result in pages
+that look strange. Only glue between paragraphs, before and after display
+mathematics, between all list items, and before section \dots\ heads is
+stretchable. Interline glue is not stretchable either in {\it Plain\/} or
+\intex. In extreme cases (badness greater 10000) the page will have very
+disturbing spacing indeed. 
+\par\endgroup
+
+
+\ejectpage
+\done

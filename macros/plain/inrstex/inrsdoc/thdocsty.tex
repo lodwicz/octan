@@ -1,0 +1,66 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{docsty}
+
+\def\cqu{}
+
+\chapterhead{docsty}{DOCUMENT\cr STYLES}
+\intex\ supplies a number of general and specialized document styles. It is
+also easy to create others within the basic structure given. 
+The two basic styles supported by \intex\ is the (default) |\paperstyle| and
+the |\bookstyle| of which this is an example. Different styles are usually
+distinguished by different header/footer conventions, appendix placement and
+numbering, and perhaps default fonts. 
+
+In addition to the page changes, a few special commands exist that are
+introduced  in the various styles. Since the |\paperstyle| the \intex\
+default, all the |\title|, and abstract commands defined for that are
+available, and will work, for {\bf all} styles.
+
+\shead{paperstyle}{Paperstyle}
+|\paperstyle| is the default style for \intex\. There will be no messages
+indicating that you are using this style. This style is designed for 8.5in 
+by 11in paper, |\tenpoint| fonts, no header, and a footer that consists of
+the page number centered at the bottom in this style ``- 6 -'', where 6 would
+have been the page number. In addition to the normal features mentioned
+previously, there is a |\title| command and a 
+|\beginabstract...\endabstract| pair. 
+
+The description of the commands are:
+
+\beginblockmode
+\ext\@|\beginabstract...\endabstract|
+\nbr
+This command should enclose the entire abstract. The abstract font is the
+|\smaller| font and both sides are indented. The text is automatically
+prefaced by ``Abstract:'' in English and ``Sommaire:'' in French. 
+
+\mbr
+\ext\@|\title{<first row>\cr ... <last row>}|
+\nbr
+If the total length of the title is more than one line it is automatically
+broken into multiple lines with each line centered. However, if |\cr| are
+included as part of the title text, the lines will be broken there and
+centered. The title font, called |\titlefont| is  |\bigfont|.
+\endblockmode
+
+\shead{inrsstyle}{INRS Report Style}
+This style is very similar to the basic |\paperstyle|. The only addition is a
+set of commands that create a cover. This style is called with either
+\@|\formatinrs| or \@|\inrsreportstyle|. The title, report date, author list,
+and report number are token lists. The actual cover is made with the command
+|\faitepagetitre|.  An example of complete cover page is
+\begintt
+\formatinrs
+\titrederapport = {INRS\TeX REFERENCE BOOK}
+\numeroderapport = {84-19}
+\datederapport = {juin 1984}
+\auteursderapport = {Michael J. Ferguson}
+\faitepagetitre
+\ejectpage
+\done
+\endtt
+
+\ejectpage
+
+\done

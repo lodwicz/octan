@@ -1,0 +1,379 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{auto}
+\marginnotestrue
+
+\def\cqu{\cquote{Words are sensible signs necessary for
+understanding.}{Concerning Human Understanding, Book III, Chap. II, 
+John~Locke (1632-1704)}}
+
+
+\chapterhead{auto}{AUTONUMBERING\cr REFERENCING\cr and TAGGING}
+\intex\ provides facilities for automatic numbering and referencing of
+chapters, sections, equations, figures, and tables. 
+Both the number of a chapter, equation, \dots\ and its page may be
+referenced. 
+In addition there are
+general features for defining your own special numbers and tags. For
+instance, it is possible to obtain a new number for, say problem exercises,
+by just calling |\newautonum{ex}|. This will create all the commands
+necessary for referencing, resetting, and autoincrementing these numbers.
+
+Chapters, sections, subsections, {\it etc}, are also autonumbered and can be
+referenced through tags. For instance this chapter has the tag |auto|. To
+insert the value of the tag in the text, it is only necessary to type
+|\ref{auto}|, which in this case gives \ref{auto} without any extra braces
+brackets or periods.  
+Details of creating tags for chapters and sections are discussed in 
+Chapter~\ref{shead} starting on page \pref{shead}.
+
+\intex\ also supplies facilities for automatically numbering and creating
+paper or journal citations (sometimes called confusingly, at least here, {\it
+references}). These are discussed in Chapter \ref{cite}, page \pref{cite}. 
+The facilities for creating lists of tables or figures are found in Chapter
+\ref{toc} starting on page \pref{toc}\footnote{\dagger}{One must be careful
+not to overdo an easily used facility.}. 
+
+\shead{autocomlist}{Command List}
+\begintwocolumn
+\ext|\aneq|
+\ext|\aneqtag|
+\ext|\autonumberingon|
+\ext|\autonumberingoff|
+\ext|\autoreferencingon|
+\ext|\autoreferencingoff|
+\ext\@|\autoeqnum|
+\ext\@|\autotblnum|
+\ext\@|\autofignum|
+\ext|\auto<type>num|
+\ext|\inputtagfiles|
+\ext|\newautonum|
+\ext|\newtag|
+\ext|\numberbychapter|
+\ext|\numberbysection|
+\ext|\Prerefform|
+\ext|\Postrefform|
+\ext|\pageref \pref|
+\ext|\pagequietref \pqref|
+\ext|\pagetagsoff|
+\ext|\pagetagson|
+\ext|\quietref \qref|
+\ext|\ref|
+\ext|\silent|
+\ext|\specialnumberscontinuous|
+\ext\@|\<type>tagrefformat|
+\ext\@|\<type>num|
+\ext\@|\<type>tagreplaceformat|
+\ext\@|\<type>numform|
+\endthreecolumn
+
+\shead{tagcon}{Tagging Conventions}
+Such items as section heads, equations, figures, and tables may be given
+symbolic ``tags'' so that references to them will be correct even if there
+are deletions, insertions, or shufflings. ``Normal'' tags refer to the
+section, equation, or figure numbers while ``page'' tags refer to the page
+where the item occurred. Page tags are turned on with the \@|\pagetagson|
+command and turned off with \@|\pagetagsoff|. The default is |\pagetagsoff|. 
+
+The tagging system within \intex\ is designed to work best when the
+autonumbering  features are on. 
+It is designed so that both forward and
+backward references are possible. This is done by saving the tags in a file
+while \tex\ is processing. The next time the document is processed, the use
+of the command |\autonumberingon| or 
+|\autoreferencingon| will bring in the latest version of the tag
+file. As tags are generated, the new definitions and values replace the old
+ones. When there is a reference to a tag that has not
+yet been (newly) defined, the old value is used. To guarantee that the tag
+references are correct, the document should be processed twice. This, of
+course is only necessary on the ``final'' version.
+
+
+All tags, whether they are for chapters, sections, equations, citations,
+or specials
+{\bf must be unique within the entire document}. This allows for the value of
+a tag, which is usually a number, may be referred to by |\ref{<tag>}| 
+or |\quietref{<tag>}| and the page number where it occurred by
+|\pref{<tag>}| or |\pqref{<tag>}|, no
+matter the type being tagged. The quiet forms of the refs do not create
+margin notes and do not check to see if a tag actually exists. Thus both
+|\qref{<tag>}| and |\pqref{<tag>}| will give an error 
+if |<tag>| does not exist. 
+The quiet forms {\bf must} be used inside  section heads and are recommended
+whenever the ref is passed as a parameter to som other command. 
+The tag value does not have
+any additional brackets or braces around it. For instance, if an equation was
+given a tag of |theq|, and that was eventually given the value of 2.11 where
+the first number is the section or chapter and the second is the equation
+number, then |\ref{theq}| would insert 2.11 into the text. To obtain ``Eq.
+(2.11)'' in the text it is necessary to type |``Eq. (\ref{theq})''|, the 
+(\dots) being put in explicitly. 
+
+In almost all instances, the actual tag is generated automatically by the
+autonumbering forms. However, the |\newtag{<tag>}{<tagvalue>}| command will
+create a tag with the name |<tag>| and the value |<tagvalue>| for |\ref| and
+the current page number for |\pref|. 
+
+Sometimes it is necessary to create the tag 
+{\it silently, ie} without any trace in the text. Although |\newtag| does not insert
+into the text, |\auto...num| does. The commands
+ \@|{\silenttrue \auto...num{<tag>}}| will cause the
+|\...num| to increment but nothing will be placed in the  text. T
+his is preferred
+to |\silent{<text>}|.
+Note that |{\silenttrue <text>}| will normally put the |<text>| in the
+document. 
+
+\shead{refformats}{Tag Insertion Formats}
+When a new tag and auto number is created, there are a number of reference
+forms for that tag that are also created. These are 
+\begintt 
+\<type>tagrefformat
+\<type>tagreplaceformat
+\<type>numform 
+\endtt
+The first governs the format of the initial replacement of the |<tag>| when
+it created. The default in |\newautonum{<type>}| is to make it the same as 
+|\<type>tagrefformat|. The second,|\<type>tagrefformat| is the format for inserting
+the tag value when it is actually referred to in the text.
+The third |\<type>numform| is set initially equal to
+|\the\<type>num|, the value of the counter corresponding to |<type>|. This
+may be modified if something other than simple arabic numerals are wanted.
+|\newautonum{<type>}| defines 
+|\<type>tagrefformat| to be equivalent to 
+``|\Prerefform  \<type>numform  \Postrefform|''. 
+The commands |\Prerefform| and |\Postrefform|
+are defined by |\numberbysection|, |\numberbychapter| and modified when
+inside Appendices. 
+
+\shead{validtag}{Valid Tag Forms}
+Any character except the following  ``|\ $ % & _ ^ { } "|  \vrt'' are
+valid as, and within tags. 
+
+\shead{numcon}{Numbering Conventions}
+There are basically two types of autonumbers in \intex, those that deal with
+chapters, sections, subsections, subsubsections, and appendices, and the {\it
+special} ones defined for equations, tables, figures, or any created
+especially for that document. 
+
+Associated with every autonumber is a {\it count} with the name |\<type>num|.
+For instance the count associated with equations is |\eqnum| and that with
+subsections is |\sshnum|. However, when the number is actually inserted
+into the text, it is not the raw number that is inserted, but rather some
+formatted version. The formatting appends to the basic count, either nothing,
+or the numbers corresponding the chapter or section where the number was
+first created. The actual formatting depends upon what type of numbering
+format is in force. 
+
+For instance, for a document with chapters, the ordinary convention is to
+number the specials as
+``|<chapter number>.<special number>|''. If
+the document has sections but no chapters, and if |\numberbysection| has been
+called, the format is ``|<section number>.<special number>|''. The default in
+\intex\ is neither of these but is continuous numbering. 
+This means that the
+specials have the form ``|<special number>|'' and are not reset, except in
+appendices, throughout the document. Continuous numbering of specials is
+forced by |\specialnumberscontinuous|.
+
+Appendices are treated specially. The specials  are reset upon entering an
+appendix, and the reference formats always include the appendix number. The
+appendix number is usually an uppercase roman letter, although other formats
+are possible. 
+
+\shead{autocomforms}{Command Forms}
+\beginblockmode
+\ext\@|\aneq  \aneqtag{<tag>}|
+\nbr
+These commands are specials for use in display math mode to create equation
+numbers. They increment the equation counter |\eqnum|, and insert either a
+left or right hand equation number as appropriate, with the equation number
+{\bf surrounded} by brackets like (|<num>|). This is provided to reduce the
+amount of typing required. The |\aneqtag{<tag>}| also creates a |<tag>|
+possible reference. 
+
+\mbr
+\ext\@|\autonumberingon|
+\nbr
+This command turns automatic numbering on. It brings in the tag file with name
+|\jobname.tag|, if it exists, and opens a new version for writing the tags
+generated by that \tex\ processing run. The |\jobname| is the file name of
+the \tex\ file {\bf without} the normal |.tex| extension.
+No errors will result if this command is called several times.
+
+\mbr
+\ext\@|\autonumberingoff|
+\nbr
+This command turns  automatic numbering off and closes the tag file.
+\intex\ defaults to |\autonumberingoff|.
+
+\mbr
+\ext\@|\autoreferencingon|
+\nbr
+This command turns automatic referencing on. It brings in the tag file with name
+|\jobname.tag|, if it exists. A |\ref{<tag>}| will result in the 
+|<tagvalue>| being put in the text. A |\pref{<tag>}| will result in the page
+number where |<tag>| was last defined being put in the text. 
+No errors will result if this command is called several times.
+\intex\ defaults to referencing being active but does not automatically bring
+in a |.tag| file. 
+
+\mbr
+\ext\@|\autoreferencingingoff|
+\nbr
+This command turns  referencing off.
+Both |\ref{<tag>}| and |\pref{<tag>}| will result in the 
+|<tag>| being put in the text.  
+
+
+\mbr
+\ext\@|\auto<type>num{<tag>}|
+\nbr
+This is the basic command for incrementing the |<type>| number and creating a
+tag for that number with the tag name of |<tag>| and the tag value of the
+number in the correct format given the numbering form in force. \intex\
+defines three basic types, |eq| for equations, |fig|, for figures, and |tbl|
+for tables. The tag is written to the |.tag| file.
+
+\mbr
+\ext\@|\inputtagfiles [=] {<input command><file name> ...}|
+\nbr
+In some cases it may be useful to bring in a file or list of files
+of tags other than those in
+|\jobname.tag|. |\inputtagfiles| is a |<token list>| of commands of the type
+given. 
+For instance the master file for this book was called |th.tex|
+while the file for this chapter was called |thauto.tex|. If
+|\autonumberingon| is called when \tex ing this chapter by itself, the tag
+file brought in will have the name |thauto.tag|. To use the |th.tag| file it
+is only necessary to put 
+\begintt
+\inputtagfiles  = {\inputwithcheck{th.tag} } in the chapter file. 
+\endtt
+
+
+\mbr
+\ext\@|\newautonum{<type>}|
+\nbr
+This command creates all the necessary commands for using and referring to
+the autonumber of |<type>|. The |<type>|s defined by \intex\ are |eq|, |fig|,
+and |tbl|, corresponding to equations, figures, and tables respectively. It
+is recommended, but not required that |<type>| be restricted to 3 or fewer
+characters. This allows for a consistent use of |<type>| as the extension of
+list file used for eventually creating a table of items for the table of
+contents part of a document. 
+For instance, the equation numbering was created with |\newautonum{eq}|. This
+created the counter |\eqnum|, and the
+commands |\eqnumform|, |\eqtagreplaceformat|, and |\eqtagrefformat|. Any of
+these can be changes at will. However, care must be taken if consistent
+numbering formats is to be maintained. 
+
+\mbr
+\ext\@|\newtag{<tag>}{<tag value>}|
+
+\ext\@|\newttag{<tag>}{<tag value>}|
+
+\ext\@|\newptag{<tag>}|
+\nbr
+This creates a (normal) tag with reference name |<tag>| and value 
+|<tag value>| and a page tag with the reference name|<tag>| and the current
+page value. These
+tags are written out to the |.tag| file if it is open. Page tags will get
+lost if they are produced inside a box that is never inserted in the text.
+This occurs for {\bf all} text inside a |\silent{<text>}|.
+|\newttag{<tag>}{<tag value>}| creates and writes a normal tag while 
+|\newptag{<tag>}| creates and writes a page tag. 
+
+\mbr
+\ext\@|\numberbychapter|
+\nbr
+This command will cause {\it specials} to be reset at the beginning of each
+new {\bf chapter}, and to append the {\bf chapter} number to any tag reference and to the
+original tag replacement.
+
+\mbr
+\ext\@|\numberbysection|
+\nbr
+This command will cause {\it specials} to be reset at the beginning of each
+new {\bf section}, and to append the {\bf section} number to any tag reference and to the
+original tag replacement.
+
+
+\mbr
+\ext\@|\pagequietref{<tag>} \pqref{<tag>}|
+\nbr
+This is a putting the page number in the text that corresponds to any
+|<tag>| 
+that has been previously
+defined. It does not attempt to create a margin note nor does it
+check to see if the |<tag>| is valid. This allows the 
+reference to be used in such places as section heads, titles, captionboxes. 
+In fact it {\bf must} be used in {\bf any}  place where the surrounding text is
+written to a special file or the terminal. 
+Page references {\bf are always from the previous version.}
+
+
+\mbr
+\ext\@|\pageref{<tag>}  \pref{<tag>}|
+\nbr
+This is the basic command for inserting the 
+page number corresponding to any |<tag>| that has been previously
+defined. Page references {\bf are always from the previous version.}
+
+\mbr
+\ext\@|\pagetagson \pagetagsoff|
+\nbr 
+These commands turn page tags on and off respectively. The default is off. 
+It is important to wait until the page containing the item is actually output
+before turning off page tags. The page tags are actually generated when the
+page is output \dots\ not before. 
+
+
+\mbr
+\ext\@|\quietref{<tag>} \qref{<tag>}|
+\nbr
+This is a putting the |<tagvalue>| in the text that corresponds to any
+|<tag>| 
+that has been previously
+defined. It does not attempt to create a margin note nor does it
+check to see if the |<tag>| is valid. This allows the 
+reference to be used in such places as section heads, titles, captionboxes. 
+In fact it {\bf must} be used in {\bf any}  place where the surrounding text is
+written to a special file or the terminal. 
+
+
+
+\mbr
+\ext\@|\ref{<tag>}|
+\nbr
+This is the basic command for inserting the 
+|<tagvalue>| for any |<tag>| that has been previously
+defined. 
+
+
+\mbr
+\ext\@|\silent{<text>}|
+\nbr
+This command expands the |<text>| inside a |vbox|, but without ever having it
+enter the document. This is a way to call out a |\figureinsert| in order to
+create the normal tags and list files without it actually appearing in the text.
+{\bf Page tags will not be created in this case.} 
+Note that tags defined inside a |\silent| {\it may} not appear in the 
+margin. The actual mechanism used is 
+|\setbox0 = \vbox{<text>}|. See Chapter~\ref{basbox} for more details on
+|box| commands.
+
+\mbr
+\ext\@|\specialnumberscontinuous|
+\nbr
+This command will prevent the {\it special} numbers from being reset at any
+point in the document, except appendices. A reference to a {\it special} number
+tag will result in the value of the appropriate counter with no section or
+chapter numbers added. {\bf All special numbers are treated the same way.}
+
+
+\endblockmode
+
+\ejectpage
+\marginnotesfalse
+\done

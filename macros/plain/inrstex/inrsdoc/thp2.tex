@@ -1,0 +1,420 @@
+
+
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{preface}
+%\inputtocfiles = {\checklistopen{toc}\inputwithcheck{masth.toc}}
+%\catcode`\@=11 \s@ubdocumentfalse \catcode`\@=12 
+\tenpoint
+\romanpagenumber = 1
+\openlistfile{toc}
+\opencitationtagfile
+\beginprelude
+\preludehead{Preface} \specialpagestyle
+This volume is a reference manual for \intex\ and \TeX82. It should not be considered a
+substitute for the \texbook. Indeed, when there is a conflict between the two
+it should be assumed that the \texbook\ is correct. This author expresses an
+immense debt of gratitude to 
+Donald Knuth, the Grand \TeX Wizard, originator of \TeX, and the
+author of the \texbook[\cite{[Knut84]}]. Indeed many of the macros that have been used for
+this book have been borrowed from those used for the production of the
+\texbook. 
+
+Any deficiencies in the aesthetics of the layout of this book lie with the
+author and not the \TeX\ that was used to produce it. \TeX\ is an exceedingly
+powerful system. Full exploitation of its capabilities will probably be
+limited to a few persons. However, it is possible, and will indeed happen,
+that there will be a number of systems based on \TeX\ that will be simple to
+use and aesthetically pleasing \dots\ at least in your local environment. 
+\intex\ is one of these. 
+
+This book is organized so that the information may be accessed in two ways.
+The main objective is to introduce the names and syntax of commands used
+in \TeX. \TeX\ is an {\it extensible language}. By this it is meant that it is
+possible, and indeed quite easy, to add commands of your own to the set
+supplied. The \texbook[\cite{[Knut84]}] discusses in 
+detail those that are primitives in the
+language and those that have been added in the basic package known as
+\plain. There are about 300 primitive and 600 more in \plain. This book
+introduces enhancements under the name of \intex. These constitute a document
+preparation package that make both an author's and secretary's life
+considerably easier. Several hundred more commands are added in \intex.
+
+
+However, these large numbers should not be considered too frightening. A very
+large number of the commands are for special symbols. In fact for most users,
+the most useful commands are the ones added
+to make the production of documents reasonably simple and automatic. However,
+{\it automatic} has its limitations. On the one hand there is the very real
+difference between people on what constitutes a beautiful layout, and on the
+other there is the problem of describing linguistically an algorithm or
+recipe for that individual beauty. 
+
+In fact beauty is usually compromised by expediency. The additional commands
+described for the various styles, books, reports, and letters attempt to
+balance the two. As much as possible is done automatically. There will be
+compromises that are not always appropriate. However, there is always a way,
+usually simple, to specifically modify a single item. Actions of this sort
+are only taken as a last resort. The problem is that subsequent changes in
+other parts may make the specific local change all wrong. It is probably a
+truism that there is never  a {\bf final} version of a document. 
+
+
+\begingroup
+\cquote{The best time for planning a book is while you are doing the
+dishes.}{Agatha Christie}
+
+\cquote{No man but a blockhead ever wrote except for 
+money.}{Boswell's ``Life~of~Johnson (1709-1784)'' [April~5,~1776]}
+
+
+
+
+\ejectpage
+\endgroup
+%\tracingall
+\begingroup
+\def\ftn{}%footnote problem
+\def\cr{ }%\cr print problem
+\let\twelvett=\tentt % ugh!
+\preludehead{Table of Contents} \specialpagestyle
+\inputtocfiles = { \inputwithcheck{masth.toc} }
+\maketoclist
+\endgroup
+\ejectpage
+\ifodd\pageno \vglue 0ptplus1fill
+              \pslide \intex// \centergraph{\refoffset h:.75 v:.75 
+                                  \btg \inrslogo h:0 v:0 sc:2 
+                                     \etg}// \fi
+\endprelude
+\chcode{Intro}
+\pagenumber=0
+
+\def\cqu{\let\folio=\relax 
+\cquote{Beauty in things exists in the mind which contemplates them.}{Essays
+on Tragedy, David~Hume (1711-1776)}
+}
+
+
+
+\chapterhead{Intro}{\tex\cr and\cr \intex}
+
+\tex\ is a typesetting 
+system\footnote{\dagger}{In fact \tex\ is a very versatile system providing
+a powerful language facility that can be used to create author aids
+for the production of documents. \intex\ is an example of an integrated
+version of such aids.}
+developed by Prof. Donald Knuth of Stanford
+University for the production of beautiful books. The intent was to
+automatically duplicate the format of the second edition of a
+text whose first edition was typeset, for the most part, manually. It has
+grown, and is becoming the basis of some very powerful document production
+systems.
+
+\tex\ is many things. It is first and foremost a language in which to tell a
+computer how to {\bf beautifully} typeset text --- all sorts of text. It allows for the use of
+symbols such as $\star$, that are not found on your normal typewriter to be
+produced by typing |\star| using letters that usually are. It goes beyond the
+simple single character and makes it possible to display a mathematics
+equation such as 
+$$
+\sum_{n=1}^k n^2 = {n(n+1)\over 2}
+$$
+in the middle of the page by just typing
+\begintt
+$$
+\sum_{n=1}^k n^2 = {n(n+1)\over 2}
+$$
+\endtt
+It produces better looking words by moving the ``a'' closer to the ``T'' in
+such words as ``Tag'' to compensate for the visual effect of the overhang of
+the top of the ``T''. It produces better looking paragraphs by absorbing the
+whole paragraph before attempting to break lines. This means that decisions
+near the top will not lead to disasters later on. It produces better looking
+pages by considering what is on the following page before attempting to break
+the present one. This prevents such visual disruptions as those 
+caused by single line paragraphs at the top or bottom of pages. 
+
+\tex\ is rapidly becoming the basis of document preparation systems,
+including \intex\  described in this book.
+Documents are made up of parts that are not usually
+thought of in terms of how they look. Parts such as sections, paragraphs,
+lists, footnotes, chapters, introductions or prefaces. \tex\ has very
+powerful facilities for creating systems for dealing with these parts and
+making decisions on how they should be displayed. These facilities really
+make up a language whose {\it primitive} parts are used to make more powerful
+parts. 
+
+\shead{TeXlevels}{The \tex\ language --- primitive, plain, and extended}
+
+As with most systems, the
+more complex parts are built from more primitive parts. {\it Primitives} in
+\tex\ supply the fundamental facilities for both typesetting and language
+extension. The first set of extensions are those in the {\it plain} package
+supplied with a {\it raw} \tex\ system. The definitive description of 
+the \tex\ {\it primitives}, and the associated extension {\it plain}, is in
+the \texbook\ of Donald Knuth. The \texbook\ shows how to use these commands
+and explores some of the implications. 
+
+The \texbook\ is aimed at all users of
+\tex\ --- the system builder and the end user. This book is aimed primarily
+at the end user and more especially the user of \intex. 
+It briefly discusses the basic text and page building
+philosophy on which \tex\ is based. 
+It gathers together most, but not all of the commands in the
+\texbook\ and displays their required syntax, and gives some uses. It does
+not explore them too deeply. Further examples will be found in the 
+{\bf \tex\ Example Book} that will be published as soon as it is compiled.
+
+In addition it describes \intex, a document preparation system that has been built on
+top of {\it plain}. At present, this includes styles for papers, reports, and
+books. In addition it aids in the preparation of documents by automatically
+generating, tables of contents, simple indexes, and numbering such
+as chapters, sections, equations, tables. Finally it allows for symbolic
+referencing of any of these parts. 
+
+\shead{editors}{\tex\ editors}
+Any text editor can be used to create a \tex\ document. Only those characters
+normally found on a keyboard are used and there are facilities in \tex\ to
+allow for those special keyboards and screen systems that can display
+different characters. For instance it might be that a French keyboard has the
+letter \'e on it and the screen can display it in that form. This can be
+encoded as single key and translated by \tex. Less capable keyboards would
+actually type a |\'e| to obtain the \'e.  
+
+Another feature that makes life easier for producing a document on a text
+editor is the ability to match a left |{| with a right |}|.
+\tex\ uses these extensively to {\it group} things together and sometimes can
+get upset in quite mysterious ways when they do not. 
+It is also quite useful to be able to edit several parts of the
+document at the same time. Newer editors allow this.
+
+A \tex\ editor does not really exist \dots\ for a number of reasons. 
+A major objective of such an editor  would be 
+as a means of catching (\tex) errors on
+input and to facilitate modifications of the file for better layout. An
+editor of that sort must know an awful lot, not only about \tex, but also
+your extended version. Another objective would be to allow coordinated views
+of the input file and the \tex printed output,
+so that the effect of both major and
+minor changes would be evident. This is conceivable, but still for the
+future. 
+
+It is possible to argue that an editor that ``showed you what you get'' is
+ideal for a document preparation and typesetting system. The difficulty with
+this argument is that there is no language that adequately encompasses the
+graphics on the screen with the place of, say a summation sign, $\sum$ in a
+mathematical equation. In some cases the semantics of the resulting document
+is varied by a change in the display format and in other cases it is not. 
+In some cases different semantic objects, such as an {\it IF} in a computer
+program and the {\it if } in a sentence are distinguished by font style, and
+sometimes not. At the document level, it is the semantics of the entity that
+is important. It may or may not show up in a format change.
+
+\shead{gentyp}{Generic Typesetting}
+The opposite extreme to the ``see what you get'' school is the giving of
+semantic tags to each entity in the document and deciding later how they will
+be displayed. This means that it is possible to change your mind about the
+way a, say {\it keyword}, will be displayed and change it consistently
+throughout the document. This approach appears to be possible in a
+constrained environment and has been successfully applied by
+DIGITAL[\cite{[Digi83]}] to the production of their manuals for the VAX11/780.
+\tex\ can be the basis of such a system too.
+
+\shead{intexintro}{\intex}
+\intex\ is 
+a system to aid in the preparation of documents in several languages using
+ordinary fonts. The system, excluding its graphics component, is usable
+with any \TeX\ system but is most useful, when using ordinary {\tt cm}
+fonts with an ML\TeX\ system. The graphics component will work with any
+reasonable PostScript printer and driver. The version at INRS/BNR uses a
+modified version of Nelson~Beebe's DVIALW on the VAX/VMS and the IBM~PC and
+uses Tom~Rokiki's DVIPS on the UNIX workstations. 
+The two languages actually used are French and English. The
+pieces, all relatively independent, are as follows:
+\beginlist
+\li $\bullet$ the \intex\ macro package kernel. This includes all the
+facilities needed for 
+\beginsublist
+\tightenlist 
+\li $\circ$ section and chapter heads,
+\li $\circ$ lists,
+\li $\circ$ {\bf easy} tables,
+\li $\circ$ {\it floating} figure and table insertions, 
+\li $\circ$ footnotes,
+\li $\circ$ automatic generation of table of contents, list of figures, and
+list of tables, 
+\li $\circ$ automatic numbering of equations, section heads, etc.,
+\li $\circ$ symbolic referencing of equations, sections, etc.,
+\li $\circ$ optional margin notes to aid in keeping track of symbolic
+references, 
+\li $\circ$ automatic generation of citation lists (IEEE style only)
+\li $\circ$ a {\it subdocument} feature for building large documents in
+pieces.
+\endsublist
+\li $\bullet$ additional packages for special forms. The modular form of the
+kernel allows for modifications of what is inside and out. At the present
+these include 
+\beginsublist
+\li $\circ$ a verbatim style using {\tt typewriter} fonts for such things as
+program listings,
+\li $\circ$ a several document styles including a |<<PAPER STYLE>>|, 
+|<<BOOK STYLE>>|, |<<REPORT STYLE>>|. Some of these are rather specialized.
+\li $\circ$ \TeX graph, a graphics system for drawing figures and inserting
+external figures. This uses the graphics primitives of  a PostScript
+printer. It is {\it inside} rather than outside the \TeX\ system.
+\li $\circ$ memo macros {\bf including} graphics for letterhead, 
+\li $\circ$ slide making {\bf including} graphics for letterhead, 
+\endsublist
+\li $\bullet$ templates for various styles. This makes their use as easy as
+filling in blanks. 
+\li $\bullet$ {\bf MLTeX} is an {\bf extension} to \TeX\ 3.+ that
+allows hyphenation of words with explicitly accented letters 
+words while using ordinary {\tt cm} fonts.
+\li $\bullet$ {\bf DVIALW}, a PostScript driver, written by Nelson~Beebe 
+has been modified by INRS to allow inline PostScript for \TeX Graph.
+There is also a version of \TeX Graph that will work with 
+Tom~Rokiki's {\bf DVIPS}. 
+\endlist
+\noindent
+\intex\ may be viewed from several perspectives. 
+\beginlist
+\li $\bullet$ At the user level, it is a
+set of procedures that augment the {\it plain} macros supplied with \TeX.
+These aid the author in building  a document by making shuffling of such
+things as sections, equations, figures, and tables sufficiently painless that
+they will be done. It helps the secretary/typist by making it easier to
+respond to changes. To work most effectively, the author, at the
+{\it pencil} input level, should be aware of the power of the system. 
+\li $\bullet$ At the document formatting level, parameters and features are
+available to modify various spacings, headers, footers, etc. 
+\li $\bullet$ At the document design level, the various internal formatting
+forms are available, {\bf independently} of the housekeeping functions for the
+automatic generation of section, equation, and figure numbers, or such things
+as the table of contents. 
+\endlist
+
+\shead{language}{English and French --- Together}
+\intex\   supports  both English and French document preparation,
+and is easily extendable to other languages . It does this through
+the generation of messages and various forms from within the \intex\ kernel
+and through the \mtex\ extension that allows for language dependent hyphenation
+of words with and without accents. An example of a kernel form variation is the
+change from ``Chapter'' to ``Chapitre'' when a |\chapterhead| is called in
+French rather than in English. |\englishversion| calls the English forms and
+|\versionfrancaise| the French forms. 
+
+
+\shead{scope}{Scope of Book}
+This book will introduce the first version of the document preparation
+system, to be called \intex, that is used at INRS/BNR. 
+It will describe virtually all of the symbols and
+commands that have been introduced in the \texbook\ with the exception of
+those used for symbol definitions and output routines. All of the accessible
+and changeable parameters will be listed and grouped according to function.
+
+Most chapters will begin with a list of commands that will be discussed in that
+chapter. Some discussion of where and how these will be used and what will be
+accomplished using them follows. Then there will be a list of the individual
+commands with their normal usage syntax. An index of these commands will be
+found at the end of the book.
+
+\ejectpage
+\chcode{descom}
+\def\cqu{\cquote{We ought to give the whole of our attention to
+the most insignificant and most easily mastered facts, and remain a long time
+in contemplation of them until we are accustomed to behold the truth clearly
+and distinctly}{Rules for the Direction of the Mind, Rule IX, 
+Ren\'e~Descartes (1596-1650)}}
+
+\chapterhead{descom}{\tex\ COMMANDS:\cr DESCRIPTION\cr FORM}
+In this book commands, command parameters, and characters that you might be
+expected to type in at a terminal are shown in {\tt typewriter} font. Thus a
+file that would typeset the  23$^{rd}$ psalm below
+\medskip
+\beginnarrowtext 1in
+\eightpoint
+\obeylines
+The Lord is my shepherd, I shall not want;
+He maketh me to lie down in green pastures,
+He leadth me beside the still waters;
+He restoreth my soul.
+\endnarrowtext
+\noindent
+is given  by 
+\begintt
+\beginnarrowtext 1in
+\eightpoint
+\obeylines
+The Lord is my shepherd, I shall not want;
+He maketh me to lie down in green pastures,
+He leadth me beside the still waters;
+He restoreth my soul.
+\endnarrowtext
+\bye
+\endtt
+
+The actual commands and their meaning will be described in later chapters. 
+However, it should be possible to guess what they do from their common sense
+meaning (noting, of course that a |\| starts a command). 
+When a listing is shown in this manner, it is assumed that each line
+is terminated by a |<return>|. The |<return>|, abbreviated by |<cr>| will
+only be explicitly shown when there might be some confusion.
+
+\shead{telltex}{Commands TO \tex\ and \intex }
+A command is the way to tell \tex\ to do something. \tex\ responds to both
+{\it verbose}, single character commands, and {\it one} implicit command.
+Verbose commands always start with an {\it escape character} which for most \tex\
+systems, and in this book, is the backslash |\|. The command name is
+a string of {\it letters} and the end of the command is shown by a
+non-letter, usually a blank, although a number such as 1, or a special
+character such as |{| or |,| will do.
+
+A typical 
+verbose command
+might be the |\beginnarrowtext| used above. It takes a parameter which is a
+{\it dimension} and is delimited by a final space. The form of the command
+description would be |\beginnarrowtext <indent dimen>|\]. 
+{\bf Note that the brackets |<| and |>| should not be typed.}
+If a parameter or entity in the command is optional it is enclosed in
+square brackets |[...]|.
+For example, the  $=$ 
+when setting the {\it outer page size} as in
+|\houterpagesize [=] <page size dimen>| is optional. Readability suggests
+that they should be included.
+{\it Verbose} commands ignore spaces between the command and the following
+text. 
+
+Single character commands are not preceded by a |\|, obviously, and exist
+primarily to improve readability and ease of typing. An example is |^| for
+superscripting or |~| to {\it tie} two words together. The major difference
+between these and the verbose commands is that spaces or blanks after them
+are {\bf not} ignored. 
+
+Finally, \tex\ has one implicit command, namely a blank line, which signifies
+the end of a paragraph and hence is equivalent to |\par|. Several blank lines
+are equivalent to only one. In addition, a line that has only a \tex\
+comment, for example
+\begintt
+%This line is a TeX comment because it starts with a %
+\endtt
+is a blank line. |\par| and blank lines are {\bf not} allowed in |\halign| or in
+display mathematics mode. 
+
+\shead{comdesc}{\tex\ Command Description}
+The general form used to describe \tex\ commands is 
+\begintt
+\<command> <parameters>
+\endtt
+If blank space is shown in the description, that space is optional and there
+can 
+be several of them. In fact the command can be split at that point and placed
+on the next line with no ensuing problems. On the other hand a \] implies that
+the blank space {\bf must} be there. 
+
+Finally the commands are shown preceded by one of $\bullet$, $\diamond$, or
+$\star$, and are {\it primitive}, {\it plain}, or \intex\  respectively.
+
+\ejectpage
+\done
+

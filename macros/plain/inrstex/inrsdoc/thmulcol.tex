@@ -1,0 +1,140 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{mulcol}
+
+\def\cqu{}
+
+\chapterhead{mulcol}{MULTICOLUMN\cr FORMAT}
+\intex\ supplies a reasonably versatile multicolumn format mechanism. 
+The rest of this chapter is set in the multicolumn format with two columns it
+was called using
+\begintt
+\beginmulticolumnformat
+\tolerance = 1000
+\intercolumnsep = {\quad \vrule\quad}
+\numberofcolumns = 2
+\endtt
+\beginmulticolumnformat
+\tolerance = 1000
+\intercolumnsep = {\quad \vrule\quad}
+\numberofcolumns = 2
+
+\shead{mulcolcomlist}{Command List}
+\begingroup
+\obeylines
+\ext|\balancecolumnsize|
+\ext|\beginmulticolumnformat|
+\ext|\endmulticolumnformat|
+\ext|\ejectcolumn|
+\ext|\ejectpage|
+\ext|\firstcolumnoffset|
+\ext|\intercolumnsep|
+\ext|\numberofcolumns|
+\endgroup
+
+\shead{mulcolform}{Multicolumn Usage}
+Multicolumn format is begun using
+\begintt
+\beginmulticolumnformat.
+\endtt
+and is terminated with an
+\begintt
+\endmulticolumnformat. 
+\endtt
+
+Narrow columns in multicolumn format can make it difficult to produce nice
+looking lines. This is why the |\tolerance| was increased above while in this
+two column mode.
+When the number of columns is specified,
+above it was 2, the {\bf current} space taken by the intercolumn separator and the
+first column offset is used to compute the size of the columns. This
+hopefully will not be of negative width. From this point all input will be
+put in multicolumn format. Footnotes, inserts, and the like that occur 
+while multicolumn format is in force will migrate to the appropriate places
+in the column.\footnote{\dagger}{This footnote migrated down to the bottom of
+this page} Figures, tables will all behave as if the column were a page.
+Footnotes and inserts that occur before or after multicolumn format will be
+placed in the appropriate place but with  respect to the entire page rather
+than the individual column. A column is completed using an |\ejectcolumn|
+while an |\ejectpage| will complete all the columns on the page. 
+
+\intex\ does not produce balanced columns automatically.
+However, there is a way of hand
+balancing. When the multicolumn format is ended, \intex\ computes
+an estimate of the column length that is needed to produce balanced
+columns on the last page. If this amount is entered by using 
+|\balancecolumnsize [=] <dimen>| command somewhere on the page {\bf
+preceding} the last page, the next time the file is processed, \intex\ will
+use |<dimen>| as the vertical size of the columns on the last
+page. It may take a few trials to determine the correct value for the
+|<dimen>|. In this instance 
+\begintt
+\balancecolumnsize=165pt
+\endtt
+was inserted here.
+\balancecolumnsize=165pt
+
+\shead{mulcolcomform}{Command Forms}
+\beginblockmode
+\ext\@|\balancecolumnsize 
+        [=] <column length> |
+\nbr
+This command, when inserted somewhere  on the second to last page or before
+the 
+multicolumnformat starts if it takes less than a page, will produce columns
+with vertical size |<column length>|.
+
+
+\mbr
+\ext\@|\beginmulticolumnformat|
+\nbr
+This begins multicolumn format and a group.
+
+
+\mbr
+\ext\@|\endmulticolumnformat|
+\nbr
+This ends multicolumn format and terminates the group. 
+
+\mbr
+\ext\@|\ejectcolumn|
+\nbr
+This ends and vertical fills a {\bf column}. When not in multicolumn format,
+it will act as an |\ejectpage|.
+
+
+\mbr
+\ext\@|\ejectpage|
+\nbr
+This command ends and fills the current column. It  then terminates the
+entire page, leaving blank columns as necessary.
+
+\mbr
+\ext\@|\firstcolumnoffset 
+      [=] <dimen>|
+\nbr
+This command reduces the horizontal size by
+amount of 2|<dimen>|. The reduction will show up 
+evenly on both side of the page. The \intex\ default is 0pt.
+
+\mbr
+\ext\@|\intercolumnsep 
+      [=] {<token list>}|
+\nbr
+The |<token list>| is  inserted between every
+column. The vertical lines  in this chapter are a result of the
+|\vrule| when the multicolumn format was first called. \intex\ defaults to a
+pure spacing of 2em. 
+
+
+\mbr
+\ext\@|\numberofcolumns 
+      [=] <integer>|
+\nbr
+This sets the number of columns and computes the horizontal size of the
+column. The various offsets should be set before this is called. This command
+should be called before any |<text>| is submitted to the multicolumn page.
+\endblockmode
+\endmulticolumnformat
+\ejectpage
+\done

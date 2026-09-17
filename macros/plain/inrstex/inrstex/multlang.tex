@@ -1,0 +1,26 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+% ====== Multiple Language Support =========
+% This is done via an internal change to TeX itself or through the
+% introduction of a counter called \language. If Bilingual TeX exists,
+% then \language has been defined. 
+
+\ifundefined{language} \n@ewcount\language \language=0 \fi 
+
+\def\englishversion{\input english \relax}
+\def\versionfrancaise{\input francais \relax}
+
+
+
+%======= are some commands for << and >> in French ======
+% ======== can be made neater when we modify fonts
+% \newcount\language % ..... this is necessary if NOT running Multilingual TeX
+\language = 0   % 0-english 1-french ...
+\def\d@qf{\raise .5ex\hbox{$\scriptscriptstyle{\langle\!\langle}$}\kern.25em}
+\def\g@qf{\kern.25em\raise .5ex\hbox{$\scriptscriptstyle{\rangle\!\rangle}$}}
+\def\ldq{\ifcase\language
+                \lq\lq \else\d@qf\fi} %changes < into `` in english
+\def\rdq{\ifcase\language
+                          \rq\rq\else\g@qf\fi} %changes > into '' in english

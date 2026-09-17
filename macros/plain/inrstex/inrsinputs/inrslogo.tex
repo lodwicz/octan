@@ -1,0 +1,58 @@
+%-*-tex-*-
+%======== macros for the INRS address logo/letterhead =====
+
+\def\ppa{\beginsegment \absoluteposition
+\lvec h:.4 v:0 
+\lvec h:.2 v:.8
+\lvec h:-.2 v:.8
+\pfill p:0
+\endsegment
+}
+
+\def\ppb{\beginsegment \absoluteposition
+\lvec h:.4 v:0 
+\lvec h:.1 v:1.2
+\lvec h:-.3 v:1.2
+\pfill p:0
+\endsegment
+}
+
+\def\inrslogo h:#1 v:#2 sc:#3 {\beginsegment 
+\penwidth .005
+\move h:#1 v:#2 
+\unitscale #3
+\relative
+\ppa
+\move h:.48 v:0
+\ppa
+\move h:.48 v:0
+\ppb
+\endsegment}
+\font\inrsaddfont = cmcsc10 
+\font\eightrm = cmr8
+\def\inrsadd{\vbox{\hsize 5in \baselineskip=9pt \parskip=0pt
+             \leftline{\eightrm Universit\'e du Qu\'ebec}
+             \vskip 3pt
+             \leftline{\inrsaddfont Institut national de la recherche
+                        scientifique}
+             \vskip 6pt
+             {\eightrm \obeylines \parindent=0pt 
+              3, place du Commerce \par
+              Ile-des-Soeurs\par
+              Verdun, Qu\'ebec\par
+              Canada \qquad   H3E 1H6\par
+              T\'el\'ephone: \tele \par}
+             \vskip 6pt
+             \leftline{\inrsaddfont INRS-T\'el\'ecommunications}
+             }}
+
+              
+\def\inrslogoadd h:#1 v:#2 {\btg\inrslogo h:#1 v:#2 sc:.3 
+                        \beginsegment
+                        \move h:0 v:0 \tbox {\inrsadd}
+                        \endsegment\etg}
+
+\def\inrsaddform{\titlepagestyle\finalversion
+                 \inrslogoadd h:-.5 v:0 }
+
+\def\tele{(514) 765-7834}

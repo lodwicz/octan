@@ -1,0 +1,1288 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{graph}
+\def\cqu{}
+
+
+\chapterhead{graph}{\TeX Graph}
+
+
+
+The graphics package that is a part of \intex\ 
+adds the following
+capabilities 
+\bl
+\li $\bullet$ The production of a complete paper/report requiring no
+additional insertions (except perhaps colour photographs if required).
+
+\li $\bullet$ The ability to insert a file, for example a plot or halftone,
+in Encapsulated PostScript Format (EPSF), and to automatically leave enough
+space in the text. 
+
+\li $\bullet$ The mixing of a vector graphics and \TeX\
+text. In fact \TeX\ text may now be printed at any arbitrary angle.
+
+\el
+
+The package requires a sensible PostScript driver. The basic requirements
+for the driver are as follows:
+\bl
+\lb The |\special| commands and the other information in the .dvi file are
+processed in the order they are found in the .dvi file. This is necessary
+in order to be able to rotate tables and arbitrary text \dots\ among other
+things.
+\lb The driver does not perform PostScript {\tt save} and {\tt restore}
+commands around |\special| commands.
+\lb The driver uses the code {\tt ps:} is used to signal a file name and
+the code {\tt ps::} to signal inline code.
+\lb The driver sets the {\tt currentpoint} before entering a |\special|.
+\el 
+
+\shead{gcomlist}{Command List - \TeX Graph}
+\begintwocolumn
+\ext|\absoluteposition|
+\ext|\absolutescale|
+\ext|\arcc|
+\ext|\arcn|
+\ext|\arrowheadscale|
+\ext|\arrowheadsize|
+\ext|\arrowheadtype|
+\ext|\avec|
+\ext|\beginsegment|
+\ext|\beginTeXgraph \btg|
+\ext|\cavec|
+\ext|\cav|
+\ext|\centergraph|
+\ext|\centerplotfile|
+\ext|\clvec|
+\ext|\clv|
+\ext|\endsegment|
+\ext|\endTeXgraph \etg|
+\ext|\graphdim|
+\ext|\hgraphsize|
+\ext|\hgraphskip|
+\ext|\hpix|
+\ext|\htext|
+\ext|\includefile|
+\ext|\incscfile|
+\ext|\incscmvfile|
+\ext|\larc|
+\ext|\lcir|
+\ext|\linecap|
+\ext|\linejoin|
+\ext|\lpatt|
+\ext|\lvec|
+\ext|\move|
+\ext|\penwidth|
+\ext|\relativeposition|
+\ext|\relativescale|
+\ext|\rstext|
+\ext|\rtext|
+\ext|\segmentscale|
+\ext|\unitscale|
+\ext|\vgraphsize|
+\ext|\vgraphskip|
+\ext|\vpix|
+\ext|\vtext|
+\endtwocolumn
+
+\shead{plotfile}{The Inclusion of Encapsulated PostScript}
+All the commands that are used to include encapsulated PostScript files
+read the {\tt Boundingbox} and leave enough space in the text for the
+graphics. The {\tt Boundingbox} may be at either the beginning or the end
+of the  file. However, if the {\tt Boundingbox} is at the the end, it might
+take \TeX\ some time to read the entire file to find it.
+
+The simplest command for including a graphics file is 
+$$ 
+|\centerplotfile{<file name>}|.
+$$
+For instance the (old) IEEE Communications Society
+logo was brought in simply by saying 
+\beginttverbatim \ninepoint \tt
+\1medskip
+\1hrule
+\1centerplotfile{ieeelogo.ps}
+\1hrule
+\1medskip
+\endttverbatim
+right here.
+\medskip
+\hrule 
+\centerplotfile{ieeelogo.ps}
+\hrule
+\medskip
+The |\hrule| commands were put in to show how much space was left by \TeX
+Graph. 
+A slightly more complicated example illustrating both rotation and scaling
+is given below.
+\bigskip
+\hrule
+\centergraph{ \btg
+              \incscfile f:{ieeelogo.ps} sc:.3 d:45 
+              \etg}
+\hrule
+\bigskip
+The code for this is 
+\beginttverbatim
+\1hrule
+\1centergraph{ \1btg
+              \1incscfile f:{ieeelogo.ps} sc:.3 d:45 
+              \1etg}
+\1hrule
+\endttverbatim
+
+Notice that the computation of the space to leave was incorrect. This is
+due to the difficulty in performing the computations for obtaining the
+bounding box for an arbitrarily rotated and scaled figure. 
+
+The most general
+inclusion command is |\incscmvfile| which allows for arbitrary scaling,
+rotation, and offset. Finally, the rotation, scaling, and placement may be
+applied around any of the nine text box reference points described in
+Section~\ref{tgraph}.
+
+
+\shead{tforms}{\TeX Graph Basics}
+\TeX Graph has a number of capabilities that range from primitive to
+powerful. The following list of classes is for reference only. More detail
+will follow with examples in the various sections to follow. This section may
+be omitted on first reading. 
+\dssshead{\TeX Graph Classes}
+\bl
+\lb Drawing primitives consist of commands for circles,
+circular arcs, line vectors, vectors with arrowheads, spline curves, spline
+curves with arrowheads, line dotting commands, and various shades of gray
+for fills.
+
+\lb There are commands for changing whether the distances specified
+are to be interpreted absolutely, with respect to an origin or relatively
+with respect to the present position. 
+
+\lb There is a command to change the (pen)width of the drawn lines
+and to change the interpreted scale of the units of distance. 
+
+\lb There is a command to change the default units. However, since
+arbitrary scaling of units is allowed, this command is of limited use except
+for those that visualize distances in different dimensions. The dimensions
+available are those available in \intex.
+
+\lb There is  a ``graphical segment''  which can be
+placed at any specific location. Distances inside a graphical segment are
+interpreted with respect to the segment origin. The distances inside a
+segment may be either relative or absolute with respect to the segment
+origin. There is a {\it segment scale} which allows for segments to be scaled
+relatively with respect to an overall graph. 
+
+\lb Text, with all the capabilities of \intex\ may be written
+at any arbitrary angle.
+
+\lb \TeX Graph keeps track of the maximum extent of a graph. These
+are available after the graph is terminated in the variables |\hgraphsize|
+and |\vgraphsize|. |\hgraphskip| and |\vgraphskip| will cause a horizontal or
+vertical skip of the appropriate graphsize. {\bf Unfortunately, these values
+may be incorrect for a number of reasons. } These are
+\bsl
+\li $\circ$ Text may stick out the edge of the graph.
+\li $\circ$ A circle or arc center is outside the main graph area.
+\li $\circ$ The visible part of a circle or arc may be too far to the right.
+\li $\circ$ A vertical segment may have inadvertently reset the maximum
+positions.
+\esl
+In some cases it may be necessary to make a fake move to the lower right hand
+corner of a graph to tell \TeX Graph the correct size \dots\ after you have
+seen a preliminary version and know what it should be.
+
+\lb All of \TeX's definitional capabilities are available. These
+can be used to replace a complex structure by a single command or
+to change the surface syntax of \TeX Graph. 
+
+\lb Explicit use of grouping in \TeX Graph, through $\{ \}$, or
+|\begingroup|, |\endgroup| pairs is not allowed. This will foul up the
+positional record keeping inside. Groups may be produced only through the
+use of segments, namely the |\beginsegment|, |\endsegment| pair. 
+\el
+
+
+\shead{tgraph}{Simple \TeX Graphics}
+\TeX Graph will allow for rather sophisticated graphics. You can use the 
+definition capabilities of  \intex\ to create libraries of symbols 
+for future use. 
+
+Directions in \TeX Graph are described as horizontal, {\tt h:}, increasing
+from left to right across the page and vertical, {\tt v:}, increaseing from
+top to bottom {\bf down} the page. Thus the fundamental directions are 
+$$
+\centergraph{\btg
+             \move h:.3 v:.3 
+             \avec h:3 v:.3
+             \move h:.3 v:.3 
+             \avec h:.3 v:2 
+             \textref h:C v:C
+             \move h:1.5 v:.15 \htext{Horizontal -- {\tt h:<number>}}
+             \move h:.15 v:1 \vtext{Vertical -- {\tt v:<number>}}
+             \etg}
+$$
+\TeX Graph capabilities will be introduced slowly. 
+The following diamond box 
+$$
+\centergraph{
+   \btg 
+     \move h:0 v:.5  % moves penup to (0,.5)
+     \lvec h:.5 v:0  % draws a line to (.5,0)
+     \lvec h:1 v:.5
+     \lvec h:.5 v:1
+     \lvec h:0 v:.5     
+     \textref h:C v:C  % sets the reference point in center of text.
+     \move h:.5 v:.5
+     \htext {$\sum_{i=1}^n \rho_n$} % horizontal text box
+    \etg}
+$$
+was put in place with
+\beginttverbatim \ninepoint \tt
+$$  % a convenient way to use displaymath spacing
+\1centergraph{
+   \1beginTeXgraphics % also known as \1btg
+     \1move h:0 v:.5  % moves penup to (0,.5)
+     \1lvec h:.5 v:0  % draws a line to (.5,0)
+     \1lvec h:1 v:.5
+     \1lvec h:.5 v:.1
+     \1lvec h:0 v:.5     
+     \1textref h:C v:C  % sets the reference point in the center.
+     \1move h:.5 v:.5
+     \1htext {$\1sum_{i=1}^n \1rho_n$} % horizontal text box
+    \1endTeXgraphics  % also known as \1etg
+     }
+$$
+\endttverbatim
+
+The command |\centergraph{<...>}| uses the information about plot size to
+center the graphics horizontally and to leave enough room vertically. 
+
+Arguments for all \TeX Graph primitive commands  are delimited by spaces.
+The units of the dimensions are implicit, but changable. The default is
+inches. Thus {\tt h:<number>} is the distance in the horizontal (to right)
+and {\tt v:<number>} is the distance in the vertical (down) direction. The
+locations are absolute distances with respect to an origin in the upper left
+hand corner. 
+
+\shead{vecforms}{Simple Vector Forms}
+This introduces some baisc drawing commands. There {\bf must} be 
+either a space or an
+end of line after each {\tt <coordinate>}\]. The dimensional units are
+implicit. We usually use {\tt <..>} instead of the less economical {\tt
+<coordinate>}.
+\beginblockmode
+\ext\@|\move h:<..> v:<..>|
+\nbr
+This is a move from the current position to the coordinates given by
+{\tt h:<..> v:<..>}. The pen is up. It may be used to move the current
+reference point or to describe a boundary when creating a filled polygon.
+
+\mbr\ext\@|\lvec h:<..> v:<..>|
+\nbr
+This draws a line from the current position to {\tt h:<..> v:<..>}.
+
+\mbr\ext\@|\clvec h1:<..> v1:<..> h2:<..> v2:<..> h3:<..> v3:<..>|
+\nbr
+This draws a Bezier spline curve from the current point to {\tt h3:<..>
+v3:<..>} with respect to the control points {\tt h1:<..> v1:<..>} and 
+{\tt h2:<..> v2:<..>}. These curves are very versatile and can create many
+effects, including loops,  by varying the control points. 
+
+\mbr\ext\@|\clv  (<h1> <v1>)  (<h2> <v2>)  (<h3> <v3>)|
+\nbr
+This command is identical to |\clvec| but with a less verbose syntax. 
+\endblockmode
+
+Lines may be either solid of various widths, or dotted with custom
+patterns. In addition the ends of the lines may be of different shapes and
+joined with different defaults. In most cases you will not have to change
+the defaults in \TeX Graph but the capability is there. 
+
+\beginblockmode
+\ext\@|\penwidth <size>|
+\nbr
+This sets the width of the pen or line in the current units. The default is
+is .015 (in). 
+
+\mbr\ext\@|\linecap <integer>|
+\nbr
+This sets the end shapes of the lines using PostScript notation. The
+default is 1 or a round cap. A value of 0 is a butt cap with the line cut
+off square exactly to its length. A value of 2 is a square cap with the
+line extended by a square cap the thikness of half its width. For narrow
+lines the difference is negligible. 
+
+\mbr\ext\@|\linejoin <integer>|
+\nbr
+This sets the form in which lines join (PostScript notation). The default
+is 1 which corresponds to a round line join. A value of 0 is a mitre or
+pointed join while a value of 2 is a beveled or flattened join. For thin
+lines the differences are negligible.
+
+\mbr\ext\@|\lpatt p:<pattern>|
+\nbr 
+This sets the dotting pattern of the line in PostScript notation. The
+default is a solid line described by |{[]}|. The simplest form is |{[a]}|
+where the line is black for {\tt a} pixels and white for 1. |{[a b]}| would
+mean {\tt a} pixels black followed by {\tt b} pixels white. A specification
+of |[a1 b1 a2 b2]| would be a cyclic pattern with the line black for the
+{\tt a?} pixels and white for the corresponding {\tt b?}.
+
+\endblockmode
+
+\TeX Graph alos supplies lines with arrowheads. These may be combined
+dotting patterns given above but a decision will have to be made as to
+whether you want the arrowhead itself dotted. 
+There are
+three styles of arrowheads 
+         \btg \move h:0 v:-.05 \avec h:.3 v:-.05
+           \arrowheadtype t:O 
+           \avec h:.6 v:-.05
+           \arrowheadtype t:F
+           \avec h:.9 v:-.05
+         \etg \hgraphskip\ 
+triangle {\tt T}, open {\tt O},
+and filled {\tt F}. The size may also be varied. There are no restriction on
+the direction  of the arrows. The commands are
+
+\beginblockmode
+\ext\@|\avec h:<..> v:<..>|
+\nbr
+This draws a vector with an arrow head from the current position to
+{\tt h:<..> v:<..>}.
+
+\mbr\ext\@|\cavec h1:<..> v1:<..> h2:<..> v2:<..> h3:<..> v3:<..>|
+\nbr\ext\@|\cav (<h1> <v1>) (<h2> <v2>) (<h3> <v3>) |
+\nbr
+These are the spline versions of the vectors with arrowheads. 
+
+\mbr\ext\@|\arrowheadtype t:<type>|
+\nbr
+The  {\tt <type>} is {\tt T O F} for triangle, open, or filled respectively.
+
+\mbr\ext\@|\arrowheadsize l:<length> w:<width>|
+\nbr
+The {\tt<length>} and {\tt<width>} are in the current units. The default
+is 0.16in by 0.04in. This size is {\tt independent} of the current scales.
+This prevents arrowheads from disappearing as a graph is scaled.
+
+\mbr\ext\@|\arrowheadscale|
+This makes the arrowheadsize sensitive to the segment and unit scales in
+force when it is called. It is not global but is affected by the grouping
+imposed by |\beginsegment| and |\endsegment| pairs.
+
+\endblockmode
+
+For most applications,  the |\arrowheadsize| and the |\arrowheadscale|
+will not be needed. 
+
+The following example of a (partial) block diagram uses these commands. 
+$$
+\centergraph{\btg
+        \move h:0 v:.3 
+        \avec h:.5 v:.3
+        \move h:.5 v:.6 % moves to lower lefthand corner of box
+        \lvec h:.5 v:0  % four sides 
+        \lvec h:1.5 v:0
+        \lvec h:1.5 v:.6        
+        \lvec h:.5 v:.6
+          \etg}
+$$
+This was produced by the following:
+\beginttverbatim \ninepoint \tt
+\1centergraph{\1btg
+        \1move h:0 v:.3 
+        \1avec h:.5 v:.3 % arrow vector leading into box
+        \1move h:.5 v:.6 % moves to lower lefthand corner of box
+        \1lvec h:.5 v:0  % four sides 
+        \1lvec h:1.5 v:0
+        \1lvec h:1.5 v:.6        
+        \1lvec h:.5 v:.6
+          \1etg}
+\endttverbatim
+
+We can change the type of arrowhead on this and all subsequent arrow vectors
+by adding adding |\arrowheadtype t:O| before the |\avec ...| to give
+$$
+\centergraph{\btg
+        \move h:0 v:.3 
+        \arrowheadtype t:F % changes default filled
+        \avec h:.5 v:.3 % arrow vector leading into box
+        \move h:.5 v:.6 % moves to lower lefthand corner of box
+        \lvec h:.5 v:0  % four sides 
+        \lvec h:1.5 v:0
+        \lvec h:1.5 v:.6        
+        \lvec h:.5 v:.6
+          \etg}
+$$
+This was produced by 
+\beginttverbatim \ninepoint \tt
+\1centergraph{\1btg
+        \1move h:0 v:.3 
+        \1arrowheadtype t:F % changes default filled
+        \1avec h:.5 v:.3 % arrow vector leading into box
+        \1move h:.5 v:.6 % moves to lower lefthand corner of box
+        \1lvec h:.5 v:0  % four sides 
+        \1lvec h:1.5 v:0
+        \1lvec h:1.5 v:.6        
+        \1lvec h:.5 v:.6
+          \1etg}
+\endttverbatim
+
+\beginblockmode
+\ext\@|\unitscale <scale>|
+\nbr 
+This command causes all subsequent units in this or enclosed segments to be
+scaled by the {\tt <scale>}. Thus |\unitscale 2.54| would have the effect
+of changing a figure where the units were originally in inches to be in
+centimetres. 
+\endblockmode
+
+
+Thus the entire graph is reduced to half size by adding |\unitscale .5|\] at
+the very beginning.
+$$
+\centergraph{\btg
+        \unitscale .5
+        \move h:0 v:.3 
+        \arrowheadtype t:F % changes default filled
+        \avec h:.5 v:.3 % arrow vector leading into box
+        \move h:.5 v:.6 % moves to lower lefthand corner of box
+        \lvec h:.5 v:0  % four sides 
+        \lvec h:1.5 v:0
+        \lvec h:1.5 v:.6        
+        \lvec h:.5 v:.6
+          \etg}
+$$
+Note that the arrowhead has not changed in size. The commands to do this are
+\beginttverbatim \ninepoint \tt
+\1centergraph{\1btg
+        \1unitscale .5  % causes all subsequent units to be multiplied
+                       % by .5 
+        \1move h:0 v:.3 
+        \1arrowheadtype t:F % changes default filled
+        \1avec h:.5 v:.3 % arrow vector leading into box
+        \1move h:.5 v:.6 % moves to lower lefthand corner of box
+        \1lvec h:.5 v:0  % four sides 
+        \1lvec h:1.5 v:0
+        \1lvec h:1.5 v:.6        
+        \1lvec h:.5 v:.6
+          \1etg}
+\endttverbatim
+If the arrowhead size needed to be reduced in the same scale it is necessary
+to add |\arrowheadscale| after the |\unitscale| and before the first
+arrowvector. Thus we get
+$$
+\centergraph{\btg
+        \unitscale .5  % causes all subsequent units to be multiplied
+                       % by .5 
+        \move h:0 v:.3 
+        \arrowheadscale % makes arrowhead size sensitive to scalings. 
+        \arrowheadtype t:F % changes default filled
+        \avec h:.5 v:.3 % arrow vector leading into box
+        \move h:.5 v:.6 % moves to lower lefthand corner of box
+        \lvec h:.5 v:0  % four sides 
+        \lvec h:1.5 v:0
+        \lvec h:1.5 v:.6        
+        \lvec h:.5 v:.6
+          \etg}
+$$
+This is produced by 
+\beginttverbatim \ninepoint \tt
+\1centergraph{\1btg
+        \1unitscale .5  % causes all subsequent units to be multiplied
+                       % by .5 
+        \1move h:0 v:.3 
+        \1arrowheadscale % makes arrowhead size sensitive to scalings. 
+        \1arrowheadtype t:F % changes default filled
+        \1avec h:.5 v:.3 % arrow vector leading into box
+        \1move h:.5 v:.6 % moves to lower lefthand corner of box
+        \1lvec h:.5 v:0  % four sides 
+        \1lvec h:1.5 v:0
+        \1lvec h:1.5 v:.6        
+        \1lvec h:.5 v:.6
+          \1etg}
+\endttverbatim
+
+Finally we have an example with dotted Bezier splines. 
+$$
+\centergraph{ \btg \lpatt p:{[20 30 20]}
+                   \lvec h:0 v:2 
+                   \move h:0 v:0 
+                   \lpatt p:{[20 20 10 10]}
+                  \cav (1 1) (2 1) (3 0) 
+                   \lpatt p:{[20 20]}
+                  \move h:4 v:1
+                  \cav (0 2) (5 2) (1 1)
+               \etg
+            }
+$$
+
+which was given by 
+\beginttverbatim
+\1centergraph{ \1btg \1lpatt p:{[20 30 20]}
+                   \1lvec h:0 v:2 
+                   \1move h:0 v:0 
+                   \1lpatt p:{[20 20 10 10]}
+                  \1cav (1 1) (2 1) (3 0) 
+                   \1lpatt p:{[20 20]}
+                  \1move h:4 v:1
+                  \1cav (0 2) (5 2) (1 1)
+               \1etg
+            }
+\endttverbatim
+This is off center because the width computation includes the (5 2) control
+point of the Bezier curve. 
+
+\sshead{text}{Text in Graphs}
+All text within \TeX Graph is actually typeset by \TeX. Since \TeX\ does
+this so beautifully, it seems counter productive to do it otherwise. The
+commands for including text at various angles are
+
+\beginblockmode
+\ext\@|\htext {<text>}| 
+\nbr
+This puts the text in a horizontal |\hbox| running from left to right.
+
+\mbr\ext\@|\vtext {<text>}| 
+\nbr
+This puts the text in a vertical |\hbox| going upwards.
+
+\mbr\ext\@|\rtext d:<degrees> t:{<text>}|
+\nbr
+This puts text in an |\hbox| with an arbitrary rotation of {\tt <degrees>}.
+
+\mbr\ext\@|\rstext d:<degrees> sc:<scale> t:{<text>}|
+\nbr
+This puts text in an |\hbox| with an arbitrary rotation of {\tt <degrees>}
+and scale {\tt <scale>}.
+
+\endblockmode
+
+Text is placed in an |\hbox|. This box is located at the point in the graph
+where the |\?text| command is called. 
+In order to make the exact placement of the
+box in a graph easier, the box is actually oriented at any one of nine
+reference points. The command is
+
+\beginblockmode
+\ext\@|\textref h:<L C R> v:<T C B>|
+\nbr
+The choices of {\tt L C R} are Left, Center, and Right respectively in the
+horizontal and vertical positions. 
+\endblockmode
+
+The nine
+choices are shown below:
+\medskip
+\def\bul{\htext {$\bullet$} }
+\def\tref{\beginsegment
+           \textref h:C v:C
+           \lvec h:1 v:0 \bul 
+           \lvec h:2 v:0 \bul 
+           \lvec h:2 v:.5 \bul 
+           \lvec h:2 v:1 \bul 
+           \lvec h:1 v:1 \bul 
+           \lvec h:0 v:1 \bul 
+           \lvec h:0 v:.5 \bul 
+           \lvec h:0 v:0 \bul 
+           \move h:1 v:.5 \bul
+          \endsegment}
+\def\tlabels{\textref h:R v:C %left hand labels
+             \htext{ h:L v:T } \lvec h:.2 v:0 \avec h:.6 v:.4 
+             \move h:0 v:.9 \htext{ h:L v:C } \avec h:.6 v:.9 
+             \move h:0 v:1.8 \htext{ h:L v:B } \lvec h:.2 v:1.8 \avec h:.6 v:1.4 
+             \textref h:L v:C %right hand labels
+             \move h:3.2 v:0 \htext{ h:R v:T } \lvec h:3 v:0 \avec h:2.6 v:.4 
+             \move h:3.2 v:.9 \htext{ h:R v:C } \avec h:2.6 v:.9 
+             \move h:3.2 v:1.8 \htext{ h:R v:B } \lvec h:3 v:1.8 \avec h:2.6 v:1.4 
+             \textref h:C v:B % Center Top 
+             \move h:1.6 v:0 \htext{ h:C v:T } \move h:1.6 v:.05 
+                \avec h:1.6 v:.4 
+             \textref h:L v:C % Center Center
+             \move h:2.0 v:.7 \htext{ h:C v:C } \lvec h:1.85 v:.7 
+                          \avec h:1.6 v:.9 
+             \textref h:C v:T % Center Bottom
+             \move h:1.6 v:1.8 \htext{ h:C v:B } \move h:1.6 v:1.75 
+                           \avec h:1.6 v:1.4 
+            }
+\medskip
+\centergraph{\btg \unitscale .7 
+             \arrowheadsize l:.08 w:.02 \arrowheadtype t:O
+             \tlabels
+             \move h:.6 v:.4 \tref
+             \etg}
+\medskip
+These reference points move with the box as it is rotated or scaled.
+
+As an example we add the following $\rho=\sum_{i=1}^{n}\rho_i$ to the 
+center of the block diagram used previously to give
+$$
+\centergraph{\btg
+        \move h:1.0 v:.3 % moves to center of box
+        \textref h:C v:C % sets text reference to dead center
+        \htext {$\rho=\sum_{i=1}^{n}\rho_i$} % puts in text
+        \move h:0 v:.3 
+        \avec h:.5 v:.3 % arrow vector leading into box
+        \move h:.5 v:.6 % moves to lower lefthand corner of box
+        \lvec h:.5 v:0  % four sides 
+        \lvec h:1.5 v:0
+        \lvec h:1.5 v:.6        
+        \lvec h:.5 v:.6
+          \etg}
+$$
+The commands to do this are
+\beginttverbatim \ninepoint \tt
+\1centergraph{\1btg
+        \1move h:1.0 v:.3 % moves to center of box
+        \1textref h:C v:C % sets text reference to dead center
+        \1htext {$\1rho=\1sum_{i=1}^{n}\1rho_i$} % puts in text
+        \1move h:0 v:.3 
+        \1avec h:.5 v:.3 % arrow vector leading into box
+        \1move h:.5 v:.6 % moves to lower lefthand corner of box
+        \1lvec h:.5 v:0  % four sides 
+        \1lvec h:1.5 v:0
+        \1lvec h:1.5 v:.6        
+        \1lvec h:.5 v:.6
+          \1etg}
+\endttverbatim
+
+Arbitrary rotation of text or graphics |\rtext|. 
+This example uses |\rtext d:45 t:<text>| in place of the |\htext|.
+$$
+\centergraph{\btg
+        \move h:1.0 v:.3 % moves to center of box
+        \textref h:C v:C % sets text reference to dead center
+        \rtext d:45 t:{$\rho=\sum_{i=1}^{n}\rho_i$} % puts in text
+        \move h:0 v:.3 
+        \avec h:.5 v:.3 % arrow vector leading into box
+        \move h:.5 v:.6 % moves to lower lefthand corner of box
+        \lvec h:.5 v:0  % four sides 
+        \lvec h:1.5 v:0
+        \lvec h:1.5 v:.6        
+        \lvec h:.5 v:.6
+          \etg}
+$$
+Note that the text spills out over the edges of the box. There is no
+guarantee that the text will fit in the box. 
+In fact if we  take the
+horizontal example and add a |\unitscale .7 \arrowheadscale| the following
+results:
+$$
+\centergraph{\btg
+        \unitscale .7
+        \arrowheadscale
+        \move h:1.0 v:.3 % moves to center of box
+        \textref h:C v:C % sets text reference to dead center
+        \htext {$\rho=\sum_{i=1}^{n}\rho_i$} % puts in text
+        \move h:0 v:.3 
+        \avec h:.5 v:.3 % arrow vector leading into box
+        \move h:.5 v:.6 % moves to lower lefthand corner of box
+        \lvec h:.5 v:0  % four sides 
+        \lvec h:1.5 v:0
+        \lvec h:1.5 v:.6        
+        \lvec h:.5 v:.6
+          \etg}
+$$
+
+Note that the font is not scaled. If we use |\rstext d:0 sc:.8 t:<...>| we
+get
+$$
+\centergraph{\btg
+        \unitscale .7  
+        \arrowheadscale
+        \move h:1.0 v:.3 % moves to center of box
+        \textref h:C v:C % sets text reference to dead center
+        \rstext d:0 sc:.8 t:{$\rho=\sum_{i=1}^{n}\rho_i$} 
+        \move h:0 v:.3 
+        \avec h:.5 v:.3 % arrow vector leading into box
+        \move h:.5 v:.6 % moves to lower lefthand corner of box
+        \lvec h:.5 v:0  % four sides 
+        \lvec h:1.5 v:0
+        \lvec h:1.5 v:.6        
+        \lvec h:.5 v:.6
+          \etg}
+$$
+
+
+\shead{vertgraph}{Rotated Graphics and Text}
+It is possible to place graphics or text at any arbitrary direction 
+on a page. It is only
+necessary to include it in a |\vtext| for vertical or an |\rtext| for an
+arbitrary rotation. However, it should be remembered that
+the reference point is that position on the page where the |\?text| was
+entered {\bf and} that the text/graphics goes at the appropriate angle. 
+The following shows a
+simple table angled on the page. To do this correctly, requires that you
+discover the size of the table. 
+
+\def\sample{
+   \btg 
+   \lvec h:1 v:0 
+   \incscfile f:ieeelogo.ps sc:.25 d:0
+   \lvec h:0 v:.5
+   \htext{\begintable
+           \begintableformat
+            &\center
+           \endtableformat
+           \-
+           \br{\:|}\use{3} PROJECT --- Squidget Forms  \er{|}
+           \-
+           \br{\:|} Milestone | Due     |  Projected    \er{|}
+           \-
+           \br{\:|}    A      | Aug. 94 | Jan. 95       \er{|}
+           \-
+           \br{\:|}    B      | Dec. 94 | Dec. 95       \er{|}
+           \-
+           \br{\:|}    A      | Jan. 95 | ?             \er{|}
+           \-
+         \endtable} 
+      \etg}
+
+$$
+\centergraph{
+    \btg 
+      \lvec h:0 v:1 % sets origin
+      \rtext d:45 t:{\sample}
+      \lvec h:2 v:2 % sets size of graph ... 
+    \etg}
+$$
+
+This was done with the following set of commands. Note that a |\def| was used
+to make the construction easier to follow. |\lvec| was used rather than
+|\move| in order to make the origin movements visible.
+\beginttverbatim \ninepoint \tt
+\1def\1sample{
+   \1btg 
+   \1lvec h;1 v:0
+   \1incscfile f:ieeelogo.ps sc:.25  d:0
+   \1lvec h:0 v:.5
+   \1htext{\1begintable
+           \1begintableformat
+            &\1center
+           \1endtableformat
+           \1-
+           \1br{\1:|}\1use{3} PROJECT --- Squidget Forms  \1er{|}
+           \1-
+           \1br{\1:|} Milestone | Due     |  Projected    \1er{|}
+           \1-
+           \1br{\1:|}    A      | Aug. 94 | Jan. 95       \1er{|}
+           \1-
+           \1br{\1:|}    B      | Dec. 94 | Dec. 95       \1er{|}
+           \1-
+           \1br{\1:|}    A      | Jan. 95 | ?             \1er{|}
+           \1-
+         \1endtable} 
+      \1etg}
+\endttverbatim
+
+\beginttverbatim \ninepoint \tt
+\1medskip
+\1centergraph{
+    \1btg \1textref h:C v:C 
+      \1lvec h:0 v:1 % sets origin
+      \1rtext d:45 t:{\1sample}
+      \1lvec h:2 v:2 % sets size of graph ... 
+    \1etg}
+\1medskip
+\endttverbatim
+In fact, this example was first
+done as a separate file to learn the appropriate dimensions and then inputted
+in the appropriate place. 
+
+\sshead{arcs}{Circles, Arcs and Fills}
+\TeX Graph uses the circle, arc, and fill commands of PostScript to
+produce curves. PostScript uses a polygonal fill on the {\bf inside} of the
+curve. This means that the direction of the arcs are important. 
+
+The commands are 
+\beginblockmode
+\ext\@|\lcir r:<radius>|
+\nbr
+This is a circle with the center at the current loaction and a radius of
+size {\tt <radius>} in the current dimensions.
+
+\mbr\ext\@|\arcc r:<radius> sd:<degrees> ed:<degrees>|
+\nbr
+This is an ``unstroked''arc, ie equivalent to a |\move| in the counter
+clockwise direction from {\tt sd:<..>} to {\tt ed:<..>}. If this is used in
+a fill, the center of the circle is the beginning of the path. 
+
+\mbr\ext\@|\arcn r:<radius> sd:<degrees> ed:<degrees>|
+\nbr
+This is the same as |\arcc| except that it is counter clockwise. 
+
+\mbr\ext\@|\pfill p:<fraction>|
+\nbr
+This completes a path a fills the path with a shade of gray with {\tt p:0}
+being black and {\tt p:1} being white. 
+\endblockmode
+
+The angles are in the directions shown here.
+$$
+\centergraph{
+  \btg \unitscale .7
+    \move h:1 v:2 
+    \avec h:1 v:0
+    \move h:0 v:1
+    \avec h:2 v:1 
+    \move h:1 v:2.05 \textref h:C v:T \htext{$90^\circ$}
+    \move h:0 v:1 \textref h:R v:C \htext{$180^\circ$ }
+    \move h:1 v:-.05 \textref h:C v:B \htext{$270^\circ$}
+    \move h:2 v:1 \textref h:L v:C \htext{ $0^\circ,\ 360^\circ$ }    
+   \etg}
+$$
+
+\def\fillbox #1 {\move h:.4 v:0
+                  \beginsegment 
+                   \absoluteposition
+                   \lvec h:.5 v:0
+                   \lvec h:.5 v:.5
+                   \lvec h:0 v:.5
+                   \pfill p:{#1}
+                   \move h:.25 v:.55 \textref h:C v:T \htext{#1}
+                 \endsegment
+                 \move h:.4 v:0 % for symmetry
+                 }
+
+Some shades of gray are as follows:
+$$
+\centergraph{
+\btg
+\relativeposition
+\fillbox 0
+\fillbox .1
+\fillbox .2
+\fillbox .3
+\fillbox .4
+\move h:-4 v:.8
+\fillbox .5
+\fillbox .6
+\fillbox .7
+\fillbox .8
+\fillbox .9
+\etg}
+$$
+
+An example of a use of arcs and fill is given below. 
+$$
+\centergraph{\btg
+              \arcc r:2 sd:0 ed:45  
+              \pfill p:.5
+              \arcc r:1 sd:0 ed:45 
+              \pfill p:1  % fills the inside with white
+              \move h:2 v:1.5 % to leave enough space
+             \etg}
+$$
+
+This logo is given by 
+\beginttverbatim \ninepoint \tt
+\1centergraph{\1btg
+              \1arcc r:2 sd:0 ed:45  
+              \1pfill p:.5
+              \1arcc r:1 sd:0 ed:45 
+              \1pfill p:1  % fills the inside with white
+              \1move h:2 v:1.5 % to leave enough space
+             \1etg}
+\endttverbatim
+This shows that a fill of ``white'' (1) is opaque and obliterates the black
+or gray underneath. Note the single line of dots from the origin. Apparently
+there is some roundoff. This strategy is necessary in PostScript filling.
+
+
+\shead{seg}{Advanced \TeX Graphics and Segments}
+The most important advanced feature of \TeX Graph is the graphical segment. 
+These are delimited by |\beginsegment| |\endsegment| pairs. They are used to
+create graphical items that can be placed at any specific location in a
+graph. This capability, combined with \TeX's ability to create definitions
+allows for the creation of libraries of symbols. {\bf Segments are the only
+groups that should be used within a} |\btg| |\etg| {\bf
+pair.}\footnote{!}{This is almost true. Groups may be used freely within
+the argument of either an |\??text|.} A simple example of the use
+of this facility was the definition of a |\fillbox| to create the box with
+the fill pattern shown in Section~\ref{arcs}. The definition was 
+
+\beginttverbatim \ninepoint \tt
+\1def\1fillbox #1 {\1move h:.4 v:0
+                  \1beginsegment 
+                   \1absoluteposition
+                   \1lvec h:.5 v:0
+                   \1lvec h:.5 v:.5
+                   \1lvec h:0 v:.5
+                   \1pfill p:{#1}
+                   \1move h:.25 v:.55 \1textref h:C v:T \1htext{#1}
+                 \1endsegment
+                 \1move h:.4 v:0 % for symmetry
+                 }
+\endttverbatim
+
+The relative position in outside the segment allows the boxes to be placed
+beside each other with even spacing and no additional instructions. 
+
+Each segment has a {\it segment reference point}. This is the location in
+the enclosing segment or |\btg| |\etg|, which is really just a special
+segment. {\bf Absolute positions} within a segment are actually relative to
+the {\it segment reference point}. Relative positions are relative. 
+The three
+boxes below 
+$$
+ \centergraph{\btg \relativeposition
+               \fillbox .3
+               \fillbox .5
+               \fillbox .7
+              \etg}
+$$
+were produced by 
+\beginttverbatim \ninepoint \tt
+\1medskip
+ \1centergraph{\1btg \1relativeposition
+               \1fillbox .3
+               \1fillbox .5
+               \1fillbox .7
+              \1etg}
+\1medskip
+\endttverbatim
+Note that the space after the |#1| in the definition for |\fillbox| means
+that the numbers are delimited by implicit space at the end of the line. If
+this space had been left out, only the first digit in each of the pattern
+numbers would have been read and the other would have been printed at some
+odd place on the page. 
+
+\sshead{segscale}{Segment Scaling} 
+There are several scaling parameters that can be used with segments. In
+addition to the |\unitscale| there is a |\segmentscale|. Roughly speaking the
+|\segmentscale| is used to change the scale of the present and all enclosed
+segments while the |\unitscale| is used to set the nominal size of segment
+object. The major difference between the two is that segment scales
+accumulate while unitscales do not. An example is obtained using the
+|\fillbox| in a segment.  The following three boxes illustrate the effect.
+$$
+\centergraph{\btg \unitscale .3 % changes units 
+               \segmentscale 2 % doubles scale of all enclosed segments
+                           % actual scale is .3*2=.6
+               \fillbox .5
+               \move h:.8 v:0  % moves to right beyond box
+               \beginsegment
+                \unitscale .5 % now unit scale is .5
+                \segmentscale .7 % reduces scale by .5 -- actual scale is
+                              % .5*2*.7=.7 
+                \fillbox .7
+                \move h:.8 v:0
+                \beginsegment
+                 \unitscale 1
+                 \segmentscale .8  % actual scale is 1*2*.7*.8=1.12
+                 \fillbox .9
+                \endsegment
+              \endsegment
+             \etg}
+$$
+
+This example should be studied carefully. The actual commands that produced
+it are 
+\beginttverbatim \ninepoint \tt
+\1centergraph{\1btg \1unitscale .3 % changes units 
+               \1segmentscale 2 
+                           % doubles scale of all enclosed segments
+                           % actual scale is .3*2=.6
+               \1fillbox .5
+               \1move h:.8 v:0  % moves to right beyond box
+               \1beginsegment
+                \1unitscale .5 % now unit scale is .5
+                \1segmentscale .7 
+                           % reduces scale by .5 -- actual scale is
+                           % .5*2*.7=.7 
+                \1fillbox .7
+                \1move h:.8 v:0
+                \1beginsegment
+                 \1unitscale 1
+                 \1segmentscale .8  % actual scale is 1*2*.7*.8=1.12
+                 \1fillbox .9
+                \1endsegment
+                  % actual scale is back to .5*2*.7=.7
+              \1endsegment
+                  % actual scale is back to .3*2=.6
+             \1etg}
+\endttverbatim
+Note how the segment scale accumulates while the unitscale does not. Note
+also that the scale reverts to that of the enclosing segment after an
+|\endsegment|.
+
+It is possible to prevent a segment from being affected by the external
+segment scales by inserting the command |\absolutescale|. This is used for
+symbols that you wish to have the same size no matter the actual scale of the
+graph. 
+
+\sshead{segsum}{Segment Command Summaries}
+The following is a list of some of the important points concerning segments:
+\beginblockmode
+\ext\@|\beginsegment|
+\nbr
+This begins a graphical segment and a group. All locations within a segment
+are relative to the origin of the segment. 
+
+\mbr\ext\@|\endsegment|
+\nbr
+This terminates a segment and the group. The current location upon leaving
+a segment is the segment origin. 
+
+\mbr\ext\@|\unitscale <scale>|
+\nbr
+The {\tt <scale>} multiplies the present segment and all
+enclosed segments unless they have their own |\unitscale|. A |\unitscale| may
+be changed at any time within a segment. 
+
+\mbr\ext\@|\segmentscale <scale>|
+\nbr
+The {\tt <scale>} affects the present segment and all
+enclosed segments unless that segment is protected by an |\absolutescale|.
+Unlike |\unitscale|, the |\segmentscale| accumulates by multiplying the
+current scale value.
+The actual scale used for interpreting position numbers is the
+product of all of the enclosing segmentscales times the presently active
+unitscale. 
+
+\mbr\ext\@|\absoluteposition|
+\nbr
+All coordinates are to be interpreted with respect to the current origin.
+This will either be the graph origin or the origin of the current segment.
+
+\mbr\ext\@|\relativeposition|
+\nbr
+Coordinate positions are interpreted relative to the previous position. If
+the previous command was the drawing of an arc or circle, 
+the previous position is
+the center of the circle. 
+\endblockmode
+
+
+
+\shead{slides}{Slide Making}
+A specialized set of commands along with appropriate templates exist to
+create a transparency. All slides are ``horizontal''. |\fullform| slides
+take up an entire 8.5 by 11~in. page and are intended for display.
+|\textform| slides are reduced for text. A |\comment <text> //| command is
+given that is suppressed when the |\fullform| is used but is printed when
+|\textform| is used. The text in the slides uses a general scaled font
+family in the file |spfont.tex|. This family is basically a scaled set of
+|\tenpoint| fonts. An example is given below:
+
+
+
+There are two basic forms, the INRS form and a General form. An example of
+the |\inrsform| is given by 
+
+
+\textform 
+\formscale .7
+
+\beginmidinsert
+\inrsform
+
+\hslide HOW TO MAKE SLIDES WITH \intex//
+\hd{Preliminaries}
+\bl 
+\lb Input the macro package with {\tt \1input inrssl.tex}.
+\lc Decide whether {\tt \1fullform} or {\tt \1textform}.
+\last Decide whether {\tt \1inrsform} or {\tt \1genform}.
+\el
+\hd{Making it.}
+\bl 
+\lb Use {\tt \1hslide <title>// <body> //}.
+\lb Use {``//''} as the delimiter. 
+\el
+//
+\endmidinsert
+
+\beginttverbatim
+\1input inrssl % brings in the slide macros
+\1textform % sets textform and size
+\1formscale .7 % further reduces the size of slide by .7
+\1beginmidinsert
+\1inrsform % sets the inrs form
+\1hslide HOW TO MAKE SLIDES WITH \1intex//
+\1hd{Preliminaries}
+\1bl 
+\1lb Input the macro package with {\1tt \1 1input inrssl.tex}.
+\1lc Decide whether {\1tt \1 1fullform} or {\1tt \1 1textform}.
+\1last Decide whether {\1tt \1 1inrsform} or {\1tt \1 1genform}.
+\1el
+\1hd{Making it.}
+\1bl 
+\1lb Use {\1tt \1 1hslide <title>// <body> //}.
+\1lb Use {``//''} as the delimiter. 
+\1el
+//
+\1endmidinsert
+\endttverbatim
+
+\beginmidinsert
+\topdata = {General Engineering Inc.}
+\botdata = {An Important Presentation}
+\slidedate = {Jan. 1, 2000}
+\genform % this calls the general form that uses these token registers
+
+\hslide This is the title \cr Split here //
+\hd{This is an internal header}
+\bl 
+\lb A listitem  starting with a bullet.
+\lc A listitem starting with a circle. 
+\last A listitem starting with an asterisk. 
+\el
+//  % the // terminates a slide
+
+\comment 
+It is possible to add a comment to the bottom of the slide which
+only shows up when the slide is printed in textform. A comment is
+terminated with a {//} //
+\endmidinsert
+
+This second slide was given by 
+\beginttverbatim
+\1topdata = {General Engineering Inc.}
+\1botdata = {An Important Presentation}
+\1slidedate = {Jan. 1, 2000}
+\1genform % the general form that uses these token strings
+
+\1hslide This is the title \1cr Split here //
+\1hd{This is an internal header}
+\1bl 
+\1lb A listitem  starting with a bullet.
+\1lc A listitem starting with a circle. 
+\1last A listitem starting with an asterisk. 
+\1el
+//  % the // terminates a slide
+
+\1comment 
+It is possible to add a comment to the bottom of the slide which
+only shows up when the slide is printed in textform. A comment is
+terminated with a {//} //
+\endttverbatim
+
+
+Arbitrary graphics may be included in a slide using normal \TeX Graph
+commands. However, the included graphics may not scale correctly when
+moving from |\fullform| to |\textform|. Under these conditions is is
+necessary to include the test |\iftextform <....> \else <...> \fi| to
+switch between the modes. 
+
+
+The basic commands in the slide package
+
+\beginblockmode
+\ext\@|\input inrssl|
+\nbr
+This command will bring in the INRS\TeX\ slide macro package. 
+
+\mbr\ext\@|\fullform|
+\nbr
+This chooses the full size form intended for creating the transparency. Any
+|\comment| is suppressed.
+
+\mbr\ext\@|\textform|
+\nbr
+This chooses the text size of the slide and does not suppress the
+|\comment| text.
+
+\mbr\ext\@|\formscale <scale>|
+\nbr
+The entire slide, text, internal graphics, and border, is  scaled 
+by the {\tt <scale>} factor. This is done by directly by PostScript. 
+
+\mbr\ext\@|\hslide <title> // <text> //|
+This is the basic command for making a slide. The title is terminated with
+a // and the slide body is also terminated with a //. 
+
+\mbr\ext\@|\comment <text> //|
+This is a comment text which is printed in |\textform| but suppressed in
+|\fullform|. 
+
+\mbr\ext\@|\inrsform|
+This will give the standard \INRS\ format with its logo on the top and
+nothing on the bottom. Text on the bottom may be added using |\botdata| and
+|\slidedate|.
+
+\mbr\ext\@|\genform|
+\nbr
+This is a completely general form where only the border is set.
+
+\mbr\ext\@|\topdata ={<text>}|
+This is printed in the |\borderfont| which is the same as the current slide
+body font. It is printed on the top line above the border with a current
+position at the left hand corner. 
+
+\mbr\ext\@|\botdata = {<b-text>}|
+\mbr\ext\@|\slidedate = {<s-date>}|
+\nbr 
+These two token strings are printed on the bottom line centered and
+separated by a --, ie as |<b-text> - <s-date>|. 
+
+\mbr\ext\@|\iftextform <...> \else <...> \fi|
+\nbr
+This is a switch that allows for different actions between fullform and
+textform. |\textform| is .578=1/1.728 the size of |\fullform|.
+
+\mbr\ext\@|\lb \lc \last|
+\nbr
+These are three short forms for use in listitems starting with $\bullet$,
+$\circ$, and {\tt *} respectively. 
+
+\mbr\ext\@|\hd{<text>}|
+\nbr
+This gives a ``header'' inside a slide. It is equivalent to a |\dssshead|
+in normal text. 
+\endblockmode
+
+
+\shead{grcomform}{Some Additional Command Forms -- \TeX Graph}
+\beginblockmode
+\ext\@|\begintexgraph \btg|
+\nbr
+This begins \TeX Graph. It will bring in the \TeX Graph macros the first
+time it is called. It starts a group and a |\vbox|. 
+
+\mbr\ext\@|\endtexgraph \etg|
+\nbr 
+Finishes \TeX Graph. It terminates the group started by |\btg|.
+
+\mbr\ext\@|\graphdim <units>|
+\nbr 
+This sets the default units of \TeX Graph. Any valid \TeX\ |<unit>| is
+valid such as {\tt in, cm, pt,} or {\tt bp}. The current default is {\tt
+in}.
+
+\mbr\ext\@|\hgraphsize|
+\nbr
+This maximum horizontal excursion of the graph as computed by \TeX Graph.
+It is a dimension. 
+
+\mbr\ext\@|\hgraphskip|
+\nbr
+This actually |\hskip \hgraphsize|. 
+
+\mbr\ext\@|\hpix <number>/<unit>|
+\nbr
+This is the horizontal resolution in pixels/unit. The default is 
+{\tt 300/in}. 
+
+
+\mbr\ext\@|\vgraphsize|
+\nbr
+This maximum vertical excursion of the graph as computed by \TeX Graph.
+It is a dimension. 
+
+\mbr\ext\@|\vgraphskip|
+\nbr
+This actually |\vskip \vgraphsize|. 
+
+
+\mbr\ext\@|\vpix <number>/<unit>|
+\nbr
+This is the vertical resolution in pixels/unit. The default is 
+{\tt 300/in}. 
+
+\endblockmode
+\ejectpage
+
+\done

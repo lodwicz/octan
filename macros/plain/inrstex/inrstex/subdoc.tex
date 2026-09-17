@@ -1,0 +1,43 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+%======== macros for handling multiple part documents =======
+% documents may be broken down to the chapter or section level 
+
+
+% each part of the document will start with the command 
+% \subdocument
+% it simply allows for the insertion of special macros or other stuff
+% that normally would be brought in only once. In addition, the page numbering
+% can be modified at this point to make sense at this point. 
+
+% parameters should be entered to tell whether the sub document is just a
+% section, chapter, or a section in a chapter. 
+% anything can be set inside the command
+% For a chapter (or series) \following\chnum = <chapter number>
+%                           \the\chaptername = {<Chapter name>}
+%                           \nochaptersfalse
+%                           \pagenumber [=] <pagenumber>
+
+%For a section in a document without chapters
+%                           \following\shnum = <section number>
+%                           \pagenumber [=] <pagenumber>
+
+% for a section in a document with chapters put both together
+% it is assumed that the subdocument will start with a section or
+% chead. The toplevel will set \subdocumentfalse immediately
+
+% this is here because it is  most useful in sub document context
+% multiple documents basically, \following\chnum =2  will set \chnum =1
+
+\def\following#1{\def\a@df{\global\advance #1 by -1\relax} 
+                 \afterassignment \a@df \global#1 }
+
+\newif\ifs@ubdocument \s@ubdocumenttrue
+\def\subdocumentmacros#1{\ifs@ubdocument #1 \fi\s@ubdocumentfalse}
+\outer\def\inputsubdocument #1{\begingroup
+                              \s@ubdocumentfalse
+                              \let\done=\relax 
+                              \input #1 \relax
+                              \endgroup}

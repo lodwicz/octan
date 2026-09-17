@@ -1,0 +1,120 @@
+%-*-tex-*-
+% diagram of a page 
+\def\gbox h:#1 v:#2 pw:#3 {\beginsegment
+                             \penwidth {#3} 
+                             \lvec h:{#1} v:0
+                             \lvec h:{#1} v:{#2}
+                             \lvec h:0 v:{#2}
+                             \lvec h:0 v:0
+                           \endsegment }
+                              
+\def\vlabel l:#1 t:#2 fr:#3 {\beginsegment
+                         \realmult{#1}{#3}{\hvh} 
+                         \move h:0 v:{\hvh}
+                         \textref h:C v:C \htext{$\bullet$}
+                         \lvec h:.1 v:{\hvh} \textref h:L v:C 
+                            \htext{#2}
+                         \move h:0 v:{\hvh}
+                         \avec h:0 v:0 
+                         \move h:0 v:{\hvh}
+                         \avec h:0 v:{#1}
+                            \endsegment}
+
+\def\vllabel l:#1 t:#2 fr:#3 {\beginsegment
+                         \realmult{#1}{#3}{\hvh} 
+                         \move h:0 v:{\hvh}
+                         \textref h:C v:C \htext{$\bullet$}
+                         \lvec h:-.1 v:{\hvh} \textref h:R v:C 
+                            \htext{ #2}
+                         \move h:0 v:{\hvh}
+                         \avec h:0 v:0 
+                         \move h:0 v:{\hvh}
+                         \avec h:0 v:{#1}
+                            \endsegment}
+
+
+\def\hlabel l:#1 t:#2 fr:#3 {\beginsegment
+                         \realmult{#1}{#3}{\hvh} 
+                         \move h:{\hvh} v:0
+                         \textref h:C v:C \htext{$\bullet$}
+                         \lvec h:{\hvh} v:.1 \textref h:C v:T 
+                            \move h:{\hvh} v:.11 \htext{#2}
+                         \move h:{\hvh} v:0
+                         \avec h:0 v:0 
+                         \move h:{\hvh} v:0
+                         \avec h:{#1} v:0
+                            \endsegment}
+
+\def\hvlabel l:#1 t:#2 fr:#3 {\beginsegment
+                         \realmult{#1}{#3}{\hvh} 
+                         \move h:{\hvh} v:0
+                         \textref h:C v:C \htext{$\bullet$}
+                         \lvec h:{\hvh} v:.1 \textref h:R v:C
+                            \move h:{\hvh} v:.11 \vtext{#2}
+                         \move h:{\hvh} v:0
+                         \avec h:0 v:0 
+                         \move h:{\hvh} v:0
+                         \avec h:{#1} v:0
+                            \endsegment}
+
+
+\def\htrlabel l:#1 t:#2 {\beginsegment
+                         \move h:-.2 v:0
+                         \avec h:0 v:0 
+                         \move h:{#1} v:0 \relativeposition \move h:.12 v:0
+                           \textref h:L v:C \htext{#2}
+                         \absoluteposition 
+                         \avec h:{#1} v:0
+                                  \endsegment}
+
+\def\htllabel l:#1 t:#2 {\beginsegment
+                         \move h:-.12 v:0
+                           \textref h:R v:C \htext{#2}
+                         \avec h:0 v:0 
+                         \move h:{#1} v:0 \relativeposition \move h:.2 v:0
+                         \absoluteposition 
+                         \avec h:{#1} v:0
+                                  \endsegment}
+
+\def\pagdiag sc:#1 {\btg \segmentscale {#1} \eighttt
+             \arrowheadsize l:.08 w:.025 
+             \gbox h:4.7 v:6 pw:.025 % paper
+             \move h:.6 v:.7 
+             \gbox h:3.5 v:4 pw:.01  %outerpage
+             \gbox h:3.5 v:.4 pw:.02 %header
+              \move h:.6 v:4.3 
+             \gbox h:3.5 v:.4 pw:.02 %footer 
+             \move h:.8 v:1.1 
+             \gbox h:3.1 v:3.2 pw:.02 %inner 
+              \move h:1.2 v:0 \vlabel l:.7 t:{\1topmarginsize} fr:.5 
+              \move h:1 v:.7 \vlabel l:.4 t:{\1vheadersize} fr:.5 
+              \move h:.6 v:1.3 \htrlabel l:.2 t:{\1firstcolumnoffset} 
+              \move h:3.9 v:1.3 \htllabel l:.2 t:{\1firstcolumnoffset} 
+              \move h:0 v:1.9 \hvlabel l:.6 t:{\1leftmarginsize } fr:.5
+              \move h:.6 v:2.3 \hlabel l:3.5 t:{\1houterpagesize} fr:.25
+              \move h:.8 v:2.7 \hlabel l:3.1 t:{\vbox{
+                                             \hbox{\1hinnerpagesize} 
+                                             \vskip 1pt
+                                             \hbox{ (computed)}}}
+                                    fr:.25
+              \move h:1 v:4.3 \vlabel l:.4 t:{\1vfootersize} fr:.5 
+              \move h:2.32 v:.7 \vllabel l:4 t:{\1vouterpagesize} fr:.25
+              \move h:2.43 v:1.1 \vlabel l:3.2 t:{\vbox{
+                                             \hbox{\1vinnerpagesize} 
+                                             \vskip 1pt
+                                             \hbox{ (computed)}}}
+                                    fr:.8
+              \move h:0 v:5.1 \hlabel l:4.7 t:{\1hpapersize} fr:.5
+              \move h:4.4 v:0 \vllabel l:6 t:{\1vpapersize } fr:.92
+              \etg}
+
+%\def\1{\char'134}
+%\centergraph{\pagdiag sc:.8 }
+
+%\done
+
+
+
+
+
+ 

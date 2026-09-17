@@ -1,0 +1,19 @@
+%!PS-Adobe-2.0 EPSF-2.0
+%%Title: University of Quebec logo
+%%CreationDate: 1990/11/28
+%%For: P. Kabal
+%%Pages: 1
+%%BoundingBox: 144 120.96 174.24 144
+%%EndComments
+144 144 translate 0.24 -0.24 scale
+0 setlinewidth
+1 setlinecap  0 setlinejoin
+16 0 moveto  50 0 lineto  34 64 lineto  0 64 lineto  16 0 lineto
+0 setgray fill
+newpath
+54 0 moveto  88 0 lineto  72 64 lineto  38 64 lineto  54 0 lineto
+0 setgray fill
+newpath
+92 0 moveto  126 0 lineto  102 96 lineto  68 96 lineto  92 0 lineto
+0 setgray fill
+showpage

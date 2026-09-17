@@ -1,0 +1,99 @@
+
+\hrule
+\centergraph{ \btg
+               \lvec h:2 v:2 
+              \etg
+            }
+\hrule 
+
+Now for some text. 
+\bigskip 
+\hrule 
+\centerplotfile{ieeelogo.ps}
+\hrule 
+\bigskip 
+\centergraph{ \btg
+              \incscfile f:{ieeelogo.ps} sc:.3 d:45 
+              \etg}
+\hrule
+\vskip 1in
+Now for the INRS Logo to demonstrate some of the \TeX Graph language.
+
+\input inrslogo
+
+\inrslogoadd  h:-.5 v:0 
+
+
+\ejectpage
+
+\input inrssl % namechange to avoid problems with Latex naming. 
+\formscale .7
+
+\inrsform % creates inrs logo ... and text .... replace by something 
+          % else appropriate. 
+
+\fullform % this creates a full sized version of this slide 
+
+\hslide This is the title \cr Split here //
+\hd{This is an internal header}
+\bl 
+\lb A listitem  starting with a bullet.
+\lc A listitem starting with a circle. 
+\last A listitem starting with an asterisk. 
+\el
+//  % the // terminates a slide and a comment
+
+\comment 
+It is possible to add a comment to the bottom of the slide which
+only shows up when the slide is printed in textform. A comment is
+terminated with a {//} //
+
+\textform % this creates a reduced version of the slide ... up to two per page
+
+% now we modify the logos and such 
+
+\topdata = {General Engineering Inc.}
+\botdata = {An Important Presentation}
+\slidedate = {Jan. 1, 2000}
+\genform % this calls the general form that uses these token registers
+
+\hslide This is the title \cr Split here //
+\hd{This is an internal header}
+\bl 
+\lb A listitem  starting with a bullet.
+\lc A listitem starting with a circle. 
+\last A listitem starting with an asterisk. 
+\el
+//  % the // terminates a slide
+
+\comment 
+It is possible to add a comment to the bottom of the slide which
+only shows up when the slide is printed in textform. A comment is
+terminated with a {//} //
+
+
+\bigskip 
+\centergraph{ \btg
+              \move h:2 v:2 
+              \rtext d:45 t:{--- ---  Some text at 45 degrees}
+              \rtext d:90 t:{--- ---  Some text at 90 degrees}
+              \rtext d:180 t:{--- ---  Some text at 180 degrees}
+              \rtext d:270 t:{--- ---  Some text at 270 degrees}
+              \vtext {\btg
+                      \move h:-2 v:2 
+                      \rtext d:45 t:{*** ***  Some text at 45 degrees +90}
+                      \rtext d:90 t:{*** ***  Some text at 90 degrees +90}
+                      \rtext d:180 t:{*** ***  Some text at 180 degrees +90}
+                      \rtext d:270 t:{*** ***  Some text at 270 degrees +90}
+                      \etg}
+             \move h:4 v:4 
+             \etg
+     }
+
+
+
+           
+
+\done
+
+

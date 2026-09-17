@@ -1,0 +1,40 @@
+%-*-tex-*-
+%========= Verbatim or NoFill Style ========
+% the actual macros for these are found in Tex$inputs:verbatim.tex
+% any character other than a \ is printed.
+% the format is \beginttverbatim <text> \endttverbatim
+% the default font is \tt
+% the \\ is defined as a \filbreak. It has the effect pushing blocks of
+% text between successive \\ onto the next page if it will not fit on the 
+% remainder of the present page. 
+\gdef\tabmessage{\ifnum\language=0  <tabs> are dangerous in tt verbatim 
+                      \else  <tabs> sont dangereux dans tt verbatim \fi}%
+{\catcode`\^^M=\active % these lines must end with %
+\gdef\ttobeylines{\catcode`\^^M\active \let^^M\vpar}%
+\global\let^^M\vpar}% this is in case ^^M appears in a \write
+{\catcode`\	=\active
+\outer\gdef\beginttverbatim{\begingroup 
+\def\\%
+{\filbreak}\chardef\other=12%
+\catcode`\{=\other
+\catcode`\}=\other
+\catcode`\$=\other
+\catcode`\&=\other
+\catcode`\#=\other
+\catcode`\%=\other
+\catcode`\~=\other
+\catcode`\_=\other
+\catcode`\^=\other
+\catcode`\<=\other
+\catcode`\>=\other
+\catcode`|=\other 
+\catcode`"=\other
+\parindent0pt\parskip0pt plus1pt%
+\def\vpar{\par\leavevmode}%
+\def	{<tab>\message{<<\tabmessage>>}}%
+\obeyspaces\ttobeylines
+\catcode`\	=\active
+\tt\xspaceskip=.5em\spaceskip=\xspaceskip 
+}}%
+\outer\gdef\endttverbatim{\endgroup}%
+\beginttverbatim 

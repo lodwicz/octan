@@ -1,0 +1,31 @@
+%-*-tex-*-
+% Copyright Michael J. Ferguson, INRS-Telecommunications
+% All rights reserved. 
+
+%============ Preface/Prelude macros ===========
+% this is the first of the environment macros. The problem, among others is
+% that the headers, footers, pagenumbering, etc are different in preface of
+% the document than elsewhere. 
+
+% These attempt to set this up in such a way 
+% that they will work with books and reports .... it may not be possible and
+% perhaps they should be parchuted in as a complete package for reports 
+% and books ... There will be more put in these as  time goes on
+% these are the paperstyle/report style macros
+\newtoks\everyprelude
+\newtoks\e@veryprelude
+\def\beginprelude{\begingroup\the\e@veryprelude\the\everyprelude}
+
+\def\preludeheadformat#1{\centerline{\sheadfont #1}\vskip 1cm}
+\newtoks\preludetitle 
+\def\preludeheadmark{\mark{\hfill \the\preludetitle\hfill}} 
+\def\preludehead#1{ \preludetitle = {#1}
+                    \writeterm{< }{\the\preludetitle}{ >}
+                    \preludeheadformat{#1}
+                    \preludeheadmark
+                    \writelistfile{toc}{\prtocout}{}{#1}
+                    }
+
+\def\endprelude{\endgroup\ejectpage}
+
+% \def\prtocout{\string\prtoc} % actually set in inrsdef.tex

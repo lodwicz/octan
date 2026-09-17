@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# INRSTeX
+#
+if [ $# = 1 ]; then
+    jobname=`/usr/bin/basename $1 .tex`
+    # rename auxiliary files -- see writunix.tex
+    /bin/mv $jobname.tag $jobname.tag~ 2>/dev/null
+    /bin/mv $jobname.toc $jobname.toc~ 2>/dev/null
+    /bin/mv $jobname.fig $jobname.fig~ 2>/dev/null
+    /bin/mv $jobname.tbl $jobname.tbl~ 2>/dev/null
+fi
+exec /usr/lib/tex/inrstex $*

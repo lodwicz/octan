@@ -1,0 +1,37 @@
+%------------ BOOKSTYLE ---------------
+% see english.tex and francais.tex for messages
+% \def\bookstylemessage{ <<< BOOK STYLE >>> } see English/French titles
+\def\bookstyle{ \message {\bookstylemessage }
+                 \documentstyle{\numberbychapter
+                  \vheadersize = 1cm
+                  \vfootersize = 2cm %this is set but not used can be
+                  \vpapersize=23cm
+                  \vouterpagesize=20cm
+                  \hpapersize =8.5in
+                  \houterpagesize=12cm
+                  \leftmarginsize = 4.8cm
+                  \topmarginsize = 3cm
+                  \chaptername = {}
+                  \def\chapterstartform{\ifodd\pageno\relax\else
+                                         \line{}\ejectpage\fi\titlepagestyle}
+                  \let\headermark=\topmark
+                  \def\headermark##1{\global\let\headermark = ##1}
+                  \headertext{\ifodd\pageno\rightheadertext
+                                         \else\leftheadertext\fi}
+                  \let\specialheadertext=\headertext
+                  \def\rightheadertext{\line{\hss
+                     \headermark\rlap{\ssheadfont\qquad\folio}}}
+                  \def\leftheadertext{\line{\llap{\ssheadfont\folio
+                                 \qquad}\the\chaptername\hss}}
+                 \footertext{}  \specialfootertext={}
+                 \normalheaderstyle
+                 \blankfooterstyle
+                 \everyprelude = {
+                    \def\leftheadertext{\line{\llap{\folio\qquad}\firstmark}}
+                    \def\rightheadertext{\line{\firstmark\rlap{\qquad\folio}}}
+                    \specialheadertext{\ifodd\pageno
+                                     \line{\hss\rlap{\qquad\folio}}      
+                                     \else\line{\llap{\folio\qquad}\hss}\fi}}
+                   }}
+
+\bookstyle

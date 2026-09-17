@@ -1,0 +1,54 @@
+%-*-tex-*-
+%texhelp upper level master
+\tracingstats=1
+\inputsubdocument{thcover} %coverpage
+\input helphdr %POSTSCRIPT 
+\input status 
+\openstatusfile
+%\finalversion
+\hfuzz=5pt
+\autonumberingon
+\indexingon
+\openlistfile{fig}
+\openlistfile{toc}
+\opencitationtagfile
+\marginnotesfalse
+\inputsubdocument{thp2}  % preface, toc, intro, descriptive conv **
+\inputsubdocument{thcont}  % control characters 3 **
+\marginnotestrue
+\inputsubdocument{thstart}  % starting stopping 4**
+\marginnotesfalse
+\inputsubdocument{thbas}  % basic ideas 5**
+\inputsubdocument{thover}  % overfull boxes **
+\inputsubdocument{thfonts}  % fonts 6**
+\inputsubdocument{thdimnum}  % dimensions, numbers 7**
+\inputsubdocument{thglue}  % glue 8**
+\inputsubdocument{thparcon} % paragraph control 8+
+\inputsubdocument{thspac}  % spacing and skipping 9**
+\inputsubdocument{thbreak}  % various breaks 10 **
+\inputsubdocument{thmatsym}  % mathematics symbols12**
+\inputsubdocument{thmateq}  % mathematic equation setup13**
+\inputsubdocument{thbasbox}  % basic box commands14 **
+\inputsubdocument{thalign}  % basic align 15 ** 
+\inputsubdocument{thdefs}  % simple definitions 16 **
+\inputsubdocument{thlists}  % list commands17**
+\inputsubdocument{thftnote} % footnotes ... **
+\inputsubdocument{thfigtbl} % figure table boxes 20 **
+\inputsubdocument{thmulcol} % multicolumn format 21 **
+\inputsubdocument{thshead}  % section heads 18 **
+\marginnotestrue
+\inputsubdocument{thauto}  % autonumbering 19 **
+\marginnotesfalse
+\inputsubdocument{thcite}  % citation lists  **
+\inputsubdocument{thtoc}  %  toc, tof, .... **
+\inputsubdocument{thpagsty}  % page, header, footer styles23 **
+\inputsubdocument{thpagsiz}  % page sizes and magnification 22 **
+\inputsubdocument{thsubdoc}  % texing parts of doc 24 **
+\inputsubdocument{thdocsty} % Document styles
+\inputsubdocument{thgraph}  % TeXGraph
+\inputsubdocument{thindex}  % Command index ... Appendix A
+\closecitationtagfile
+\closelistfile{toc}
+\indexingoff
+\done
+

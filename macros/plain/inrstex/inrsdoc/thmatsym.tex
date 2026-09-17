@@ -1,0 +1,419 @@
+%-*-tex-*-
+\ifundefined{writestatus} \input status \relax \fi %
+\chcode{matsym}
+
+
+\def\cqu{\cquote{{\leftskip=0ptplus1fill\def\\%
+{\endgraf}Yet what are all such gaieties to me\\Whose thoughts are full of
+indices and surds?\\$x^2+7x+53$\\ $\displaystyle={11\over3}$.\\ }}{
+Four~Riddles, Lewis~Carroll (1832-1898)}}
+
+
+\chapterhead{matsym}{MATHEMATICS:\cr SYMBOLS\cr FONTS}
+\tex\ supplies a vast array of mathematical symbols, both in fixed and
+extensible forms. For the most part, the symbols mentioned are available only
+in mathematics mode. Other symbols that are useful in 
+regular text mode have been listed in Section \ref{specialtextsymbols}
+This chapter describes the symbols available. These
+symbols can be used in any font size that is on the system. Although it is
+possible to build your own symbols from simpler ones, it takes a little care
+to make sure that they are the correct size for all possible uses. 
+
+\shead{mathfonts}{Ordinary Fonts in Mathematics}
+The mathematics symbol font contains characters that are very similar to
+to text italic font. The major difference is the spacing. {\it For instance} is
+in ordinary italic but $For\ instance$, is in math italic and was invoked with
+|$For\|\]|instance$|, where |\|\]  forces the  space. 
+However, it is an easy matter to put
+roman or {\bf bold} letters in  mathematics by just using 
+|$x={\bf the\ spot}$| to obtain $x={\bf the\ spot}$. The real fun
+comes  with something like the following:
+
+\def\xbf{{\vec{\bf x}}}
+$$ \xbf = 2^{\xbf^\xbf} $$
+which is given by
+\begintt
+\def\xbf{{\vec{\bf x}}}
+$$ 
+\xbf = 2^{\xbf^\xbf} 
+$$
+\endtt
+Note that the bold face is scaled correctly up into the superscripts. The
+extra $\{\ldots\}$ are necessary so that the third |\xbf| will look like a
+single token to the second |\@|.
+
+\shead{mathtypes}{Mathematical Symbol Types}
+Some symbols, even though they may look the same are given different command
+sequences in \tex. The reason for this is that their use demands different
+spacing and line breaking when in mathematics mode.
+For this reason there are four mathematics symbols for a vertical
+bar $\mid$, namely |\mid|, |\left\vert|, |\right\vert|, and |\vert|. The
+first  is a {\it relation} -- called {\it Rel} -- like the $=$; the second
+and third are opening and 
+closing brackets like ( and ) --- \tex\ calls these {\it openings} and {\it
+closings}; and the last is an {\it ordinary} --- called {\it Ord} --- symbol
+like $\infty$. Two other types are {\it large operators} --- called {\it Op}
+--- like $\sum$ and {\it binary operators} --- called {\it Bin} --- like $+$.
+Finally there is the {\it punctuation} --- called {\it Punct} --- like the
+period. 
+
+\shead{greekletters}{Greek Letters}
+All the Greek letters are of type {\it Ord}. They are all assumed to be in
+mathematics mode.
+
+\bshortcomlist
+\@|\alpha {\rm A} A|&$\alpha$ A $A$ \cr
+\@|\beta {\rm B} B|&$\beta$ B $B$\cr 
+\@|\gamma \Gamma {\mit\Gamma}|&$\gamma$  $\Gamma$  ${\mit\Gamma}$ \cr
+\@|\delta \Delta {\mit\Delta} |&$\delta$ $\Delta$ ${\mit\Delta}$ \cr
+\@|\epsilon {\rm E} E|&$\epsilon$  E $E$ \cr
+\@|\varepsilon|&$\varepsilon$\cr
+\@|\zeta {\rm Z} Z|&$\zeta$ Z $Z$ \cr
+\@|\eta {\rm H} H|&$\eta$  H $H$ \cr
+\@|\theta \Theta {\mit\Theta} |&$\theta$  $\Theta$ $\mit\Theta$ \cr
+\@|\vartheta|&$\vartheta$ \cr
+\@|\iota {\rm I} I|&$\iota$ I $I$ \cr
+\@|\kappa {\rm K} K |&$\kappa$ K $K$ \cr
+\@|\lambda \Lambda {\mit\Lambda}  |&$\lambda$  $\Lambda$ $\mit\Lambda$ \cr
+\@|\mu {\rm M} M |&$\mu$ M $M$ \cr
+\@|\nu {\rm N} N|&$\nu$ N $N$ \cr
+\@|\xi \Xi {\mit\Xi} |&$\xi$ $\Xi$ $\mit\Xi$  \cr
+ |o {\rm O} O|&$o$ O $O$ \cr 
+\@|\pi \Pi {\mit\Pi}|&$\pi$ $\Pi$ $\mit\Pi$ \cr
+\@|\varpi|&$\varpi$\cr
+\@|\rho {\rm R} R|&$\rho$ R $R$\cr
+\@|\sigma \Sigma {\mit\Sigma}|&$\sigma$ $\Sigma$ $\mit\Sigma$ \cr
+\@|\tau {\rm T} T|&$\tau$ T $T$ \cr
+\@|\upsilon \Upsilon {\mit\Upsilon}|&$\upsilon$ $\Upsilon$ $\mit\Upsilon$ \cr 
+\@|\phi \Phi {\mit\Phi}|&$\phi$ $\Phi$ $\mit\Phi$ \cr
+\@|\varphi|&$\varphi$ \cr
+\@|\chi {\rm X} X|&$\chi$ X $X$ \cr
+\@|\psi \Psi {\mit\Psi}|&$\psi$ $\Psi$ $\mit\Psi$\cr
+\@|\omega \Omega {\mit\Omega}|&$\omega$ $\Omega$ $\mit\Omega$\cr
+\eshortcomlist
+
+\shead{caligraphic}{Calligraphic Capitals}
+These look like ${\cal A} \ldots{\cal Z}$ and are obtained in math mode by
+the construction |{\cal <capital letter>}| while in math 
+mode.
+
+\shead{opsrels}{Ords, Operators, and Relations}
+The following is a composite list of the symbols of
+type ordinary, relation and operator supplied by
+{\it plain}. The type is specified along with the symbol. The meaning of the
+type abbreviations has been given in Section \ref{mathtypes}.
+\medbreak
+\beginmulticolumnformat
+\hfuzz=20pt
+\parindent=0pt
+\def\bin{\leavevmode\hbox to 30pt{\it Bin\hss}}
+\def\ord{\leavevmode\hbox to 30pt{\it Ord\hss}}
+\def\rel{\leavevmode\hbox to 30pt{\it Rel\hss}}
+\def\op{\leavevmode\hbox to 30pt{\it Op\hss}}
+\intercolumnsep = {\hskip 3em}
+\numberofcolumns = 2
+\obeylines
+\bin\hbox to 20pt{$+$\quad\hss}\@|+|
+\bin\hbox to 20pt{$-$\quad\hss}\@|-|
+\rel\hbox to 20pt{$=$\quad\hss}\@|=|
+\rel\hbox to 20pt{$\not=$\quad\hss}\@|\not=| |\ne| |\neq|
+\rel\hbox to 20pt{$<$\quad\hss}\@|<|
+\rel\hbox to 20pt{$\not<$\quad\hss}\@|\not<|
+\rel\hbox to 20pt{$>$\quad\hss}\@|>|
+\rel\hbox to 20pt{$\not>$\quad\hss}\@|\not>|
+\ord\hbox to 20pt{$\aleph$\quad\hss}\@|\aleph| 
+\ord\hbox to 20pt{$\amalg$\quad\hss}\@|\amalg|
+\ord\hbox to 20pt{$\angle$\quad\hss}\@|\angle|
+\rel\hbox to 20pt{$\approx$\quad\hss}\@|\approx|
+\rel\hbox to 20pt{$\not\approx$\quad\hss}\@|\not\approx|
+\bin\hbox to 20pt{$\ast$\quad\hss}\@|\ast| or *
+\rel\hbox to 20pt{$\asymp$\quad\hss}\@|\asymp|
+\ord\hbox to 20pt{$\backslash$\quad\hss}\@|\backslash|
+\op\hbox to 20pt{$\bigcap$\quad\hss}\@|\bigcap|
+\bin\hbox to 20pt{$\bigcirc$\quad\hss}\@|\bigcirc|
+\op\hbox to 20pt{$\bigcup$\quad\hss}\@|\bigcup|
+\op\hbox to 20pt{$\bigodot$\quad\hss}\@|\bigodot|
+\op\hbox to 20pt{$\bigoplus$\quad\hss}\@|\bigoplus|
+\op\hbox to 20pt{$\bigotimes$\quad\hss}\@|\bigotimes|
+\op\hbox to 20pt{$\bigsqcup$\quad\hss}\@|\bigsqcup|
+\bin\hbox to 20pt{$\bigtriangledown$\quad\hss}\@|\bigtriangledown|
+\bin\hbox to 20pt{$\bigtriangleup$\quad\hss}\@|\bigtriangleup|
+\op\hbox to 20pt{$\biguplus$\quad\hss}\@|\biguplus|
+\op\hbox to 20pt{$\bigvee$\quad\hss}\@|\bigvee|
+\op\hbox to 20pt{$\bigwedge$\quad\hss}\@|\bigwedge|
+\ord\hbox to 20pt{$\bot$\quad\hss}\@|\bot|
+\rel\hbox to 20pt{$\bowtie$\quad\hss}\@|\bowtie|
+\bin\hbox to 20pt{$\bullet$\quad\hss}\@|\bullet|
+\bin\hbox to 20pt{$\cap$\quad\hss}\@|\cap|
+\bin\hbox to 20pt{$\cdot$\quad\hss}\@|\cdot|
+\bin\hbox to 20pt{$\circ$\quad\hss}\@|\circ|
+\ord\hbox to 20pt{$\clubsuit$\quad\hss}\@|\clubsuit|
+\rel\hbox to 20pt{$\cong$\quad\hss}\@|\cong|
+\rel\hbox to 20pt{$\not\cong$\quad\hss}\@|\not\cong|
+\op\hbox to 20pt{$\coprod$\quad\hss}\@|\coprod|
+\bin\hbox to 20pt{$\cup$\quad\hss}\@|\cup|
+\bin\hbox to 20pt{$\dagger$\quad\hss}\@|\dagger|
+\rel\hbox to 20pt{$\dashv$\quad\hss}\@|\dashv|
+\bin\hbox to 20pt{$\ddagger$\quad\hss}\@|\ddagger|
+\ord\hbox to 20pt{$\diamondsuit$\quad\hss}\@|\diamondsuit|
+\balancecolumnsize = 470pt
+\bin\hbox to 20pt{$\diamond$\quad\hss}\@|\diamond|
+\bin\hbox to 20pt{$\div$\quad\hss}\@|\div|
+\rel\hbox to 20pt{$\doteq$\quad\hss}\@|\doteq|
+\rel\hbox to 20pt{$\Downarrow$\quad\hss}\@|\Downarrow|
+\rel\hbox to 20pt{$\downarrow$\quad\hss}\@|\downarrow| 
+\ord\hbox to 20pt{$\ell$\quad\hss}\@|\ell|
+\ord\hbox to 20pt{$\emptyset$\quad\hss}\@|\emptyset|
+\rel\hbox to 20pt{$\equiv$\quad\hss}\@|\equiv|
+\rel\hbox to 20pt{$\not\equiv$\quad\hss}\@|\not\equiv|
+\ord\hbox to 20pt{$\exists$\quad\hss}\@|\exists|
+\ord\hbox to 20pt{$\flat$\quad\hss}\@|\flat|
+\ord\hbox to 20pt{$\forall$\quad\hss}\@|\forall|
+\ord\hbox to 20pt{$\frown$\quad\hss}\@|\frown|
+\rel\hbox to 20pt{$\geq$\quad\hss}\@|\ge| \@|\geq|
+\rel\hbox to 20pt{$\not\geq$\quad\hss}\@|\not\geq|
+\rel\hbox to 20pt{$\gg$\quad\hss}\@|\gg|
+\rel\hbox to 20pt{$\not\gg$\quad\hss}\@|\not\gg|
+\ord\hbox to 20pt{$\hbar$\quad\hss}\@|\hbar|
+\ord\hbox to 20pt{$\heartsuit$\quad\hss}\@|\heartsuit|
+\rel\hbox to 20pt{$\hookleftarrow$\quad\hss}\@|\hookleftarrow| 
+\rel\hbox to 20pt{$\hookrightarrow$\quad\hss}\@|\hookrightarrow|
+\ord\hbox to 20pt{$\Im$\quad\hss}\@|\Im|
+\ord\hbox to 20pt{$\imath$\quad\hss}\@|\imath|
+\ord\hbox to 20pt{$\infty$\quad\hss}\@|\infty|
+\op\hbox to 20pt{$\int$\quad\hss}\@|\int|
+\rel\hbox to 20pt{$\in$\quad\hss}\@|\in|
+\rel\hbox to 20pt{$\not\in$\quad\hss}\@|\not\in|
+\ord\hbox to 20pt{$\jmath$\quad\hss}\@|\jmath|
+\rel\hbox to 20pt{$\Leftarrow$\quad\hss}\@|\Leftarrow|
+\rel\hbox to 20pt{$\leftarrow$\quad\hss}\@|\leftarrow| 
+\rel\hbox to 20pt{$\leftharpoondown$\quad\hss}\@|\leftharpoondown| 
+\rel\hbox to 20pt{$\leftharpoonup$\quad\hss}\@|\leftharpoonup| 
+\rel\hbox to 20pt{$\Leftrightarrow$\quad\hss}\@|\Leftrightarrow| 
+\rel\hbox to 20pt{$\leftrightarrow$\quad\hss}\@|\leftrightarrow| 
+\rel\hbox to 20pt{$\leq$\quad\hss}\@|\le| \@|\leq|
+\rel\hbox to 20pt{$\not\leq$\quad\hss}\@|\not\leq|
+\rel\hbox to 20pt{$\ll$\quad\hss}\@|\ll|
+\rel\hbox to 20pt{$\not\ll$\quad\hss}\@|\not\ll|
+\rel\hbox to 20pt{$\Longleftarrow$\quad\hss}\@|\Longleftarrow| 
+\rel\hbox to 20pt{$\longleftarrow$\quad\hss}\@|\longleftarrow| 
+\rel\hbox to 20pt{$\Longleftrightarrow$\quad\hss}\@|\Longleftrightarrow| 
+\rel\hbox to 20pt{$\longleftrightarrow$\quad\hss}\@|\longleftrightarrow|  
+\rel\hbox to 20pt{$\longmapsto$\quad\hss}\@|\longmapsto| 
+\rel\hbox to 20pt{$\Longrightarrow$\quad\hss}\@|\Longrightarrow| 
+\rel\hbox to 20pt{$\longrightarrow$\quad\hss}\@|\longrightarrow|
+\rel\hbox to 20pt{$\mapsto$\quad\hss}\@|\mapsto|
+\rel\hbox to 20pt{$\mid$\quad\hss}\@|\mid|
+\rel\hbox to 20pt{$\models$\quad\hss}\@|\models|
+\bin\hbox to 20pt{$\mp$\quad\hss}\@|\mp|
+\ord\hbox to 20pt{$\nabla$\quad\hss}\@|\nabla|
+\ord\hbox to 20pt{$\natural$\quad\hss}\@|\natural|
+\rel\hbox to 20pt{$\nearrow$\quad\hss}\@|\nearrow| 
+\rel\hbox to 20pt{$\nwarrow$\quad\hss}\@|\nwarrow|
+\ord\hbox to 20pt{$\neg$\quad\hss}\@|\neg| \@|\lnot|
+\rel\hbox to 20pt{$\ni$\quad\hss}\@|\ni| \@|\owns|
+\bin\hbox to 20pt{$\odot$\quad\hss}\@|\odot|
+\op\hbox to 20pt{$\oint$\quad\hss}\@|\oint|
+\bin\hbox to 20pt{$\ominus$\quad\hss}\@|\ominus|
+\bin\hbox to 20pt{$\oplus$\quad\hss}\@|\oplus|
+\bin\hbox to 20pt{$\oslash$\quad\hss}\@|\oslash|
+\bin\hbox to 20pt{$\otimes$\quad\hss}\@|\otimes|
+\rel\hbox to 20pt{$\parallel$\quad\hss}\@|\parallel|
+\ord\hbox to 20pt{$\partial$\quad\hss}\@|\partial|
+\bin\hbox to 20pt{$\perp$\quad\hss}\@|\perp|
+\bin\hbox to 20pt{$\pm$\quad\hss}\@|\pm|
+\rel\hbox to 20pt{$\preceq$\quad\hss}\@|\preceq|
+\rel\hbox to 20pt{$\not\preceq$\quad\hss}\@|\not\preceq|
+\rel\hbox to 20pt{$\prec$\quad\hss}\@|\prec|
+\rel\hbox to 20pt{$\not\prec$\quad\hss}\@|\not\prec|
+\ord\hbox to 20pt{$\prime$\quad\hss}\@|\prime|
+\op\hbox to 20pt{$\prod$\quad\hss}\@|\prod|
+\rel\hbox to 20pt{$\propto$\quad\hss}\@|\propto|
+\ord\hbox to 20pt{$\Re$\quad\hss}\@|\Re|
+\rel\hbox to 20pt{$\Rightarrow$\quad\hss}\@|\Rightarrow| 
+\rel\hbox to 20pt{$\rightarrow$\quad\hss}\@|\rightarrow| 
+\rel\hbox to 20pt{$\rightharpoondown$\quad\hss}\@|\rightharpoondown|  
+\rel\hbox to 20pt{$\rightharpoonup$\quad\hss}\@|\rightharpoonup|  
+\rel\hbox to 20pt{$\rightleftharpoons$\quad\hss}\@|\rightleftharpoons|
+\bin\hbox to 20pt{$\setminus$\quad\hss}\@|\setminus|
+\ord\hbox to 20pt{$\sharp$\quad\hss}\@|\sharp|
+\rel\hbox to 20pt{$\simeq$\quad\hss}\@|\simeq|
+\rel\hbox to 20pt{$\not\simeq$\quad\hss}\@|\not\simeq|
+\rel\hbox to 20pt{$\sim$\quad\hss}\@|\sim|
+\rel\hbox to 20pt{$\not\sim$\quad\hss}\@|\not\sim|
+\rel\hbox to 20pt{$\smile$\quad\hss}\@|\smile|
+\ord\hbox to 20pt{$\spadesuit$\quad\hss}\@|\spadesuit|
+\bin\hbox to 20pt{$\sqcap$\quad\hss}\@|\sqcap|
+\bin\hbox to 20pt{$\sqcup$\quad\hss}\@|\sqcup|
+\rel\hbox to 20pt{$\sqsubseteq$\quad\hss}\@|\sqsubseteq|
+\rel\hbox to 20pt{$\not\sqsubseteq$\quad\hss}\@|\not\sqsubseteq|
+\rel\hbox to 20pt{$\sqsupseteq$\quad\hss}\@|\sqsupseteq|
+\rel\hbox to 20pt{$\not\sqsupseteq$\quad\hss}\@|\not\sqsupseteq|
+\ord\hbox to 20pt{$\star$\quad\hss}\@|\star|
+\rel\hbox to 20pt{$\subseteq$\quad\hss}\@|\subseteq|
+\rel\hbox to 20pt{$\not\subseteq$\quad\hss}\@|\not\subseteq|
+\rel\hbox to 20pt{$\subset$\quad\hss}\@|\subset|
+\rel\hbox to 20pt{$\not\subset$\quad\hss}\@|\not\subset|
+\rel\hbox to 20pt{$\succeq$\quad\hss}\@|\succeq|
+\rel\hbox to 20pt{$\not\succeq$\quad\hss}\@|\not\succeq|
+\rel\hbox to 20pt{$\succ$\quad\hss}\@|\succ|
+\rel\hbox to 20pt{$\not\succ$\quad\hss}\@|\not\succ|
+\op\hbox to 20pt{$\sum$\quad\hss}\@|\sum|
+\rel\hbox to 20pt{$\supseteq$\quad\hss}\@|\supseteq|
+\rel\hbox to 20pt{$\not\supseteq$\quad\hss}\@|\not\supseteq|
+\rel\hbox to 20pt{$\supset$\quad\hss}\@|\supset|
+\rel\hbox to 20pt{$\not\supset$\quad\hss}\@|\not\supset|
+\ord\hbox to 20pt{$\surd$\quad\hss}\@|\surd|
+\rel\hbox to 20pt{$\searrow$\quad\hss}\@|\searrow| 
+\rel\hbox to 20pt{$\swarrow$\quad\hss}\@|\swarrow|
+\bin\hbox to 20pt{$\times$\quad\hss}\@|\times|
+\bin\hbox to 20pt{$\top$\quad\hss}\@|\top|
+\bin\hbox to 20pt{$\triangleleft$\quad\hss}\@|\triangleleft|
+\bin\hbox to 20pt{$\triangleright$\quad\hss}\@|\triangleright|
+\ord\hbox to 20pt{$\triangle$\quad\hss}\@|\triangle|
+\bin\hbox to 20pt{$\uplus$\quad\hss}\@|\uplus|
+\rel\hbox to 20pt{$\Uparrow$\quad\hss}\@|\Uparrow| 
+\rel\hbox to 20pt{$\uparrow$\quad\hss}\@|\uparrow| 
+\rel\hbox to 20pt{$\Updownarrow$\quad\hss}\@|\Updownarrow| 
+\rel\hbox to 20pt{$\updownarrow$\quad\hss}\@|\updownarrow|         
+\ord\hbox to 20pt{$\Vert$\quad\hss}\@|\Vert| or |\|\vrt 
+\ord\hbox to 20pt{$\vert$\quad\hss}\@|\vert| or \vrt
+\rel\hbox to 20pt{$\vdash$\quad\hss}\@|\vdash|
+\bin\hbox to 20pt{$\vee$\quad\hss}\@|\lor| \@|\vee|
+\bin\hbox to 20pt{$\wedge$\quad\hss}\@|\land| \@|\wedge|
+\ord\hbox to 20pt{$\wp$\quad\hss}\@|\wp|
+\bin\hbox to 20pt{$\wr$\quad\hss}\@|\wr|
+\endmulticolumnformat
+
+\shead{delims}{Brackets or Delimiters}
+\tex\ supplies a large variety of delimiters or brackets, some of different
+sizes and others that grow to be the correct size. Here is a list of the
+delimiters supplied by {\it plain}. 
+
+\bshortcomlist
+\@|\big\Arrowvert|&center part of double up arrow -- $\big\Arrowvert$\cr
+\@|\big\arrowvert|&center part of up arrow --  $\big\arrowvert$\cr
+\@|\langle|&left angle bracket --  $\langle$\cr
+\@|\rangle|&right angle bracket --  $\rangle$\cr
+\@|\big\bracevert|&center part of large braces -- $\big\bracevert$ \cr
+|\{| or \@|\lbrace|&left brace --  $\{$\cr
+|\}| or \@|\rbrace|&right brace --  $\}$\cr
+|[| or \@|\lbrack|&left square bracket --  $[$\cr
+|]| or \@|\rbrack|&right square bracket --  $]$\cr
+\@|\lceil|&left ceiling --  $\lceil$\cr
+\@|\rceil|&right ceiling --  $\rceil$\cr
+\@|\lfloor|&left floor --  $\lfloor$\cr
+\@|\rfloor|&right floor --  $\rfloor$\cr
+\@|\big\lgroup|&large left paren without middle -- $\big\lgroup$\cr
+\@|\big\rgroup|&large right paren without middle -- $\big\rgroup$\cr
+\@|\big\lmoustache|&  -- $\big\lmoustache$\cr
+\@|\big\rmoustache|&  -- $\big\rmoustache$\cr
+|/|&slash --  $/$\cr
+\@|\backslash|&reverse slash --  $\backslash$\cr
+\vrt\ or |\vert|&vertical bar --  $\vert$\cr
+|\|\vrt\ or |\Vert|&double vertical bar --  $\Vert$\cr
+|\downarrow|&down arrow --  $\downarrow$\cr
+|\Downarrow|&double down arrow --  $\Downarrow$\cr
+|\uparrow|&up arrow --  $\uparrow$\cr
+|\Uparrow|&double up arrow --  $\Uparrow$\cr
+|\updownarrow|&up-and-down arrow --  $\updownarrow$\cr
+|\Updownarrow|&double up-and-down arrow --  $\Updownarrow$\cr
+|(|&left paren --  $($\cr
+|)|&right paren --  $)$\cr
+\eshortcomlist
+
+Two very powerful operators exist for the delimiters, namely |\left| and
+|\right|. They must be used in pairs as 
+\par
+\hbox to \hsize{\hss\@|$\left<delimiter> ...\right<delimiter>$|,\hss} 
+\noindent
+where the |<delimiter>| is one of the above. The result
+of these operators is a pair of braces that grow the correct size for the
+particular formula in which they are used. This saves you from the problem of
+measuring. A |\right.| implies there is nothing at the place of the right
+delimiter and |\left.| similarly on the left. This allows a delimiter on only
+one side of a formula but to still have the operators match in pairs.
+
+Finally there is a second set of four pairs of operators, \@|\bigl|, |\Bigl|,
+\@|\biggl|, \@|\Biggl| and the corresponding  right hand ones  \@|\bigr|, \@|\Bigr|,
+\@|\biggr|, and \@|\Biggr|. These produce big, but fixed size delimiters for instance we have
+\begintt
+$$
+ \bigl\{\quad 
+\Bigl[\quad 
+\biggl\lfloor\quad 
+\Biggl\Updownarrow\quad\Biggr\Updownarrow
+\quad\biggr\rfloor
+\quad\Bigr]
+\quad\bigr\}
+$$
+\endtt
+produces
+$$
+ \bigl\{\quad 
+\Bigl[\quad 
+\biggl\lfloor\quad 
+\Biggl\Updownarrow\quad\Biggr\Updownarrow
+\quad\biggr\rfloor
+\quad\Bigr]
+\quad\bigr\}
+$$
+
+\shead{sincos}{Common Mathematical Functions}
+Certain functions such as |sin|, |cos|, and |limsup| for example are shown in
+mathematics text in Roman font. In addition some like |lim| sometimes take
+limits that should be placed in the same way as the limits on the large
+operators ({\it Op}). For example
+\begintt
+$$
+\limsup_{t \leftrightarrow \infty} 
+$$
+\endtt
+gives
+$$
+\limsup_{t \leftrightarrow \infty} 
+$$
+There are 32 of these already defined in {\it plain}. They are
+\beginthreecolumn
+\@|\arg|    
+\@|\arccos| 
+\@|\arcsin| 
+\@|\arctan| 
+\@|\cot|  
+\@|\coth| 
+\@|\cosh| 
+\@|\cos|  
+\@|\csc|
+\@|\det|
+\@|\deg|
+\@|\dim|
+\@|\exp|
+\@|\gcd|
+\@|\hom|
+\@|\inf|
+\@|\ker|   
+\@|\lg|    
+\@|\liminf|
+\@|\limsup|
+\@|\lim|   
+\@|\ln|    
+\@|\log|   
+\@|\max|   
+\@|\min| 
+\@|\Pr|  
+\@|\sec| 
+\@|\sin| 
+\@|\sinh|
+\@|\sup|
+\@|\tanh|
+\@|\tan|
+\endthreecolumn
+
+\shead{buildown}{Build Your Own Symbols}
+There are several advanced facilities in \tex\ for building your own symbols.
+However, there is one rather simple form using 
+\@|\buildrel <superscript> \over <relation>|. For example
+|\buildrel \triangle  \over =| gives $\buildrel \triangle  \over =$.
+
+\ejectpage
+\done
