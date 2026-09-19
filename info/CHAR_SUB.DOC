@@ -1,0 +1,338 @@
+% char_sub.doc 
+% \charsubdef documentation 
+% ==== Plain TeX form of documentation for the Charsublist extension of
+% ==== TeX 3.0+ -- Just TeX this file with a PLAIN format 
+% Version Aug. 1990 --- \charsubdef replaces \charsublist
+
+%============= special command escapes 
+
+\def\1{\char'134}
+\def\<{\char'173}
+\def\>{\char'175}
+
+
+%========= Verbatim or NoFill Style ========
+% the actual macros for these are found in Tex$inputs:verbatim.tex
+% any character other than a \ is printed.
+% the format is \beginttverbatim <text> \endttverbatim
+% the default font is \tt
+% the \\ is defined as a \filbreak. It has the effect pushing blocks of
+% text between successive \\ onto the next page if it will not fit on the 
+% remainder of the present page. 
+
+\gdef\tabmessage{\ifnum\language=0  <tabs> are dangerous in tt verbatim 
+                      \else  <tabs> sont dangereux dans tt verbatim \fi}
+{\catcode`\^^M=\active % these lines must end with %
+  \gdef\ttobeylines{\catcode`\^^M\active \let^^M\vpar}%
+  \global\let^^M\vpar}% this is in case ^^M appears in a \write
+{\catcode`\	=\active
+\outer\gdef\beginttverbatim{\begingroup 
+\def\\%
+{\filbreak}\chardef\other=12
+\catcode`\{=\other
+\catcode`\}=\other
+\catcode`\$=\other
+\catcode`\&=\other
+\catcode`\#=\other
+\catcode`\%=\other
+\catcode`\~=\other
+\catcode`\_=\other
+\catcode`\^=\other
+\catcode`\<=\other
+\catcode`\>=\other
+\catcode`|=\other 
+\catcode`"=\other
+\parindent0pt\parskip0pt plus1pt%
+\def\vpar{\par\leavevmode}%
+\def	{<tab>\message{<<\tabmessage>>}}%
+\obeyspaces\ttobeylines
+\catcode`\	=\active
+\tt\xspaceskip=.5em\spaceskip=\xspaceskip 
+}}
+\outer\gdef\endttverbatim{\endgroup}
+
+
+\beginttverbatim
+
+Documentation for the use of the \1charsubdef primitive
+
+June 6, 1990
+
+Prof. Michael J. Ferguson
+INRS-Telecommunications
+3 Place du Commerce
+Verdun, Quebec H3E 1H6
+Canada 
+
+INTRODUCTION:
+
+The modifications described here allow the new TeX 2.993+ to use the current
+fonts and enhance it to allow for the hyphenation of words with characters
+that do not explicitly appear in the font. The modification consists of 
+
+       * char_sub.ch ... a change file for the program TeX. This change file
+            introduces two new TeX primitives \1charsubdef and
+            \1tracingcharsubdef.
+
+       * a set of TeX macro definitions that redefine the accent macros, such
+         as \1^e , so that the appropriate 8bit code is used if the 
+         substitution list for the character exists but uses TeX's original 
+         definitions if it does not. In addition, there are a set of macros
+         that allow for the inputting of hyphenation patterns and exceptions
+         with accented characters encoded in TeX's backslash form ... ie 
+         both \"u and \1"u are acceptable input forms. The use of these macros 
+         allows for almost 100% compatibility with Multilingual TeX. 
+
+This note consists of a description and syntax of the new primitives and
+macros, a discussion of the appropriate use of the primitives with a warning
+of potential surprises,  and a short section on modifications required to
+allow a Multilingual TeX environment to be compatible with the new TeX. 
+
+
+The basic idea of the extension is to define a two character sequence for
+each letter and to rebuild that character, if it does not exist in the font,
+just before it is sent out to the dvi file. The idea is quite powerful, but at
+the moment is restricted to just a single accent and base letter. When TeX
+needs a letter for spacing and such, it uses the base letter in the list. 
+
+
+
+THE PRIMITIVE \1charsubdef 
+
+The heart of the extension is the new primitive \1charsubdef. This new
+primitive defines the substitution sequence for the extended character.
+The syntax is as follows: 
+
+     \1charsubdef <ext char> [=] <accent> <base char> 
+
+The = is optional and each of the other arguments are character numbers. The
+syntax is similar to the TeX primitive \1chardef. TeX allows for a character
+number to be expressed in octal, hexadecimal, decimal or symbolically. Thus
+the e-circumflex, \^e, may be described in the four following equivalent ways
+... assuming the IBM-PC internal code. 
+
+            octal:    '212
+            hex:      ^^8a
+            decimal:  138
+            symbolic: `\1\^e
+
+Thus the \1charsubdef definition for \^e would be 
+
+          \1charsubdef `\1\`e = '022 `\1e 
+
+Note that the code '022 is that of the accent in the font and not the code
+for ` .  The symbolic forms are used whenever possible to avoid error. An
+equivalent form would be 
+
+          \1charsubdef '212 = '022 '145 
+
+The TeX "internal" encoding used should be the same as that of the equivalent
+character in the 256 code font. Thus when TeX checks for the existence of the
+character, it will indeed be checking for the same character. The
+"Compatibility " macros allow for a very simple mapping from the keyboard
+code to the internal code. 
+
+
+THE PRIMITIVE \1tracingcharsubdef
+
+The \1charsubdef for any given character may be modified, much like most
+other TeX parameters, while the document is being processed. Since the
+character is rebuilt just before it is sent out to the dvi file, the
+\1charsubdef actually in force at that time is the one used. It is
+recommended that all the \1charsubdef(initions) be made in the format file.
+However, since it is possible to modify a \1charsubdef dynamically,
+setting the primitive \1tracingcharsubdef non-zero will report everytime that
+\1charsubdef is used. This should help in determining whether there has been
+a change in a \1charsubdef before a particular \1shipout. In addition, if
+\1tracinglostchars >=100, then everytime that a character is rebuilt using
+a \1charsubdef, it is reported in the log file. 
+
+
+THE COMPATIBILITY MACROS:
+
+The "Compatibility" macros define an equivalent and efficient macro
+"inverse" for each of the characters defined with a \1charsubdef. This
+"inverse" is used when determining whether an accented character built using
+a macro sequence such as \1"u should be replaced by its equivalent 8bit
+internal code or built using the accent primitive. For example, \1"u would
+usually be replaced by \"u while \1^t would not. 
+
+\1csubinverse{ext char}{accent macro invocation letter}{base char}
+
+Unlike the \1charsubdef, this macro takes actual characters as arguments. 
+The {ext char} and the {base char} are as before but the 
+{accent macro invocation char} is a string representation of the  keyboard
+character that appears in the macro such as \1'e rather than the font code
+for the accent. For the acute accent this is {@ac@}. Thus the 
+inverse for \`e would be 
+
+         \1csubinverse \`e{@ac@}e
+
+The definition of \1csubinverse is 
+
+\1def\1csubinverse #1#2#3{\1expandafter\1def\1csname #2#3\1endcsname{#1}}
+                        
+Accent Macro Definitions 
+
+These macros check to see if a \1csubinverse has been defined for a particular
+sequence. If the inverse exists, the equivalent extended character code is
+substituted. If it does not exist, the accent primitive is used in its normal
+fashion.  The accent sequences such as \1^e, are used in exactly the same
+manner as in ordinary or Multilingual TeX. An example of a definition for the
+acute accent  \1' is 
+
+
+\1def\1'#1{{\1expandafter\1ifx\1csname '#1\1endcsname\1relax
+           {\1accent19 #1}\1else\1csname '#1\1endcsname\1fi}}
+
+Because some characters, such as ~ , are normally active in TeX and have
+special meanings, both the original inverse and the accent forms are defined
+slightly differently. Thus a \1~ used Spanish for \1~n, is defined as 
+
+\1def\1~#1{{\1expandafter\1ifx\1csname @til@#1\1endcsname\1relax
+           {\1accent'176 #1}\1else\1csname @til@#1\1endcsname\1fi}}
+
+The complete set of macros is included in the file compatible.tex. 
+
+SOME SAMPLE EXTENDED CHARACTER DEFINITIONS 
+
+The complete list of extended character definitions in the ISO Latin 1
+internal coding is in the file extdef.tex. This file inputs compatible.tex
+before it processes the character codes. 
+
+An example for the \"a and \"A
+
+\1catcode`\1\"a=11 \1lccode`\1\"a= `\1\"a \1charsubdef `\1\"a = '177 `\1a
+\1csubinverse \"a{@um@}a
+\1catcode`\1\"A=11 \1lccode`\1\"A= `\1\"a \1charsubdef `\1\"A = '177 `\1A
+\1csubinverse \"A{@um@}A
+
+The \1catcode`\1\"a=11 defines \"a as a letter, the \1lccode`\1\"a= `\1\"a 
+defines the  \1lccode to be itself while \1lccode`\1\"A= `\1\"a  defines the
+\1lccode for the uppercase \"A to be the same as the lowercase \"a. The 
+\1charsubdef `\1\"a = '177 `\1a  is the actual charsub form. The
+\1csubinverse \"a{@um@}a defines the inverse for the macro checks. Note that the
+second argument is @um@. 
+
+Some characters appear "normally" as an extended character but are not
+accessed via the accent macros. An example of that is the Swedish \AA, the
+capital "circle A" which is accessed in TeX with a \1AA macro. The extended
+character equivalent is essentially the same as in Multilingual TeX, except
+that we must explicitly declare the extended character active. Thus we have
+
+               \1catcode`\1\AA=\1active 
+               \1def \AA{\1AA }
+
+To disable a previous \1charsubdef it is necessary to define it as a pair
+of zero values. Thus 
+
+               \1charsubdef '321 = '000 '000  % N tilde -- disabled 
+
+removes the \1charsubdef for the character whose internal (ISO) code is
+'321. This happens to be the N-tilde, \~N. The information in the log file,
+in conjunction with \1tracinglostchars, and \1tracingcharsubdef is
+sufficient to discover the internal coding of any character. 
+
+
+
+Inputting Hyphenation Patterns and Exceptions. 
+
+TeX has very limited macro capabilities when processing the \1patterns
+primitive. It is able to process a \1csname <...> \1endcsname but not any
+tests. The key to having the hyphenation proceed is to replace the accented
+characters in the patterns and exceptions with their extended character code.
+Since there is no guarantee that extended character codes will be consistent
+across all TeX installations, the convention is to input the extended
+characters in their macro form. Thus \`e is input as \1`e and \^\i\ as \1^\1i. 
+The macro \1accenthyphcodes performs this magic. This form is complete for
+French but might require extensions for other languages. The definition is
+
+
+\1gdef\1accenthyphcodes{
+\1def\1oe{^^[} % \1oe 
+\1def\1i{^^P}
+\1def\1'##1{\1csname @ac@##1\1endcsname}
+\1def\1`##1{\1csname @gr@##1\1endcsname}
+\1def\1v##1{\1csname @v@##1\1endcsname}
+\1let\1^^_=\1v
+\1def\1u##1{\1csname  @u@##1\1endcsname}
+\1let\1^^S=\1u
+\1def\1=##1{\1csname @eq@##1\1endcsname}
+\1def\1^##1{\1csname @hat@##1\1endcsname}
+\1let\1^^D=\1^
+\1def\1.##1{\1csname @dot@##1\1endcsname}
+\1def\1H##1{\1csname @H@##1\1endcsname}
+\1def\1~##1{\1csname @til@##1\1endcsname}
+\1def\1"##1{\1csname @um@##1\1endcsname}
+\1let\1c@@=\1c
+\1def\1c##1{\1csname c@##1\1endcsname}
+}
+
+\1gdef\1spechyphcodes{}
+
+The \1gdef\1spechyphcodes{} is input for compatibility with Multilingual TeX.
+
+Thus the  French hyphenation patterns, identical to those in multilingual TeX
+would be input as 
+
+% french hyphenation patterns
+\1begingroup
+\1language=1
+\1input frhyph \1relax
+\1endgroup
+
+Multilingual TeX also redefines the hyphenation exception primitive as
+follows: 
+
+
+\1let\1h@yphenation=\1hyphenation
+\1def\1hyphenation#1{{\1spechyphcodes\1accenthyphcodes \1h@yphenation{#1}}}
+
+A form with or without the \1spechyphcodes is required for this extension to
+process hyphenation exceptions correctly.
+
+
+MODIFICATIONS REQUIRED FOR OLD MULTILINGUAL TeX Systems. 
+
+Old Multilingual TeX systems are completely compatible with the new
+\1charsubdef TeX with a few exceptions. These exceptions are 
+
+     * \1dischyph is not implemented. This means that words that include 
+       explicit discretionaries will not be hyphenated. 
+
+     * Current implentations of TeX 3 restrict the number of trie_ops to 256
+       per language. Multilingual TeX had a restriction on the total only. 
+       This restriction is being relaxed in some newer implementations, for
+       example, PCTeX allows for 512. Extensions of this sort will almost 
+       certainly become essential. 
+
+Multilingual TeX permanently set all internal codes above 127 to be \1active. 
+This meant that to define a character such as \^e only required the  following:
+
+          \1def \^e{\1^e} 
+
+In the new version, you must explicitly define the \^e active. Thus you must
+use
+
+         \1catcode `\1\^e = \1active 
+         \1def \^e{\1^e}
+
+instead. Any character so defined will not be allowed in a macro name. This
+restriction is currently true for Multilingual TeX. 
+
+
+COMMENTS:
+
+The primitive \1charsubdef used to be called \1charsublist. The change to
+\1charsubdef was made to emphasize its similarity to \1chardef in syntax. In
+addition, the current version (June 1990) introduces the new primitive
+\1tracingcharsubdef and fixed a number of bugs in the implementation of the
+character rebuilding. In particular, diacritics that appear below the letter,
+such as the cedilla in \c C, are recognized by their zero height and not
+raised over capital letters. TeX's accent routine is considerably more
+magical. 
+
+\endttverbatim
+
+\bye
+
