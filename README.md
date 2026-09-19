@@ -1,4 +1,4 @@
-# dislatex
+# octan: old ctan archives
 
 This project aims to collect old versions of TeX material no longer available at CTAN. 
 
