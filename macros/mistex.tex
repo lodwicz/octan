@@ -1,0 +1,146 @@
+% This is `mistex.tex' for use with MLTeX v2.2 (as of December 17, 1995).
+%
+% Copyright (C) 2000 by Thierry Laronde; all rights are reserved.
+%
+% MLTeX is copyright (C) 1990-92 by Michael J. Ferguson; all rights are reserved.
+% MLTeX Version 2.2 is copyright (C) 1995 by B. Raichle; all rights are reserved.
+% The TeX program is copyright (C) 1982 by D. E. Knuth.
+% TeX is a trademark of the American Mathematical Society.
+%
+%
+% Usage:
+%
+%  1. Run iniTeX with the MLTeX extensions on this file.
+%     Do not try to use plain-TeX or LaTeX.
+%
+% Input of plain.tex
+\input plain.tex
+% The hyphen.tex loaded with plain.tex defines the hyphenation patterns and
+% exceptions for the language0, in this case the english.
+\def\english{\language=0}
+% define correct substitutions
+\charsubdef "C0 = "12 `A		% A grave
+\charsubdef "C1 = "13 `A		% A accute
+\charsubdef "C2 = "5E `A		% A circumflex
+\charsubdef "C3 = "7E `A		% A tilde
+\charsubdef "C4 = "7F `A		% A dieresis
+\charsubdef "C5 = "17 `A		% A ring
+\charsubdef "C7 = "18 `C		% C cedilla
+\charsubdef "C8 = "12 `E		% E grave
+\charsubdef "C9 = "13 `E		% E accute
+\charsubdef "CA = "5E `E		% E circumflex
+\charsubdef "CB = "7F `E		% E dieresis
+\charsubdef "CC = "12 `I		% I grave
+\charsubdef "CD = "13 `I		% I accute
+\charsubdef "CE = "5E `I		% I circumflex
+\charsubdef "CF = "7F `I		% I dieresis
+\charsubdef "D1 = "7E `N		% N tilde
+\charsubdef "D2 = "12 `O		% O grave
+\charsubdef "D3 = "13 `O		% O accute
+\charsubdef "D4 = "5E `O		% O circumflex
+\charsubdef "D5 = "7E `O		% O tilde
+\charsubdef "D6 = "7F `O		% O dieresis
+\charsubdef "D9 = "12 `U		% U grave
+\charsubdef "DA = "13 `U		% U accute
+\charsubdef "DB = "5E `U		% U circumflex
+\charsubdef "DC = "7F `U		% U dieresis
+\charsubdef "DD = "13 `Y		% dagger or Y acute Capital
+\charsubdef "E0 = "12 `a		% a grave
+\charsubdef "E1 = "13 `a		% a accute
+\charsubdef "E2 = "5E `a		% a circumflex
+\charsubdef "E3 = "7E `a		% a tilde
+\charsubdef "E4 = "7F `a		% a dieresis
+\charsubdef "E5 = "17 `a		% a ring
+\charsubdef "E7 = "18 `c		% c cedilla
+\charsubdef "E8 = "12 `e		% e grave
+\charsubdef "E9 = "13 `e		% e accute
+\charsubdef "EA = "5E `e		% e circumflex
+\charsubdef "EB = "7F `e		% e dieresis
+\charsubdef "EC = "12 16		% i grave
+\charsubdef "ED = "13 16		% i accute
+\charsubdef "EE = "5E 16		% i circumflex
+\charsubdef "EF = "7F 16		% i dieresis
+\charsubdef "F1 = "7E `n		% n tilde
+\charsubdef "F2 = "12 `o		% o grave
+\charsubdef "F3 = "13 `o		% o accute
+\charsubdef "F4 = "5E `o		% o circumflex
+\charsubdef "F5 = "7E `o		% o tilde
+\charsubdef "F6 = "7F `o		% o dieresis
+\charsubdef "F9 = "12 `u		% u grave
+\charsubdef "FA = "13 `u		% u accute
+\charsubdef "FB = "5E `u		% u circumflex
+\charsubdef "FC = "7F `u		% u dieresis
+\charsubdef "FD = "13 `y		% double dagger or y acute small
+\charsubdef "FF = "7F `y		% y dieresis
+% We define now the 8bits characters so that they can be used for hyphenation.
+% This implies defining the \lccode (lowercase character associated : the
+% \patterns only uses lowercase comparison). 
+% We define the \uccode as well (uppercase character associated).
+\lccode"C0="E0 \uccode"C0="C0	% A grave
+\lccode"C1="E1 \uccode"C1="C1	% A accute
+\lccode"C2="E2 \uccode"C2="C2	% A circumflex
+\lccode"C3="E3 \uccode"C3="C3	% A tilde
+\lccode"C4="E4 \uccode"C4="C4	% A dieresis
+\lccode"C5="E5 \uccode"C5="C5	% A ring
+\lccode"C7="E7 \uccode"C7="C7	% C cedilla
+\lccode"C8="E8 \uccode"C8="C8	% E grave
+\lccode"C9="E9 \uccode"C9="C9	% E accute
+\lccode"CA="EA \uccode"CA="CA	% E circumflex
+\lccode"CB="EB \uccode"CB="CB	% E dieresis
+\lccode"CC="EC \uccode"CC="CC	% I grave
+\lccode"CD="ED \uccode"CD="CD	% I accute
+\lccode"CE="EE \uccode"CE="CE	% I circumflex
+\lccode"CF="EF \uccode"CF="CF	% I dieresis
+\lccode"D1="F1 \uccode"D1="D1	% N tilde
+\lccode"D2="F2 \uccode"D2="D2	% O grave
+\lccode"D3="F3 \uccode"D3="D3	% O accute
+\lccode"D4="F4 \uccode"D4="D4	% O circumflex
+\lccode"D5="F5 \uccode"D5="D5	% O tilde
+\lccode"D6="F6 \uccode"D6="D6	% O dieresis
+\lccode"D9="F9 \uccode"D9="D9	% U grave
+\lccode"DA="FA \uccode"DA="DA	% U accute
+\lccode"DB="FB \uccode"DB="DB	% U circumflex
+\lccode"DC="FC \uccode"DC="DC	% U dieresis
+\lccode"DD="FD \uccode"DD="DD	% dagger or Y acute Capital
+\lccode"E0="E0 \uccode"E0="C0	% a grave
+\lccode"E1="E1 \uccode"E1="C1	% a accute
+\lccode"E2="E2 \uccode"E2="C2	% a circumflex
+\lccode"E3="E3 \uccode"E3="C3	% a tilde
+\lccode"E4="E4 \uccode"E4="C4	% a dieresis
+\lccode"E5="E5 \uccode"E5="C5	% a ring
+\lccode"E7="E7 \uccode"E7="C7	% c cedilla
+\lccode"E8="E8 \uccode"E8="C8	% e grave
+\lccode"E9="E9 \uccode"E9="C9	% e accute
+\lccode"EA="EA \uccode"EA="CA	% e circumflex
+\lccode"EB="EB \uccode"EB="CB	% e dieresis
+\lccode"EC="EC \uccode"EC="CC	% i grave
+\lccode"ED="ED \uccode"ED="CD	% i accute
+\lccode"EE="EE \uccode"EE="CE	% i circumflex
+\lccode"EF="EF \uccode"EF="CF	% i dieresis
+\lccode"F1="F1 \uccode"F1="D1	% n tilde
+\lccode"F2="F2 \uccode"F2="D2	% o grave
+\lccode"F3="F3 \uccode"F3="D3	% o accute
+\lccode"F4="F4 \uccode"F4="D4	% o circumflex
+\lccode"F5="F5 \uccode"F5="D5	% o tilde
+\lccode"F6="F6 \uccode"F6="D6	% o dieresis
+\lccode"F9="F9 \uccode"F9="D9	% u grave
+\lccode"FA="FA \uccode"FA="DA	% u accute
+\lccode"FB="FB \uccode"FB="DB	% u circumflex
+\lccode"FC="FC \uccode"FC="DC	% u dieresis
+\lccode"FD="FD \uccode"FD="DD	% double dagger or y acute small
+\lccode"FF="FF \uccode"FF="DF	% y dieresis
+
+% Additionnal characters : french guillemets
+\font\threemmi=cmmi3
+\catcode171=13	\def^^ab{{\threemmi \hbox{\raise1pt\hbox{<\kern-.4em <\kern-2pt}}}}         % 171 '253, "ab, 
+\catcode187=13 	\def^^bb{{\threemmi \hbox{\raise1pt\hbox{\kern-2pt>\kern-.4em >\kern.25em}}}}       % 187, '273, "bb 
+% \catcode171=13	\def^^ab{{\hbox{\raise.5ex\hbox{$<$\kern-.2em$<$\kern-.2em}}}}         % 171 '253, "ab, 
+% \catcode187=13 	\def^^bb{{\hbox{\raise.5ex\hbox{\kern-.2em$>$\kern-.2em$>$\kern.2em}}}}       % 187, '273, "bb 
+% Definition de \MisTeX
+\def\MisTeX{M\raise.2ex\hbox{i}\lower.2ex\hbox{s}\kern-.1em\TeX}
+% Hyphenation patterns and exceptions for french
+\language1
+\def\french{\language1\message{Setting language to 1 (french)}}
+% Hyphenation patterns --- GUTenberg and others file
+\input frhyph.tex
+%% End of file `mistex.tex'.
