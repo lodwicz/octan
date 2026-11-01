@@ -1,0 +1,11 @@
+\def\batchfile{polyglot.ins}
+
+\input docstrip.tex
+
+\keepsilent
+
+\generateFile{polyglot.sty}{t}{\from{polyglot.dtx}{package}}
+\generateFile{polyglot.def}{t}{\from{polyglot.dtx}{preload}}
+\generateFile{polyglot.ltx}{t}{\from{polyglot.dtx}{install}}
+\generateFile{polyglot.cfg}{t}{\from{polyglot.dtx}{config}}
+

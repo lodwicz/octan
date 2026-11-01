@@ -1,0 +1,64 @@
+% Copyright 1997 Javier Bezos-L\'opez. All rights reserved.
+% 
+% This file is part of the polyglot system release 1.1.
+% --------------------------------------------------
+%
+% This program can be redistributed and/or modified under the terms
+% of the LaTeX Project Public License Distributed from CTAN
+% archives in directory macros/latex/base/lppl.txt; either
+% version 1 of the License, or any later version.
+
+\ProvidesFile{spanish.ot1}
+
+\def\spanish@accent#1#2{%
+  \allowhyphens\accent#1 #2\allowhyphens }
+
+\def\spanish@lowacute#1{\leavevmode\allowhyphens
+  {\@tempdima\fontdimen5\font\setbox\z@\hbox{\char19}%
+   \@tempdimb-.52ex\advance\@tempdimb\ht\z@
+   \ifdim1ex<\@tempdimb\fontdimen5\font\@tempdimb\fi%
+   {\accent19 \fontdimen5\font\@tempdima #1}}\allowhyphens}
+
+\DeclareLanguageCompositeCommand{\~}{OT1}{n}
+  {\spanish@accent{126}n}
+\DeclareLanguageCompositeCommand{\~}{OT1}{N}
+  {\spanish@accent{126}N}
+
+\DeclareLanguageCompositeCommand{\"}{OT1}{u}
+  {\spanish@accent{127}u}
+\DeclareLanguageCompositeCommand{\"}{OT1}{U}
+  {\spanish@accent{127}U}
+
+\DeclareLanguageCompositeCommand{\'}{OT1}{a}
+  {\spanish@accent{19}a}
+\DeclareLanguageCompositeCommand{\'}{OT1}{e}
+  {\spanish@accent{19}e}
+\DeclareLanguageCompositeCommand{\'}{OT1}{\i}
+  {\spanish@accent{19}\i}
+\DeclareLanguageCompositeCommand{\'}{OT1}{i}
+  {\spanish@accent{19}\i}
+\DeclareLanguageCompositeCommand{\'}{OT1}{o}
+  {\spanish@accent{19}o}
+\DeclareLanguageCompositeCommand{\'}{OT1}{u}
+  {\spanish@accent{19}u}
+\DeclareLanguageCompositeCommand{\'}{OT1}{A}
+  {\spanish@lowacute A}
+\DeclareLanguageCompositeCommand{\'}{OT1}{E}
+  {\spanish@lowacute E}
+\DeclareLanguageCompositeCommand{\'}{OT1}{I}
+  {\spanish@lowacute I}
+\DeclareLanguageCompositeCommand{\'}{OT1}{O}
+  {\spanish@lowacute O}
+\DeclareLanguageCompositeCommand{\'}{OT1}{U}
+  {\spanish@lowacute U}
+
+\DeclareLanguageTextCommand{\guillemotleft}{OT1}%
+  {{\leavevmode\count@\spacefactor
+    \setbox\z@\hbox{$\scriptscriptstyle\langle\mkern-4mu\langle$}%
+    \raise.74\dp\z@\box\z@\spacefactor\count@}}
+\DeclareLanguageTextCommand{\guillemotright}{OT1}%
+  {{\leavevmode\count@\spacefactor
+    \setbox\z@\hbox{$\scriptscriptstyle\rangle\mkern-4mu\rangle$}%
+    \raise.74\dp\z@\box\z@\spacefactor\count@}}
+
+\endinput

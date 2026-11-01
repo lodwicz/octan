@@ -1,0 +1,75 @@
+% Copyright 1997 Javier Bezos-L\'opez. All rights reserved.
+% 
+% This file is part of the polyglot system release 1.1.
+% --------------------------------------------------
+%
+% This program can be redistributed and/or modified under the terms
+% of the LaTeX Project Public License Distributed from CTAN
+% archives in directory macros/latex/base/lppl.txt; either
+% version 1 of the License, or any later version.
+
+\ProvidesFile{french.ot1}
+
+\def\french@accent#1#2{%
+  \allowhyphens\accent#1 #2\allowhyphens}
+
+\DeclareLanguageCompositeCommand{\"}{OT1}{e}
+  {\french@accent{127}e}
+\DeclareLanguageCompositeCommand{\"}{OT1}{E}
+  {\french@accent{127}E}
+\DeclareLanguageCompositeCommand{\"}{OT1}{y}
+  {\french@accent{127}y}
+\DeclareLanguageCompositeCommand{\"}{OT1}{Y}
+  {\french@accent{127}Y}
+
+\DeclareLanguageCompositeCommand{\^}{OT1}{a}
+  {\french@accent{94}a}
+\DeclareLanguageCompositeCommand{\^}{OT1}{e}
+  {\french@accent{94}e}
+\DeclareLanguageCompositeCommand{\^}{OT1}{i}
+  {\french@accent{94}\i}
+\DeclareLanguageCompositeCommand{\^}{OT1}{\i}
+  {\french@accent{94}\i}
+\DeclareLanguageCompositeCommand{\^}{OT1}{o}
+  {\french@accent{94}o}
+\DeclareLanguageCompositeCommand{\^}{OT1}{u}
+  {\french@accent{94}u}
+\DeclareLanguageCompositeCommand{\^}{OT1}{A}
+  {\french@accent{94}A}
+\DeclareLanguageCompositeCommand{\^}{OT1}{E}
+  {\french@accent{94}E}
+\DeclareLanguageCompositeCommand{\^}{OT1}{I}
+  {\french@accent{94}I}
+\DeclareLanguageCompositeCommand{\^}{OT1}{O}
+  {\french@accent{94}O}
+\DeclareLanguageCompositeCommand{\^}{OT1}{U}
+  {\french@accent{94}U}
+
+\DeclareLanguageCompositeCommand{\`}{OT1}{a}
+  {\french@accent{18}a}
+\DeclareLanguageCompositeCommand{\`}{OT1}{e}
+  {\french@accent{18}e}
+\DeclareLanguageCompositeCommand{\`}{OT1}{u}
+  {\french@accent{18}u}
+\DeclareLanguageCompositeCommand{\`}{OT1}{A}
+  {\french@accent{18}A}
+\DeclareLanguageCompositeCommand{\`}{OT1}{E}
+  {\french@accent{18}E}
+\DeclareLanguageCompositeCommand{\`}{OT1}{U}
+  {\french@accent{18}U}
+
+\DeclareLanguageCompositeCommand{\'}{OT1}{e}
+  {\french@accent{19}e}
+\DeclareLanguageCompositeCommand{\'}{OT1}{E}
+  {\french@accent{19}E}
+
+\DeclareLanguageTextCommand{\guillemotleft}{OT1}
+  {{\leavevmode\count@\spacefactor
+    \sbox\z@{$\scriptscriptstyle\langle\mkern-4mu\langle$}%
+    \raise.74\dp\z@\box\z@\spacefactor\count@}}
+\DeclareLanguageTextCommand{\guillemotright}{OT1}
+  {{\leavevmode\count@\spacefactor
+    \sbox\z@{$\scriptscriptstyle\rangle\mkern-4mu\rangle$}%
+    \raise.74\dp\z@\box\z@\spacefactor\count@}}
+
+\endinput
