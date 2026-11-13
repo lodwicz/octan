@@ -1,0 +1,399 @@
+\documentclass[twoside,letterpaper,11pt]{article}
+\usepackage{lshort2e,mylayout}
+
+\begin{document}
+
+\title{Essential \LaTeXe\ i18n}
+\author{Tobias Oetiker}
+\date{2002}
+
+\maketitle
+
+\index{international} When you write documents in \wi{language}s
+other than English, there are three areas where \LaTeX{} has to be
+configured appropriately:
+
+\begin{enumerate}
+\item All automatically generated text strings\footnote{Table of
+    Contents, List of Figures, \ldots} have to be adapted to the new
+  language.  For many languages, these changes can be accomplished by
+  using the \pai{babel} package by Johannes Braams.
+\item \LaTeX{} needs to know the hyphenation rules for the new
+  language. Getting hyphenation rules into \LaTeX{} is a bit more
+  tricky. It means rebuilding the format file with different
+  hyphenation patterns enabled. Your \guide{} should give more
+  information on this.
+\item Language specific typographic rules. In French for example, there is a
+  mandatory space before each colon character (:).
+\end{enumerate}
+
+\section{The Babel Package}
+
+If your system is already configured appropriately, you can activate
+the \pai{babel} package by adding the command
+\begin{lscommand}
+\ci{usepackage}\verb|[|\emph{language}\verb|]{babel}| 
+\end{lscommand}
+\noindent after the \verb|\documentclass| command. A list of the
+\emph{language}s built into your \LaTeX{} system will be displayed
+every time the compiler is started. Babel will
+automatically activate the appropriate hyphenation rules for the
+language you choose. If your \LaTeX{} format does not support
+hyphenation in the language of your choice, babel will still work but
+will disable hyphenation, which has quite a negative effect on the
+appearance of the typeset document.
+
+\textsf{Babel} also specifies new commands for some languages, which
+simplify the input of special characters. The \wi{German} language, for
+example, contains a lot of umlauts (\"a\"o\"u).  With \textsf{babel},
+you can enter an \"o by typing \verb|"o| instead of~\verb|\"o|.
+
+If you call babel with multiple languages
+\begin{lscommand}
+\ci{usepackage}\verb|[|\emph{languageA}\verb|,|\emph{languageB}\verb|]{babel}| 
+\end{lscommand}
+\noindent you have to use the command
+\begin{lscommand}
+\ci{selectlanguage}\verb|{|\emph{languageA}\verb|}|
+\end{lscommand}
+\noindent to set the current language.
+
+\section{Input Encodings}
+
+Most modern computer systems allow you to input some special characters
+directly from the keyboard. \LaTeX{} can handle such characters through the
+\pai{inputenc} package:
+\begin{lscommand}
+\ci{usepackage}\verb|[|\emph{encoding}\verb|]{inputenc}| 
+\end{lscommand}
+
+When using this package, you should consider
+that other people might not be able to display your input files on
+their computer, because they use a different encoding. For example,
+the German umlaut \"a on OS/2 is encoded as 132, but on Unix
+systems using ISO-LATIN~1 it is encoded as 228; therefore you should
+use this feature with care. The following encodings may come in handy,
+depending on the type of system you are working on: 
+
+\begin{center}
+\begin{tabular}{l | r}
+Operating system & encoding\\
+\hline
+Mac     &  \texttt{applemac} \\
+Unix    &  \texttt{latin1} \\ 
+Windows &  \texttt{ansinew} \\
+DOS, OS/2    &  \texttt{cp850}
+\end{tabular}
+\end{center}
+
+\section{Font Encodings}
+
+Font encoding is a different matter. It defines at which position inside
+a \TeX-font each letter is stored. The original Computer Modern
+\TeX{} font only contains the 128 characters of the old 7-bit ASCII
+character set. When accented characters are required, \TeX{} creates
+them by combining a normal character with an accent. While the
+resulting output looks perfect, this approach stops the automatic
+hyphenation from working inside words containing accented characters.
+
+Fortunately, most modern \TeX{} distributions contain a copy of the EC
+fonts. These fonts look like the Computer Modern fonts, but contain
+special characters for most of the accented characters used in
+European languages. By using these fonts you can improve hyphenation
+in non-English documents. The EC fonts are activated by including the
+\pai{fontenc} package in the preamble of your document. \label{fontenc}
+
+\begin{lscommand}
+\ci{usepackage}\verb|[T1]{fontenc}| 
+\end{lscommand}
+
+\iffalse
+
+As of this writing, no free, high quality \textsc{PostScript} versions of the EC fonts are
+available.\footnote{Vladimir Volovich has created the cm-super font bundle
+which covers the entire EC/TC, EC Concrete, EC Bright and LH fonts. It is avalable from \texttt{CTAN:/fonts/ps-type1/cm-super} and is
+included with \TeX{}Live7 and Mik\TeX. Unfortunately these fonts are not
+of the same typographic quality as the normal Type1 renderings of the CM fonts} This causes problems when generating PDF versions of your
+documents---the resulting PDF file will look abysmal on screen. You might
+want to have a look at the \pai{aeguill} package, aka \emph{Almost European
+Computer Modern with Guillemets}, which uses the characters from the original Computer
+Modern font, but rearranges them in the EC order and can thus use the
+excellent type 1 format CM fonts available on most systems. There is also an \pai{ae} package, but it
+does not provide proper rendering of French quotes, aka guillemets (see the section
+on pdf\LaTeX{} on page \pageref{sec:pdftex}).
+
+\fi
+
+\subsection{Support for French}
+
+\secby{Daniel Flipo}{daniel.flipo@univ-lille1.fr}
+Some hints for those creating \wi{French} documents with \LaTeX{}:
+you can load French language support with the command
+
+\begin{lscommand}
+\verb|\usepackage[frenchb]{babel}|
+\end{lscommand}
+
+Note that, for historical reasons, the name of \textsf{babel}'s option 
+for French is either \emph{frenchb} or \emph{francais} but not \emph{french}.
+
+This enables French hyphenation, if you have configured your
+LaTeX system accordingly. It also changes all automatic text into
+French: \verb+\chapter+ prints Chapitre, \verb+\today+ prints the current
+date in French and so on. A set of new commands also
+becomes available, which allows you to write French input files more
+easily. Check out table \ref{cmd-french} for inspiration. 
+
+\begin{table}[!htbp]
+\caption{Special commands for French.} \label{cmd-french}
+\begin{lined}{9cm}
+\selectlanguage{french}
+\begin{tabular}{ll}
+\verb+\og guillemets \fg{}+         \quad &\og guillemets \fg \\[1ex]
+\verb+M\up{me}, D\up{r}+            \quad &M\up{me}, D\up{r}  \\[1ex]
+\verb+1\ier{}, 1\iere{}, 1\ieres{}+ \quad &1\ier{}, 1\iere{}, 1\ieres{}\\[1ex]
+\verb+2\ieme{} 4\iemes{}+           \quad &2\ieme{} 4\iemes{}\\[1ex]
+\verb+\No 1, \no 2+                 \quad &\No 1, \no 2   \\[1ex]
+\verb+20~\degres C, 45\degres+      \quad &20~\degres C, 45\degres \\[1ex]
+\verb+\bsc{M. Durand}+              \quad &\bsc{M.~Durand} \\[1ex]
+\verb+\nombre{1234,56789}+          \quad &\nombre{1234,56789}
+\end{tabular}
+\selectlanguage{english}
+\bigskip
+\end{lined}
+\end{table}
+
+You will also notice that the layout of lists changes when switching to the
+French language. For more information on what the \texttt{frenchb}
+option of \textsf{babel} does and how you can customize its behaviour, run
+\LaTeX{} on file \texttt{frenchb.dtx} and read the produced file
+\texttt{frenchb.dvi}.
+
+\subsection{Support for German}
+
+Some hints for those creating \wi{German}\index{Deutsch}
+documents with \LaTeX{}: you can load German language support with the
+command
+
+\begin{lscommand}
+\verb|\usepackage[german]{babel}|
+\end{lscommand}
+
+This enables German hyphenation, if you have configured your
+\LaTeX system accordingly. It also changes all automatic text into
+German. Eg. ``Chapter'' becomes ``Kapitel.'' A set of new commands also
+becomes available, which allows you to write German input files more quickly
+even when you don't use the inputenc package. Check out table
+\ref{german} for inspiration. With inputenc, all this become mute, but your 
+text also is locked in a particular encoding world.
+
+\begin{table}[!htbp]
+\caption{German Special Characters.} \label{german}
+\begin{lined}{8cm}
+\selectlanguage{german}
+\begin{tabular}{*2{ll}}
+\verb|"a| & "a \hspace*{1ex} & \verb|"s| & "s \\[1ex]
+\verb|"`| & "` & \verb|"'| & "' \\[1ex]
+\verb|"<| or \ci{flqq} & "<  & \verb|">| or \ci{frqq} & "> \\[1ex]
+\ci{flq} & \flq & \ci{frq} & \frq \\[1ex]
+\ci{dq} & " \\
+\end{tabular}
+\selectlanguage{english}
+\bigskip
+\end{lined}
+\end{table}
+
+In German books you often find French quotation marks (\flqq guillemets\frqq).
+German typesetters, however, use them differently. A quote in a German book
+would look like \frqq this\flqq. In the German speaking part of Switzerland,
+typesetters use \flqq guillemets\frqq~the same way the French do.
+
+A major problem arises from the use of commands
+like \verb+\flq+: If you use the OT1 font (which is the default font) the  
+guillemets will look like the math symbol ``$\ll$'', which turns a typesetter's stomach.
+T1 encoded fonts, on the other hand, do contain the required symbols. So if you are using this type
+of quote, make sure you use the T1 encoding. (\verb|\usepackage[T1]{fontenc}|)
+
+\iffalse
+
+\subsection{Support for Portuguese}
+
+\secby{Demerson Andre Polli}{polli@linux.ime.usp.br}
+To enable hyphenation and change all automatic text to \wi{Portuguese},
+\index{Portugu\^es} use the command:
+\begin{lscommand}
+\verb|\usepackage[portuguese]{babel}|
+\end{lscommand}
+Or if you are in Brazil, substitute the language for \wi{brazilian}.
+
+As there are a lot of accents in Portuguese you might want to use
+\begin{lscommand}
+\verb|\usepackage[latin1]{inputenc}|
+\end{lscommand}
+to be able to input them correctly as well as 
+\begin{lscommand}
+\verb|\usepackage[T1]{fontenc}|
+\end{lscommand}
+to get the hyphenation right.
+
+See table~\ref{portuguese} for the preamble you need to write in the
+Portuguese language. Note that we are using the latin1 input encoding here,
+so this will not work on a Mac or on DOS. Just use
+the appropriate encoding for your system.
+
+\begin{table}[btp]
+\caption{Preamble forPortuguese documents.} \label{portuguese}
+\begin{lined}{5cm}
+\begin{verbatim}
+\usepackage[portuges]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\end{verbatim}
+\bigskip
+\end{lined}
+\end{table}
+
+\subsection[Support for Korean]{Support for Korean\footnotemark}\label{support_korean}%
+\footnotetext{%
+Considering a number of issues  Korean \LaTeX{} users
+have to cope with.
+This section was written by Karnes KIM on behalf of the
+Korean lshort translation team. It  was translated into English
+by SHIN Jungshik and shortened by Tobi Oetiker}
+
+To use \LaTeX{} for typesetting  \wi{Korean}, 
+we need to solve three problems: 
+
+\begin{enumerate}
+\item 
+We must be able to 
+edit \wi{Korean input files}.
+Korean input files must be in plain text format, but because Korean
+uses its own character set outside the
+repertoire of US-ASCII, they will look rather strange with a normal ASCII editor.  The two most widely used encodings for
+Korean text files are  EUC-KR and its upward compatible
+extension used in Korean MS-Windows, CP949/Windows-949/UHC.
+In these encodings each US-ASCII character represents its normal ASCII
+character similar to other ASCII compatible encodings such as
+ISO-8859-\textit{x}, EUC-JP,Shift\_JIS, and Big5. On the other hand, Hangul
+syllables, Hanjas (Chinese characters as used in Korea), Hangul Jamos,
+Hirakanas, Katakanas, Greek and Cyrillic characters and other
+symbols and letters drawn from KS~X~1001 are represented by two
+consecutive octets. The first has its MSB set.
+Until mid the 1990's, it took a considerable amount of time and effort to
+set up a Korean-capable environment under a non-localized (non-Korean)
+operating system. 
+You can skim through the now much-outdated \url{http://jshin.net/faq} to get 
+a glimpse of what it was like to use Korean under non-Korean OS in mid-1990's.
+These days all three major operating systems (Mac OS, Unix, Windows) come equipped
+with pretty decent multilingual support and internationalization features
+so that editing Korean text file is not so much of a problem anymore, even
+on non-Korean operating systems.
+
+\item \TeX{} and \LaTeX{} were originally written for
+scripts with no more than 256 characters in their alphabet.
+To make them work for languages with considerably 
+more characters such as
+Korean%,
+ \footnote{Korean Hangul is an alphabetic script with 14 basic consonants
+ and 10 basic vowels (Jamos). Unlike Latin or Cyrillic scripts, the
+ individual characters have to be arranged in rectangular
+ clusters about the same size as Chinese characters. Each cluster
+ represents a syllable. An unlimited number of syllables can be
+ formed out of this finite set of vowels and consonants. Modern Korean
+ orthographic standards (both in South Korea and  North Korea), however,
+ put some restriction on the formation of these clusters.
+ Therefore only a finite the number of  orthographically correct syllables exist.
+ The Korean Character encoding defines individual code points for each of these syllables (KS~X~1001:1998 and KS~X~1002:1992). So Hangul, albeit alphabetic, is
+ treated like the Chinese and Japanese writing systems with tens of thousands of
+ ideographic/logographic characters.  ISO~10646/Unicode offers both ways of
+ representing Hangul used for \emph{modern} Korean by encoding Conjoining
+ Hangul Jamos (alphabets: \url{http://www.unicode.org/charts/PDF/U1100.pdf})
+ in addition to encoding all the orthographically allowed Hangul syllables in
+ \emph{modern} Korean (\url{http://www.unicode.org/charts/PDF/UAC00.pdf}).
+ One of the most daunting challenges in Korean typesetting with
+ \LaTeX{} and related typesetting system is supporting Middle Korean---and possibly future Korean---syllables that can be only represented
+ by conjoining Jamos in Unicode. It is hoped that future \TeX{} engines like $\Omega$ and
+ $\Lambda$ will eventually provide solutions to this
+ so that some Korean linguists and historians
+ will defect from MS Word that already has  a pretty good support 
+ for Middle Korean.}
+or Chinese, a subfont mechanism was developed.
+It divides a single CJK fonts with  thousands or tens of thousands of
+glyphs into a set of subfonts with 256 glyphs each. 
+For Korean, there are three widely used packages;  \wi{H\LaTeX}
+by UN~Koaunghi, \wi{h\LaTeX{}p} by CHA~Jaechoon and the \wi{CJK package}
+by Werner~Lemberg.\footnote{% 
+They can be obtained at \texttt{CTAN:/tex-archive/language/korean/HLaTeX/}\\
+   \texttt{CTAN:/tex-archive/language/korean/CJK/} and
+   \texttt{http://knot.kaist.ac.kr/htex/}}
+H\LaTeX{} and h\LaTeX{}p are specific to Korean and provide
+Korean localization on top of the font support.
+They both can process Korean input text files encoded in EUC-KR. H\LaTeX{} can
+even process input files encoded in CP949/Windows-949/UHC and UTF-8
+when used along with $\Lambda$, $\Omega$.
+
+The CJK package is not specific to Korean. It can
+process input files in UTF-8 as well as in various CJK encodings
+including EUC-KR and CP949/Windows-949/UHC, it can be used to typeset documents with
+multilingual content (especially Chinese, Japanese and Korean).
+The CJK package has no Korean localization such as the one offered by H\LaTeX{} and it
+does not come with as many special Korean fonts as H\LaTeX.
+
+\item The ultimate purpose of using typesetting programs like \TeX{}
+and \LaTeX{} is to get documents typeset in an `aesthetically' satisfying way.
+Arguably the most important element in typesetting is  a set of
+well-designed fonts. The H\LaTeX{} distribution
+includes \index{Korean font!UHC font}UHC \textsc{PostScript} fonts 
+of 10
+different families and
+Munhwabu\footnote{Korean Ministry of Culture}
+fonts (TrueType) of 5 different families.
+The CJK package works with a set of fonts used by earlier versions
+of H\LaTeX{} and it can use Bitstream's cyberbit TrueType
+font.
+\end{enumerate}
+
+To use the  H\LaTeX{} package for typesetting your Korean text, put the following
+declaration into the preamble of your document:
+\begin{lscommand}
+\verb+\usepackage{hangul}+
+\end{lscommand}
+
+This command turns the Korean localization on. The headings
+of chapters, sections, subsections, table of content and table of
+figures are all translated into Korean and the formatting of the document
+is changed to follow Korean conventions. 
+The packages also provides automatic ``particle selection.''
+In Korean, there are pairs of post-fix particles 
+grammatically equivalent but different in form. Which 
+of any given pair is correct depends on 
+whether the preceding syllable ends with a  vowel or a consonant.
+(It is a bit more complex than this, but this should give you
+a good picture.)
+Native Korean speakers have no problem picking the right particle, but
+it cannot be determined which particle to use for references and other automatic
+text that will change while you edit the document.
+It 
+takes a painstaking effort to place appropriate particles manually
+every time you add/remove references or simply shuffle  parts
+of your document around.
+H\LaTeX{} relieves its users from this boring and error-prone process.
+
+In case you don't need Korean localization features
+but just want 
+to  typeset Korean text, you can put the following line in the 
+preamble, instead.
+\begin{lscommand}
+\verb+\usepackage{hfont}+
+\end{lscommand}
+
+For more details on typesetting  Korean with H\LaTeX{}, refer to
+the \emph{H\LaTeX{} Guide}.  Check out the web site of the Korean
+\TeX{} User Group (KTUG) at  \url{http://www.ktug.or.kr/}.
+There is also a Korean translation
+of this manual available.
+
+\fi
+
+\end{document}
